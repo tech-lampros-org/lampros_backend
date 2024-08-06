@@ -3,11 +3,13 @@
   "version": "1.0.0",
   "description": "the high powerful backend for lampros app and website",
   "main": "app.js",
+  "type": "module",
   "directories": {
     "doc": "docs",
     "test": "tests"
   },
   "scripts": {
+    "start": "node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -22,5 +24,10 @@
   "bugs": {
     "url": "https://github.com/tech-lampros-org/lampros_backend/issues"
   },
-  "homepage": "https://github.com/tech-lampros-org/lampros_backend#readme"
+  "homepage": "https://github.com/tech-lampros-org/lampros_backend#readme",
+  "dependencies": {
+    "express": "^4.19.2",
+    "winston": "^3.13.1",
+    "winston-daily-rotate-file": "^5.0.0"
+  }
 }

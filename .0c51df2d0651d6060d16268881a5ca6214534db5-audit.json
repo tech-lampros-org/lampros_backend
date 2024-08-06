@@ -1,0 +1,15 @@
+{
+    "keep": {
+        "days": false,
+        "amount": 100
+    },
+    "auditLog": "/home/user/lampros_backend/.0c51df2d0651d6060d16268881a5ca6214534db5-audit.json",
+    "files": [
+        {
+            "date": 1722920102393,
+            "name": "/home/user/lampros_backend/logs-2024-08-06.log",
+            "hash": "8636807c26a8c9791b2fb20a69177e645e8fe506527dbba909949e7c918d250b"
+        }
+    ],
+    "hashType": "sha256"
+}
