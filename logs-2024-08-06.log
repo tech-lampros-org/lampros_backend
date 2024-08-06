@@ -2,3 +2,7 @@
 {"level":"info","message":"Incoming request: GET /","timestamp":"2024-08-06T04:55:04.134Z"}
 {"level":"debug","message":"Debugging the root route","timestamp":"2024-08-06T04:55:04.135Z"}
 {"level":"info","message":"Serving the root route","timestamp":"2024-08-06T04:55:04.135Z"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2024-08-06T06:22:14.698Z"}
+{"level":"info","message":"Incoming request: GET /","timestamp":"2024-08-06T06:22:17.025Z"}
+{"level":"debug","message":"Debugging the root route","timestamp":"2024-08-06T06:22:17.046Z"}
+{"level":"info","message":"Serving the root route","timestamp":"2024-08-06T06:22:17.053Z"}
