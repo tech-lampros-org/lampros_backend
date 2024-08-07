@@ -10,6 +10,7 @@
   },
   "scripts": {
     "start": "pm2 start app.js",
+    "dev": "nodemon app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -26,9 +27,22 @@
   },
   "homepage": "https://github.com/tech-lampros-org/lampros_backend#readme",
   "dependencies": {
+    "@vonage/server-sdk": "^3.16.0",
+    "cors": "^2.8.5",
+    "crypto": "^1.0.1",
+    "dotenv": "^16.4.5",
     "express": "^4.19.2",
+    "express-rate-limit": "^7.4.0",
+    "express-validator": "^7.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.5.2",
+    "morgan": "^1.10.0",
+    "nanoid": "^5.0.7",
     "pm2": "^5.4.2",
     "winston": "^3.13.1",
     "winston-daily-rotate-file": "^5.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
   }
 }

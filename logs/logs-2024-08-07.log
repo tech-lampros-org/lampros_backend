@@ -1,0 +1,175 @@
+{"level":"info","message":"Server is running on port 3000","timestamp":"2024-08-07T04:56:27.470Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-02.hgasejj.mongodb.net","timestamp":"2024-08-07T04:56:27.603Z"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2024-08-07T04:56:51.819Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-02.hgasejj.mongodb.net","timestamp":"2024-08-07T04:56:51.951Z"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2024-08-07T04:57:57.653Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-00.hgasejj.mongodb.net","timestamp":"2024-08-07T04:57:57.852Z"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2024-08-07T04:58:13.521Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-00.hgasejj.mongodb.net","timestamp":"2024-08-07T04:58:13.650Z"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2024-08-07T04:58:22.808Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-01.hgasejj.mongodb.net","timestamp":"2024-08-07T04:58:22.952Z"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2024-08-07T04:58:43.204Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-00.hgasejj.mongodb.net","timestamp":"2024-08-07T04:58:43.353Z"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2024-08-07T05:01:56.504Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-00.hgasejj.mongodb.net","timestamp":"2024-08-07T05:01:56.750Z"}
+{"level":"info","message":"Server is running on port 5000","timestamp":"2024-08-07T05:02:47.275Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-00.hgasejj.mongodb.net","timestamp":"2024-08-07T05:02:47.408Z"}
+{"level":"debug","message":"Debugging the root route","timestamp":"2024-08-07T05:02:54.955Z"}
+{"level":"info","message":"Serving the root route","timestamp":"2024-08-07T05:02:54.956Z"}
+{"level":"info","message":"::1 - - [07/Aug/2024:05:02:54 +0000] \"GET / HTTP/1.1\" 200 12 \"https://github.com/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36\"","timestamp":"2024-08-07T05:02:54.960Z"}
+{"level":"info","message":"::1 - - [07/Aug/2024:05:02:58 +0000] \"GET /favicon.ico HTTP/1.1\" 404 150 \"https://shiny-tribble-x5wwpr5xgjwr3vgw5-5000.app.github.dev/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36\"","timestamp":"2024-08-07T05:02:58.200Z"}
+{"level":"debug","message":"Debugging the root route","timestamp":"2024-08-07T05:03:01.392Z"}
+{"level":"info","message":"Serving the root route","timestamp":"2024-08-07T05:03:01.392Z"}
+{"level":"info","message":"::1 - - [07/Aug/2024:05:03:01 +0000] \"GET / HTTP/1.1\" 304 - \"https://github.com/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36\"","timestamp":"2024-08-07T05:03:01.394Z"}
+{"level":"info","message":"Server is running on port 5000","timestamp":"2024-08-07T05:04:32.533Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-00.hgasejj.mongodb.net","timestamp":"2024-08-07T05:04:32.741Z"}
+{"level":"info","message":"Server is running on port 5000","timestamp":"2024-08-07T05:04:57.923Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-00.hgasejj.mongodb.net","timestamp":"2024-08-07T05:04:58.097Z"}
+{"level":"info","message":"Server is running on port 5000","timestamp":"2024-08-07T05:05:22.895Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-01.hgasejj.mongodb.net","timestamp":"2024-08-07T05:05:23.030Z"}
+{"level":"info","message":"Server is running on port 5000","timestamp":"2024-08-07T05:05:29.039Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-01.hgasejj.mongodb.net","timestamp":"2024-08-07T05:05:29.182Z"}
+{"level":"info","message":"Server is running on port 5000","timestamp":"2024-08-07T05:05:45.201Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-00.hgasejj.mongodb.net","timestamp":"2024-08-07T05:05:45.383Z"}
+{"level":"info","message":"Server is running on port 5000","timestamp":"2024-08-07T05:06:57.837Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-00.hgasejj.mongodb.net","timestamp":"2024-08-07T05:06:58.081Z"}
+{"level":"info","message":"Server is running on port 5000","timestamp":"2024-08-07T05:07:19.511Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-00.hgasejj.mongodb.net","timestamp":"2024-08-07T05:07:19.657Z"}
+{"level":"info","message":"Server is running on port 5000","timestamp":"2024-08-07T05:07:31.771Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-00.hgasejj.mongodb.net","timestamp":"2024-08-07T05:07:31.983Z"}
+{"level":"info","message":"Server is running on port 5000","timestamp":"2024-08-07T05:07:33.191Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-01.hgasejj.mongodb.net","timestamp":"2024-08-07T05:07:33.354Z"}
+{"level":"info","message":"Server is running on port 5000","timestamp":"2024-08-07T05:07:37.687Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-00.hgasejj.mongodb.net","timestamp":"2024-08-07T05:07:37.859Z"}
+{"level":"info","message":"Server is running on port 5000","timestamp":"2024-08-07T05:07:40.204Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-02.hgasejj.mongodb.net","timestamp":"2024-08-07T05:07:40.350Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-00.hgasejj.mongodb.net","timestamp":"2024-08-07T05:08:26.941Z"}
+{"level":"info","message":"Server running in development mode on port 5000","timestamp":"2024-08-07T05:08:59.338Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-02.hgasejj.mongodb.net","timestamp":"2024-08-07T05:08:59.499Z"}
+{"level":"info","message":"Server running in development mode on port 5000","timestamp":"2024-08-07T05:09:21.111Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-00.hgasejj.mongodb.net","timestamp":"2024-08-07T05:09:21.272Z"}
+{"level":"info","message":"Server running in development mode on port 5000","timestamp":"2024-08-07T05:15:26.186Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-00.hgasejj.mongodb.net","timestamp":"2024-08-07T05:15:26.383Z"}
+{"level":"info","message":"Server running in development mode on port 5000","timestamp":"2024-08-07T05:15:41.350Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-02.hgasejj.mongodb.net","timestamp":"2024-08-07T05:15:41.559Z"}
+{"level":"info","message":"Server running in development mode on port 5000","timestamp":"2024-08-07T05:15:56.540Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-01.hgasejj.mongodb.net","timestamp":"2024-08-07T05:15:56.843Z"}
+{"level":"info","message":"Server running in development mode on port 5000","timestamp":"2024-08-07T05:16:08.020Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-00.hgasejj.mongodb.net","timestamp":"2024-08-07T05:16:08.279Z"}
+{"level":"info","message":"Server running in development mode on port 5000","timestamp":"2024-08-07T05:16:09.118Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-02.hgasejj.mongodb.net","timestamp":"2024-08-07T05:16:09.269Z"}
+{"level":"info","message":"Server running in development mode on port 5000","timestamp":"2024-08-07T05:25:22.878Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-00.hgasejj.mongodb.net","timestamp":"2024-08-07T05:25:23.075Z"}
+{"level":"info","message":"Server running in development mode on port 5000","timestamp":"2024-08-07T05:25:28.173Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-00.hgasejj.mongodb.net","timestamp":"2024-08-07T05:25:28.447Z"}
+{"level":"info","message":"Server running in development mode on port 5000","timestamp":"2024-08-07T05:25:47.109Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-00.hgasejj.mongodb.net","timestamp":"2024-08-07T05:25:47.326Z"}
+{"level":"info","message":"Server running in development mode on port 5000","timestamp":"2024-08-07T05:25:48.305Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-01.hgasejj.mongodb.net","timestamp":"2024-08-07T05:25:48.433Z"}
+{"level":"info","message":"Server running in development mode on port 5000","timestamp":"2024-08-07T05:25:59.740Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-01.hgasejj.mongodb.net","timestamp":"2024-08-07T05:25:59.912Z"}
+{"level":"info","message":"Server running in development mode on port 5000","timestamp":"2024-08-07T05:27:45.880Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-00.hgasejj.mongodb.net","timestamp":"2024-08-07T05:27:46.111Z"}
+{"level":"info","message":"Server running in development mode on port 5000","timestamp":"2024-08-07T05:27:51.392Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-02.hgasejj.mongodb.net","timestamp":"2024-08-07T05:27:51.525Z"}
+{"level":"info","message":"Server running in development mode on port 5000","timestamp":"2024-08-07T05:27:55.587Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-00.hgasejj.mongodb.net","timestamp":"2024-08-07T05:27:55.733Z"}
+{"level":"info","message":"Server running in development mode on port 5000","timestamp":"2024-08-07T05:29:01.047Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-00.hgasejj.mongodb.net","timestamp":"2024-08-07T05:29:01.283Z"}
+{"level":"info","message":"Server running in development mode on port 5000","timestamp":"2024-08-07T05:29:07.283Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-00.hgasejj.mongodb.net","timestamp":"2024-08-07T05:29:07.430Z"}
+{"level":"info","message":"Server running in development mode on port 5000","timestamp":"2024-08-07T05:32:25.223Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-00.hgasejj.mongodb.net","timestamp":"2024-08-07T05:32:25.491Z"}
+{"level":"info","message":"Server running in development mode on port 5000","timestamp":"2024-08-07T05:33:37.362Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-00.hgasejj.mongodb.net","timestamp":"2024-08-07T05:33:37.582Z"}
+{"level":"info","message":"Server running in development mode on port 5000","timestamp":"2024-08-07T05:33:49.373Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-02.hgasejj.mongodb.net","timestamp":"2024-08-07T05:33:49.504Z"}
+{"level":"info","message":"Server running in development mode on port 5000","timestamp":"2024-08-07T05:33:56.833Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-01.hgasejj.mongodb.net","timestamp":"2024-08-07T05:33:56.973Z"}
+{"level":"info","message":"Server running in development mode on port 5000","timestamp":"2024-08-07T05:34:08.102Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-01.hgasejj.mongodb.net","timestamp":"2024-08-07T05:34:08.303Z"}
+{"level":"info","message":"Server running in development mode on port 5000","timestamp":"2024-08-07T05:34:09.245Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-01.hgasejj.mongodb.net","timestamp":"2024-08-07T05:34:09.406Z"}
+{"level":"info","message":"Server running in development mode on port 5000","timestamp":"2024-08-07T05:34:19.815Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-01.hgasejj.mongodb.net","timestamp":"2024-08-07T05:34:19.957Z"}
+{"level":"info","message":"Server running in development mode on port 5000","timestamp":"2024-08-07T05:35:33.483Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-00.hgasejj.mongodb.net","timestamp":"2024-08-07T05:35:33.731Z"}
+{"level":"info","message":"Server running in development mode on port 5000","timestamp":"2024-08-07T05:41:56.574Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-00.hgasejj.mongodb.net","timestamp":"2024-08-07T05:41:56.772Z"}
+{"level":"info","message":"Server running in development mode on port 5000","timestamp":"2024-08-07T05:53:28.909Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-00.hgasejj.mongodb.net","timestamp":"2024-08-07T05:53:29.159Z"}
+{"level":"info","message":"Server running in development mode on port 5000","timestamp":"2024-08-07T05:53:31.047Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-02.hgasejj.mongodb.net","timestamp":"2024-08-07T05:53:31.198Z"}
+{"level":"info","message":"Server running in development mode on port 5000","timestamp":"2024-08-07T05:53:44.467Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-01.hgasejj.mongodb.net","timestamp":"2024-08-07T05:53:44.624Z"}
+{"level":"info","message":"Server running in development mode on port 5000","timestamp":"2024-08-07T05:54:14.605Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-01.hgasejj.mongodb.net","timestamp":"2024-08-07T05:54:14.793Z"}
+{"level":"info","message":"Server running in development mode on port 5000","timestamp":"2024-08-07T05:54:19.808Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-01.hgasejj.mongodb.net","timestamp":"2024-08-07T05:54:19.956Z"}
+{"level":"info","message":"Server running in development mode on port 5000","timestamp":"2024-08-07T05:54:21.511Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-01.hgasejj.mongodb.net","timestamp":"2024-08-07T05:54:21.641Z"}
+{"level":"info","message":"Server running in development mode on port 5000","timestamp":"2024-08-07T05:54:28.209Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-00.hgasejj.mongodb.net","timestamp":"2024-08-07T05:54:28.359Z"}
+{"level":"info","message":"::1 - - [07/Aug/2024:06:14:46 +0000] \"GET / HTTP/1.1\" 200 23 \"https://github.com/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36\"","timestamp":"2024-08-07T06:14:46.615Z"}
+{"level":"info","message":"::1 - - [07/Aug/2024:06:15:19 +0000] \"GET / HTTP/1.1\" 200 23 \"https://github.com/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36\"","timestamp":"2024-08-07T06:15:19.743Z"}
+{"level":"info","message":"::1 - - [07/Aug/2024:06:35:02 +0000] \"GET / HTTP/1.1\" 200 23 \"https://github.com/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36\"","timestamp":"2024-08-07T06:35:02.891Z"}
+{"level":"info","message":"Server running in development mode on port 5000","timestamp":"2024-08-07T06:36:05.329Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-00.hgasejj.mongodb.net","timestamp":"2024-08-07T06:36:05.615Z"}
+{"level":"info","message":"Server running in development mode on port 5000","timestamp":"2024-08-07T06:36:08.093Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-00.hgasejj.mongodb.net","timestamp":"2024-08-07T06:36:08.351Z"}
+{"level":"info","message":"Server running in development mode on port 5000","timestamp":"2024-08-07T06:36:58.329Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-02.hgasejj.mongodb.net","timestamp":"2024-08-07T06:36:58.502Z"}
+{"level":"info","message":"Server running in development mode on port 5000","timestamp":"2024-08-07T06:37:01.260Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-00.hgasejj.mongodb.net","timestamp":"2024-08-07T06:37:01.454Z"}
+{"level":"info","message":"Server running in development mode on port 5000","timestamp":"2024-08-07T06:37:02.479Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-01.hgasejj.mongodb.net","timestamp":"2024-08-07T06:37:02.695Z"}
+{"level":"info","message":"Server running in development mode on port 5000","timestamp":"2024-08-07T06:38:00.282Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-00.hgasejj.mongodb.net","timestamp":"2024-08-07T06:38:00.499Z"}
+{"level":"info","message":"Server running in development mode on port 5000","timestamp":"2024-08-07T06:42:05.247Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-00.hgasejj.mongodb.net","timestamp":"2024-08-07T06:42:05.463Z"}
+{"level":"info","message":"Server running in development mode on port 5000","timestamp":"2024-08-07T06:42:09.757Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-01.hgasejj.mongodb.net","timestamp":"2024-08-07T06:42:09.944Z"}
+{"level":"info","message":"Server running in development mode on port 5000","timestamp":"2024-08-07T06:42:41.611Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-01.hgasejj.mongodb.net","timestamp":"2024-08-07T06:42:41.809Z"}
+{"level":"info","message":"Server running in development mode on port 5000","timestamp":"2024-08-07T06:42:44.299Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-02.hgasejj.mongodb.net","timestamp":"2024-08-07T06:42:44.456Z"}
+{"level":"info","message":"Server running in development mode on port 5000","timestamp":"2024-08-07T06:43:37.554Z"}
+{"level":"info","message":"Server running in development mode on port 5000","timestamp":"2024-08-07T06:44:46.661Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-01.hgasejj.mongodb.net","timestamp":"2024-08-07T06:44:46.864Z"}
+{"level":"info","message":"Server running in development mode on port 5000","timestamp":"2024-08-07T06:46:43.797Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-00.hgasejj.mongodb.net","timestamp":"2024-08-07T06:46:44.030Z"}
+{"level":"info","message":"Server running in development mode on port 5000","timestamp":"2024-08-07T06:48:51.882Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-00.hgasejj.mongodb.net","timestamp":"2024-08-07T06:48:52.162Z"}
+{"level":"info","message":"Server running in development mode on port 5000","timestamp":"2024-08-07T06:48:56.229Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-02.hgasejj.mongodb.net","timestamp":"2024-08-07T06:48:56.385Z"}
+{"level":"info","message":"Server running in development mode on port 5000","timestamp":"2024-08-07T06:50:07.602Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-00.hgasejj.mongodb.net","timestamp":"2024-08-07T06:50:07.850Z"}
+{"level":"info","message":"Server running in development mode on port 5000","timestamp":"2024-08-07T06:50:14.355Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-00.hgasejj.mongodb.net","timestamp":"2024-08-07T06:50:14.499Z"}
+{"level":"info","message":"Server running in development mode on port 5000","timestamp":"2024-08-07T06:50:30.109Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-00.hgasejj.mongodb.net","timestamp":"2024-08-07T06:50:30.287Z"}
+{"level":"info","message":"Server running in development mode on port 5000","timestamp":"2024-08-07T06:50:33.059Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-01.hgasejj.mongodb.net","timestamp":"2024-08-07T06:50:33.341Z"}
+{"level":"info","message":"Server running in development mode on port 5000","timestamp":"2024-08-07T06:50:35.087Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-00.hgasejj.mongodb.net","timestamp":"2024-08-07T06:50:35.348Z"}
+{"level":"info","message":"Server running in development mode on port 5000","timestamp":"2024-08-07T06:50:41.111Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-02.hgasejj.mongodb.net","timestamp":"2024-08-07T06:50:41.360Z"}
+{"level":"info","message":"Server running in development mode on port 5000","timestamp":"2024-08-07T06:50:42.407Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-02.hgasejj.mongodb.net","timestamp":"2024-08-07T06:50:42.610Z"}
+{"level":"info","message":"Server running in development mode on port 5000","timestamp":"2024-08-07T06:50:43.840Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-01.hgasejj.mongodb.net","timestamp":"2024-08-07T06:50:44.057Z"}
+{"level":"info","message":"Server running in development mode on port 5000","timestamp":"2024-08-07T06:50:46.075Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-01.hgasejj.mongodb.net","timestamp":"2024-08-07T06:50:46.277Z"}
+{"level":"info","message":"Server running in development mode on port 5000","timestamp":"2024-08-07T06:50:49.418Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-02.hgasejj.mongodb.net","timestamp":"2024-08-07T06:50:49.574Z"}
+{"level":"info","message":"::1 - - [07/Aug/2024:06:57:43 +0000] \"GET / HTTP/1.1\" 200 23 \"https://github.com/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36\"","timestamp":"2024-08-07T06:57:43.550Z"}
+{"level":"info","message":"Server running in development mode on port 5000","timestamp":"2024-08-07T07:14:30.496Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-00.hgasejj.mongodb.net","timestamp":"2024-08-07T07:14:30.786Z"}
+{"level":"info","message":"Server running in development mode on port 5000","timestamp":"2024-08-07T07:14:41.020Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-01.hgasejj.mongodb.net","timestamp":"2024-08-07T07:14:41.229Z"}
+{"level":"info","message":"Server running in development mode on port 5000","timestamp":"2024-08-07T07:15:03.763Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-01.hgasejj.mongodb.net","timestamp":"2024-08-07T07:15:03.914Z"}
+{"level":"info","message":"Server running in development mode on port 3000","timestamp":"2024-08-07T07:15:30.808Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-00.hgasejj.mongodb.net","timestamp":"2024-08-07T07:15:31.978Z"}
+{"level":"info","message":"Server running in development mode on port 3000","timestamp":"2024-08-07T07:16:15.940Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-02.hgasejj.mongodb.net","timestamp":"2024-08-07T07:16:16.075Z"}
