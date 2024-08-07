@@ -1,24 +1,44 @@
 import express from 'express';
 import logger from './config/loggingConfig.js';
+import connectDB from './config/dbConfig.js';
+import corsMiddleware from './middlewares/corsMiddleware.js';
+import requestLoggerMiddleware from './middlewares/requestLogger.js';
+import config from './config/serverConfig.js';
+import rateLimiter from './middlewares/rateLimiter.js';
+import errorHandler from './middlewares/errorHandler.js';
+import advancedUserRoutes from './routes/advancedUserRoutes.js';
+import otpRoutes from './routes/otpRoutes.js'
 
 const app = express();
-const PORT = process.env.PORT || 3000;
 
-// Middleware for logging requests
-app.use((req, res, next) => {
-  logger.info(`Incoming request: ${req.method} ${req.url}`);
-  next();
-});
+
+connectDB();
+
+// Use rate limiter middleware
+app.use(rateLimiter);
+
+// Use CORS middleware
+app.use(corsMiddleware);
+
+// Use request logger middleware
+app.use(requestLoggerMiddleware);
+
+app.use('/api/advanced-users', advancedUserRoutes);
+
+// Use OTP routes
+app.use('/api/homeowners', otpRoutes);
+
 
 // Example route
 app.get('/', (req, res) => {
-  logger.debug('Debugging the root route');
-  logger.info('Serving the root route');
-  res.send('Hello World!');
+  res.json({"status":"running..."})
 });
 
-app.listen(PORT, () => {
-  logger.info(`Server is running on port ${PORT}`);
-});
+// Use error handler middleware (after all routes and other middleware)
+app.use(errorHandler);
+
+const PORT = config.port;
+
+app.listen(PORT, () => logger.info(`Server running in ${config.nodeEnv} mode on port ${PORT}`));
 
 export default app;
