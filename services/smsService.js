@@ -1,4 +1,5 @@
 import { Vonage } from '@vonage/server-sdk';
+import logger from '../config/loggingConfig.js';
 
 const vonage = new Vonage({
   apiKey: process.env.VONAGE_API_KEY,
@@ -7,11 +8,16 @@ const vonage = new Vonage({
 
 export const sendSms = (to, message) => {
   return new Promise((resolve, reject) => {
-    vonage.messages.sendSms(process.env.VONAGE_PHONE_NUMBER, to, message, (err, responseData) => {
+    vonage.sms.send({ to, from: process.env.VONAGE_PHONE_NUMBER, text: message }, (err, responseData) => {
       if (err) {
+        logger.error(err);
         reject(err);
       } else {
-        resolve(responseData);
+        if (responseData.messages[0].status === "0") {
+          resolve(responseData);
+        } else {
+          reject(new Error(responseData.messages[0]['error-text']));
+        }
       }
     });
   });

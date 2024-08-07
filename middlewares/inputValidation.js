@@ -44,3 +44,42 @@ export const validateCreateAdvancedUser = [
     next();
   },
 ];
+
+export const validateOtpHomeowner = [
+
+  body('phoneNumber')
+    .isString()
+    .notEmpty()
+    .withMessage('Phone number is required')
+    .isMobilePhone()
+    .withMessage('Invalid phone number format'),
+  
+  // Middleware to handle validation results
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    next();
+  },
+];
+
+
+// Validation rules for Homeowner
+export const validateCreateHomeowner = [
+  body('phoneNumber')
+    .isString()
+    .notEmpty()
+    .withMessage('Phone number is required')
+    .isMobilePhone()
+    .withMessage('Invalid phone number format'),
+  
+  // Middleware to handle validation results
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    next();
+  },
+];
