@@ -173,3 +173,120 @@
 {"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-00.hgasejj.mongodb.net","timestamp":"2024-08-07T07:15:31.978Z"}
 {"level":"info","message":"Server running in development mode on port 3000","timestamp":"2024-08-07T07:16:15.940Z"}
 {"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-02.hgasejj.mongodb.net","timestamp":"2024-08-07T07:16:16.075Z"}
+{"level":"info","message":"Server running in development mode on port 3000","timestamp":"2024-08-07T07:56:11.497Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-00.hgasejj.mongodb.net","timestamp":"2024-08-07T07:56:11.724Z"}
+{"level":"info","message":"::1 - - [07/Aug/2024:07:56:27 +0000] \"GET / HTTP/1.1\" 200 23 \"https://shiny-tribble-x5wwpr5xgjwr3vgw5.github.dev/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36\"","timestamp":"2024-08-07T07:56:27.854Z"}
+{"level":"info","message":"::1 - - [07/Aug/2024:07:56:29 +0000] \"GET /favicon.ico HTTP/1.1\" 404 150 \"https://shiny-tribble-x5wwpr5xgjwr3vgw5-3000.app.github.dev/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36\"","timestamp":"2024-08-07T07:56:29.276Z"}
+{"level":"info","message":"Server running in development mode on port 3000","timestamp":"2024-08-07T07:58:17.024Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-00.hgasejj.mongodb.net","timestamp":"2024-08-07T07:58:17.238Z"}
+{"level":"info","message":"::1 - - [07/Aug/2024:07:58:22 +0000] \"GET / HTTP/1.1\" 304 - \"https://shiny-tribble-x5wwpr5xgjwr3vgw5.github.dev/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36\"","timestamp":"2024-08-07T07:58:22.168Z"}
+{"level":"info","message":"::1 - - [07/Aug/2024:08:00:01 +0000] \"GET / HTTP/1.1\" 200 23 \"https://shiny-tribble-x5wwpr5xgjwr3vgw5.github.dev/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36\"","timestamp":"2024-08-07T08:00:01.535Z"}
+{"level":"info","message":"::1 - - [07/Aug/2024:08:00:05 +0000] \"GET / HTTP/1.1\" 200 23 \"-\" \"PostmanRuntime/7.40.0\"","timestamp":"2024-08-07T08:00:05.617Z"}
+{"level":"info","message":"::1 - - [07/Aug/2024:08:00:11 +0000] \"GET / HTTP/1.1\" 200 23 \"-\" \"PostmanRuntime/7.40.0\"","timestamp":"2024-08-07T08:00:11.059Z"}
+{"level":"info","message":"::1 - - [07/Aug/2024:08:01:26 +0000] \"GET / HTTP/1.1\" 200 23 \"-\" \"PostmanRuntime/7.40.0\"","timestamp":"2024-08-07T08:01:26.031Z"}
+{"level":"info","message":"Server running in development mode on port 3000","timestamp":"2024-08-07T08:06:49.831Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-00.hgasejj.mongodb.net","timestamp":"2024-08-07T08:06:50.097Z"}
+{"level":"info","message":"Server running in development mode on port 3000","timestamp":"2024-08-07T08:06:55.612Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-00.hgasejj.mongodb.net","timestamp":"2024-08-07T08:06:55.787Z"}
+{"level":"info","message":"Server running in development mode on port 3000","timestamp":"2024-08-07T08:06:58.922Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-02.hgasejj.mongodb.net","timestamp":"2024-08-07T08:06:59.065Z"}
+{"level":"info","message":"Server running in development mode on port 3000","timestamp":"2024-08-07T08:07:00.736Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-02.hgasejj.mongodb.net","timestamp":"2024-08-07T08:07:00.881Z"}
+{"level":"info","message":"Server running in development mode on port 3000","timestamp":"2024-08-07T08:07:04.399Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-02.hgasejj.mongodb.net","timestamp":"2024-08-07T08:07:04.557Z"}
+{"level":"info","message":"Server running in development mode on port 3000","timestamp":"2024-08-07T08:09:12.149Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-00.hgasejj.mongodb.net","timestamp":"2024-08-07T08:09:12.401Z"}
+{"level":"info","message":"Server running in development mode on port 3000","timestamp":"2024-08-07T08:09:35.532Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-02.hgasejj.mongodb.net","timestamp":"2024-08-07T08:09:35.693Z"}
+{"level":"info","message":"::1 - - [07/Aug/2024:08:11:25 +0000] \"GET / HTTP/1.1\" 200 23 \"https://shiny-tribble-x5wwpr5xgjwr3vgw5.github.dev/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36\"","timestamp":"2024-08-07T08:11:25.797Z"}
+{"level":"info","message":"Server running in development mode on port 3000","timestamp":"2024-08-07T08:11:40.495Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-00.hgasejj.mongodb.net","timestamp":"2024-08-07T08:11:40.810Z"}
+{"level":"info","message":"::1 - - [07/Aug/2024:08:13:35 +0000] \"GET / HTTP/1.1\" 200 23 \"-\" \"PostmanRuntime/7.40.0\"","timestamp":"2024-08-07T08:13:35.231Z"}
+{"level":"info","message":"::1 - - [07/Aug/2024:08:14:04 +0000] \"GET /api/homeowners HTTP/1.1\" 404 153 \"-\" \"PostmanRuntime/7.40.0\"","timestamp":"2024-08-07T08:14:04.190Z"}
+{"level":"info","message":"::1 - - [07/Aug/2024:08:14:09 +0000] \"POST /api/homeowners HTTP/1.1\" 404 154 \"-\" \"PostmanRuntime/7.40.0\"","timestamp":"2024-08-07T08:14:09.400Z"}
+{"level":"info","message":"Server running in development mode on port 3000","timestamp":"2024-08-07T08:16:23.837Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-00.hgasejj.mongodb.net","timestamp":"2024-08-07T08:16:24.134Z"}
+{"level":"info","message":"Server running in development mode on port 3000","timestamp":"2024-08-07T08:17:31.293Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-00.hgasejj.mongodb.net","timestamp":"2024-08-07T08:17:31.493Z"}
+{"level":"info","message":"Server running in development mode on port 3000","timestamp":"2024-08-07T08:17:56.978Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-00.hgasejj.mongodb.net","timestamp":"2024-08-07T08:17:57.148Z"}
+{"level":"info","message":"::1 - - [07/Aug/2024:08:22:15 +0000] \"GET / HTTP/1.1\" 200 23 \"https://shiny-tribble-x5wwpr5xgjwr3vgw5.github.dev/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36\"","timestamp":"2024-08-07T08:22:15.818Z"}
+{"level":"info","message":"::1 - - [07/Aug/2024:08:22:21 +0000] \"GET /favicon.ico HTTP/1.1\" 404 150 \"https://shiny-tribble-x5wwpr5xgjwr3vgw5-3000.app.github.dev/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36\"","timestamp":"2024-08-07T08:22:21.815Z"}
+{"level":"info","message":"::1 - - [07/Aug/2024:08:24:39 +0000] \"GET / HTTP/1.1\" 200 23 \"-\" \"PostmanRuntime/7.40.0\"","timestamp":"2024-08-07T08:24:39.291Z"}
+{"level":"info","message":"::1 - - [07/Aug/2024:08:25:50 +0000] \"GET / HTTP/1.1\" 200 23 \"-\" \"PostmanRuntime/7.40.0\"","timestamp":"2024-08-07T08:25:50.326Z"}
+{"level":"info","message":"::1 - - [07/Aug/2024:08:26:19 +0000] \"GET / HTTP/1.1\" 200 23 \"-\" \"PostmanRuntime/7.40.0\"","timestamp":"2024-08-07T08:26:19.954Z"}
+{"level":"info","message":"::1 - - [07/Aug/2024:08:27:51 +0000] \"POST /api/homeowners/request-otp HTTP/1.1\" 400 271 \"-\" \"PostmanRuntime/7.40.0\"","timestamp":"2024-08-07T08:27:51.842Z"}
+{"level":"info","message":"::1 - - [07/Aug/2024:08:28:33 +0000] \"POST /api/homeowners/request-otp HTTP/1.1\" 400 271 \"-\" \"PostmanRuntime/7.40.0\"","timestamp":"2024-08-07T08:28:33.314Z"}
+{"level":"info","message":"::1 - - [07/Aug/2024:08:28:52 +0000] \"POST /api/homeowners/request-otp HTTP/1.1\" 400 271 \"-\" \"PostmanRuntime/7.40.0\"","timestamp":"2024-08-07T08:28:52.465Z"}
+{"level":"info","message":"::1 - - [07/Aug/2024:08:29:39 +0000] \"POST /api/homeowners/request-otp HTTP/1.1\" 400 271 \"-\" \"PostmanRuntime/7.40.0\"","timestamp":"2024-08-07T08:29:39.594Z"}
+{"level":"info","message":"Server running in development mode on port 3000","timestamp":"2024-08-07T08:31:01.221Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-00.hgasejj.mongodb.net","timestamp":"2024-08-07T08:31:01.431Z"}
+{"level":"info","message":"Server running in development mode on port 3000","timestamp":"2024-08-07T08:31:21.600Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-02.hgasejj.mongodb.net","timestamp":"2024-08-07T08:31:21.751Z"}
+{"level":"info","message":"::1 - - [07/Aug/2024:08:31:25 +0000] \"POST /api/homeowners/request-otp HTTP/1.1\" 400 111 \"-\" \"PostmanRuntime/7.40.0\"","timestamp":"2024-08-07T08:31:25.960Z"}
+{"level":"info","message":"::1 - - [07/Aug/2024:08:31:43 +0000] \"POST /api/homeowners/request-otp HTTP/1.1\" 500 42 \"-\" \"PostmanRuntime/7.40.0\"","timestamp":"2024-08-07T08:31:43.223Z"}
+{"level":"info","message":"::1 - - [07/Aug/2024:08:32:01 +0000] \"POST /api/homeowners/request-otp HTTP/1.1\" 200 30 \"-\" \"PostmanRuntime/7.40.0\"","timestamp":"2024-08-07T08:32:01.526Z"}
+{"level":"info","message":"::1 - - [07/Aug/2024:08:32:08 +0000] \"POST /api/homeowners/request-otp HTTP/1.1\" 200 30 \"-\" \"PostmanRuntime/7.40.0\"","timestamp":"2024-08-07T08:32:08.743Z"}
+{"level":"info","message":"Server running in development mode on port 3000","timestamp":"2024-08-07T08:32:55.844Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-00.hgasejj.mongodb.net","timestamp":"2024-08-07T08:32:56.100Z"}
+{"level":"info","message":"Server running in development mode on port 3000","timestamp":"2024-08-07T08:34:26.014Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-00.hgasejj.mongodb.net","timestamp":"2024-08-07T08:34:26.252Z"}
+{"level":"info","message":"Server running in development mode on port 3000","timestamp":"2024-08-07T08:34:38.376Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-01.hgasejj.mongodb.net","timestamp":"2024-08-07T08:34:38.786Z"}
+{"level":"info","message":"Server running in development mode on port 3000","timestamp":"2024-08-07T08:35:04.419Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-02.hgasejj.mongodb.net","timestamp":"2024-08-07T08:35:04.666Z"}
+{"level":"info","message":"Server running in development mode on port 3000","timestamp":"2024-08-07T08:35:10.170Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-02.hgasejj.mongodb.net","timestamp":"2024-08-07T08:35:10.359Z"}
+{"level":"info","message":"::1 - - [07/Aug/2024:08:35:12 +0000] \"POST /api/homeowners/request-otp HTTP/1.1\" 200 30 \"-\" \"PostmanRuntime/7.40.0\"","timestamp":"2024-08-07T08:35:12.946Z"}
+{"level":"info","message":"::1 - - [07/Aug/2024:08:35:24 +0000] \"POST /api/homeowners/verify-otp HTTP/1.1\" 400 331 \"-\" \"PostmanRuntime/7.40.0\"","timestamp":"2024-08-07T08:35:24.235Z"}
+{"level":"info","message":"Server running in development mode on port 3000","timestamp":"2024-08-07T08:36:12.703Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-00.hgasejj.mongodb.net","timestamp":"2024-08-07T08:36:12.935Z"}
+{"level":"info","message":"::1 - - [07/Aug/2024:08:36:19 +0000] \"POST /api/homeowners/verify-otp HTTP/1.1\" 400 36 \"-\" \"PostmanRuntime/7.40.0\"","timestamp":"2024-08-07T08:36:19.156Z"}
+{"level":"info","message":"::1 - - [07/Aug/2024:08:36:36 +0000] \"POST /api/homeowners/verify-otp HTTP/1.1\" 400 36 \"-\" \"PostmanRuntime/7.40.0\"","timestamp":"2024-08-07T08:36:36.130Z"}
+{"level":"info","message":"::1 - - [07/Aug/2024:08:36:57 +0000] \"POST /api/homeowners/verify-otp HTTP/1.1\" 400 72 \"-\" \"PostmanRuntime/7.40.0\"","timestamp":"2024-08-07T08:36:57.690Z"}
+{"level":"info","message":"::1 - - [07/Aug/2024:08:37:06 +0000] \"POST /api/homeowners/verify-otp HTTP/1.1\" 400 36 \"-\" \"PostmanRuntime/7.40.0\"","timestamp":"2024-08-07T08:37:06.895Z"}
+{"level":"info","message":"::1 - - [07/Aug/2024:08:37:13 +0000] \"POST /api/homeowners/verify-otp HTTP/1.1\" 400 36 \"-\" \"PostmanRuntime/7.40.0\"","timestamp":"2024-08-07T08:37:13.850Z"}
+{"level":"info","message":"::1 - - [07/Aug/2024:08:37:36 +0000] \"POST /api/homeowners/request-otp HTTP/1.1\" 500 42 \"-\" \"PostmanRuntime/7.40.0\"","timestamp":"2024-08-07T08:37:36.791Z"}
+{"level":"info","message":"Server running in development mode on port 3000","timestamp":"2024-08-07T08:38:40.501Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-00.hgasejj.mongodb.net","timestamp":"2024-08-07T08:38:40.757Z"}
+{"level":"info","message":"Server running in development mode on port 3000","timestamp":"2024-08-07T08:38:43.405Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-02.hgasejj.mongodb.net","timestamp":"2024-08-07T08:38:43.556Z"}
+{"level":"info","message":"Server running in development mode on port 3000","timestamp":"2024-08-07T08:38:45.847Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-02.hgasejj.mongodb.net","timestamp":"2024-08-07T08:38:46.019Z"}
+{"level":"info","message":"Server running in development mode on port 3000","timestamp":"2024-08-07T08:38:48.867Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-02.hgasejj.mongodb.net","timestamp":"2024-08-07T08:38:49.068Z"}
+{"level":"info","message":"Server running in development mode on port 3000","timestamp":"2024-08-07T08:38:50.254Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-01.hgasejj.mongodb.net","timestamp":"2024-08-07T08:38:50.444Z"}
+{"level":"info","message":"Server running in development mode on port 3000","timestamp":"2024-08-07T08:38:53.827Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-00.hgasejj.mongodb.net","timestamp":"2024-08-07T08:38:53.988Z"}
+{"level":"info","message":"Server running in development mode on port 3000","timestamp":"2024-08-07T08:39:11.198Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-02.hgasejj.mongodb.net","timestamp":"2024-08-07T08:39:11.344Z"}
+{"level":"info","message":"::1 - - [07/Aug/2024:08:39:33 +0000] \"POST /api/homeowners/verify-otp HTTP/1.1\" 400 36 \"-\" \"PostmanRuntime/7.40.0\"","timestamp":"2024-08-07T08:39:33.965Z"}
+{"level":"info","message":"::1 - - [07/Aug/2024:08:39:39 +0000] \"POST /api/homeowners/request-otp HTTP/1.1\" 500 42 \"-\" \"PostmanRuntime/7.40.0\"","timestamp":"2024-08-07T08:39:39.571Z"}
+{"level":"info","message":"::1 - - [07/Aug/2024:08:39:51 +0000] \"POST /api/homeowners/request-otp HTTP/1.1\" 500 42 \"-\" \"PostmanRuntime/7.40.0\"","timestamp":"2024-08-07T08:39:51.745Z"}
+{"level":"info","message":"::1 - - [07/Aug/2024:08:39:53 +0000] \"POST /api/homeowners/request-otp HTTP/1.1\" 500 42 \"-\" \"PostmanRuntime/7.40.0\"","timestamp":"2024-08-07T08:39:53.508Z"}
+{"level":"info","message":"::1 - - [07/Aug/2024:08:40:34 +0000] \"POST /api/homeowners/request-otp HTTP/1.1\" 500 42 \"-\" \"PostmanRuntime/7.40.0\"","timestamp":"2024-08-07T08:40:34.295Z"}
+{"level":"info","message":"Server running in development mode on port 3000","timestamp":"2024-08-07T08:42:01.971Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-00.hgasejj.mongodb.net","timestamp":"2024-08-07T08:42:02.254Z"}
+{"level":"info","message":"Server running in development mode on port 3000","timestamp":"2024-08-07T08:42:10.079Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-02.hgasejj.mongodb.net","timestamp":"2024-08-07T08:42:10.242Z"}
+{"level":"info","message":"Server running in development mode on port 3000","timestamp":"2024-08-07T08:42:14.744Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-00.hgasejj.mongodb.net","timestamp":"2024-08-07T08:42:15.132Z"}
+{"level":"info","message":"Server running in development mode on port 3000","timestamp":"2024-08-07T08:42:16.828Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-00.hgasejj.mongodb.net","timestamp":"2024-08-07T08:42:17.055Z"}
+{"level":"info","message":"Server running in development mode on port 3000","timestamp":"2024-08-07T08:42:22.682Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-00.hgasejj.mongodb.net","timestamp":"2024-08-07T08:42:22.869Z"}
+{"level":"info","message":"Server running in development mode on port 3000","timestamp":"2024-08-07T08:42:25.835Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-00.hgasejj.mongodb.net","timestamp":"2024-08-07T08:42:26.074Z"}
+{"level":"info","message":"Server running in development mode on port 3000","timestamp":"2024-08-07T08:42:28.680Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-00.hgasejj.mongodb.net","timestamp":"2024-08-07T08:42:28.903Z"}
+{"level":"info","message":"Server running in development mode on port 3000","timestamp":"2024-08-07T08:42:30.301Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-01.hgasejj.mongodb.net","timestamp":"2024-08-07T08:42:30.574Z"}
+{"level":"error","message":"vonage.messages.sendSms is not a function","stack":"TypeError: vonage.messages.sendSms is not a function\n    at file:///workspaces/lampros_backend/services/smsService.js:10:21\n    at new Promise (<anonymous>)\n    at sendSms (file:///workspaces/lampros_backend/services/smsService.js:9:10)\n    at requestOtp (file:///workspaces/lampros_backend/controllers/otpController.js:23:11)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)","timestamp":"2024-08-07T08:42:34.290Z"}
+{"level":"info","message":"::1 - - [07/Aug/2024:08:42:34 +0000] \"POST /api/homeowners/request-otp HTTP/1.1\" 500 96 \"-\" \"PostmanRuntime/7.40.0\"","timestamp":"2024-08-07T08:42:34.296Z"}
+{"level":"info","message":"Server running in development mode on port 3000","timestamp":"2024-08-07T08:44:27.390Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-00.hgasejj.mongodb.net","timestamp":"2024-08-07T08:44:27.758Z"}
+{"level":"info","message":"Server running in development mode on port 3000","timestamp":"2024-08-07T08:44:47.083Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-00.hgasejj.mongodb.net","timestamp":"2024-08-07T08:44:47.229Z"}
+{"level":"info","message":"Server running in development mode on port 3000","timestamp":"2024-08-07T08:45:24.033Z"}
+{"level":"info","message":"MongoDB Connected: ac-kqp0rtz-shard-00-00.hgasejj.mongodb.net","timestamp":"2024-08-07T08:45:24.197Z"}

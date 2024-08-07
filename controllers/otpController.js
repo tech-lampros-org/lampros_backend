@@ -1,6 +1,8 @@
 import Otp from '../models/otpModel.js';
 import Homeowner from '../models/homeownerModel.js';
 import { sendSms } from '../services/smsService.js';
+import { generateToken } from '../config/jwtConfig.js'; 
+import logger from '../config/loggingConfig.js';
 
 // Step 1: Request OTP
 export const requestOtp = async (req, res) => {
@@ -21,6 +23,7 @@ export const requestOtp = async (req, res) => {
     await sendSms(phoneNumber, `Your OTP code is ${otpRecord.otp}`);
     res.status(200).json({ message: 'OTP sent successfully' });
   } catch (error) {
+    logger.error(error)
     res.status(500).json({ message: 'Error sending OTP', error });
   }
 };
@@ -47,13 +50,11 @@ export const verifyOtp = async (req, res) => {
     }
     homeowner = new Homeowner({ phoneNumber, name: `${firstName} ${lastName}` });
     await homeowner.save();
-    res.status(201).json({ message: 'Registration successful', homeowner });
+    const token = generateToken(homeowner.customId); // Generate token with customId
+    res.status(201).json({ message: 'Registration successful', homeowner, token });
   } else {
-    // Optionally update the homeowner's name if it was provided
-    if (firstName || lastName) {
-      homeowner.name = `${firstName || ''} ${lastName || ''}`;
-      await homeowner.save();
-    }
-    res.status(200).json({ message: 'Login successful', homeowner });
+   
+    const token = generateToken(homeowner.customId); // Generate token with customId
+    res.status(200).json({ message: 'Login successful', homeowner, token });
   }
 };

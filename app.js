@@ -16,6 +16,9 @@ connectDB();
 
 // Use rate limiter middleware
 app.use(rateLimiter);
+// Body parser middleware
+app.use(express.json()); // Parse JSON bodies
+app.use(express.urlencoded({ extended: true }));
 
 // Use CORS middleware
 app.use(corsMiddleware);
