@@ -2,7 +2,7 @@ import Otp from '../models/otpModel.js';
 import Homeowner from '../models/homeownerModel.js';
 import { sendSms } from '../services/smsService.js';
 import { generateToken } from '../config/jwtConfig.js'; 
-import logger from '../config/loggingConfig.js';
+import {logger} from '../config/loggingConfig.js';
 
 // Step 1: Request OTP
 export const requestOtp = async (req, res) => {

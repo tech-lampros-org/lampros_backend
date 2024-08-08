@@ -1,5 +1,5 @@
 import express from 'express';
-import logger from './config/loggingConfig.js';
+import {logger} from './config/loggingConfig.js';
 import connectDB from './config/dbConfig.js';
 import corsMiddleware from './middlewares/corsMiddleware.js';
 import requestLoggerMiddleware from './middlewares/requestLogger.js';
