@@ -1,6 +1,4 @@
 import winston from 'winston';
-import path from 'path';
-import DailyRotateFile from 'winston-daily-rotate-file';
 
 const logger = winston.createLogger({
   level: 'debug',
@@ -19,15 +17,7 @@ const logger = winston.createLogger({
         winston.format.simple()
       ),
     }),
-    new DailyRotateFile({
-      filename: path.join(path.resolve(), 'logs', 'logs-%DATE%.log'),
-      datePattern: 'YYYY-MM-DD',
-      zippedArchive: true,
-      maxSize: '20m',
-      maxFiles: '100',
-      format: winston.format.json(),
-    }),
   ],
 });
 
-export default logger;
+export {logger};

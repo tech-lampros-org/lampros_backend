@@ -1,5 +1,5 @@
 import { Vonage } from '@vonage/server-sdk';
-import logger from '../config/loggingConfig.js';
+import {logger} from '../config/loggingConfig.js';
 
 const vonage = new Vonage({
   apiKey: process.env.VONAGE_API_KEY,

@@ -1,5 +1,5 @@
 import morgan from 'morgan';
-import logger from '../config/loggingConfig.js'; // Adjusted import path for logger
+import {logger} from '../config/loggingConfig.js'; // Adjusted import path for logger
 
 // Create a stream object with a 'write' function that will be used by morgan
 const stream = {
