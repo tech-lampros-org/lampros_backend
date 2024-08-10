@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import { nanoid } from 'nanoid'; // For generating unique IDs
 
 const advancedUserSchema = new mongoose.Schema({
-  customId: { type: String, required: true, unique: true }, // Custom unique ID field
+  customId: { type: String }, // Custom unique ID field
   password: { type: String },
   email: { type: String, required: true, unique: true },
   phoneNumber: { type: String, required: true },
