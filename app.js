@@ -42,6 +42,6 @@ app.use(errorHandler);
 
 const PORT = config.port;
 
-app.listen(PORT, () => logger.info(`Server running in ${config.nodeEnv} mode on port ${PORT}`));
+app.listen(PORT, () => logger.info(`Server running in ${config.nodeEnv} mode on https://localhost:${PORT}`));
 
 export default app;

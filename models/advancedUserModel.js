@@ -6,6 +6,9 @@ const advancedUserSchema = new mongoose.Schema({
   password: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   phoneNumber: { type: String, required: true },
+  name: { type: String },
+  age: { type: Number },
+  gender: { type: String, enum: ['male', 'female', 'non-binary', 'other'] },
   address: {
     street: { type: String },
     city: { type: String },
@@ -13,7 +16,7 @@ const advancedUserSchema = new mongoose.Schema({
     country: { type: String },
     pincode: { type: String },
   },
-  businessDetails: {
+  companyDetails: {
     companyName: { type: String },
     companyAddress: {
       street: { type: String },
@@ -22,10 +25,15 @@ const advancedUserSchema = new mongoose.Schema({
       country: { type: String },
       pincode: { type: String },
     },
-    gst: { type: String }, // GST number
+    companyEmail: { type: String },
+    companyPhone: { type: String },
+    companyGstNumber: { type: String },
   },
-  age: { type: Number },
-  gender: { type: String, enum: ['male', 'female', 'non-binary', 'other'] },
+  plan: { type: String },
+  role: { type: String },
+  type: { type: String },
+  duration: { type: String },
+  place: { type: String },
   premium: {
     isPremium: { type: Boolean, default: false },
     category: {
@@ -35,7 +43,6 @@ const advancedUserSchema = new mongoose.Schema({
     },
   },
   extraRoleFields: {
-    // Additional role-specific fields
     professionalSpecificField: { type: String },
     affiliateSpecificField: { type: String },
   }
@@ -50,6 +57,16 @@ advancedUserSchema.pre('save', async function(next) {
     const uniqueId = nanoid(10); // Generates a unique string of length 10
     this.customId = `${prefix}${uniqueId}`;
   }
+  
+  // Determine if the user is premium based on the plan
+  if (this.plan === 'Premium') {
+    this.premium.isPremium = true;
+    this.premium.category = 'premium';
+  } else {
+    this.premium.isPremium = false;
+    this.premium.category = 'basic'; // or any default value
+  }
+  
   next();
 });
 
