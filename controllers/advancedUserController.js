@@ -1,5 +1,5 @@
 import AdvancedUser from '../models/advancedUserModel.js';
-import { updateSheet } from '../services/sheetsService.js';
+// import { updateSheet } from '../services/sheetsService.js';
 
 export const createAdvancedUser = async (req, res) => {
   const {
@@ -65,26 +65,26 @@ export const createAdvancedUser = async (req, res) => {
   };
 
   try {
-    // Update Google Sheets first
-    await updateSheet({
-      age,
-      companyName,
-      company_address,
-      company_city,
-      company_email,
-      company_phone,
-      company_gstNumber,
-      company_pincode,
-      duration,
-      email,
-      gender,
-      name,
-      phoneNumber,
-      place,
-      plan,
-      role,
-      type
-    });
+    // // Update Google Sheets first
+    // await updateSheet({
+    //   age,
+    //   companyName,
+    //   company_address,
+    //   company_city,
+    //   company_email,
+    //   company_phone,
+    //   company_gstNumber,
+    //   company_pincode,
+    //   duration,
+    //   email,
+    //   gender,
+    //   name,
+    //   phoneNumber,
+    //   place,
+    //   plan,
+    //   role,
+    //   type
+    // });
 
     // Update MongoDB
     const advancedUser = new AdvancedUser(userData);
