@@ -3,12 +3,12 @@ import { nanoid } from 'nanoid'; // For generating unique IDs
 
 const advancedUserSchema = new mongoose.Schema({
   customId: { type: String, required: true, unique: true }, // Custom unique ID field
-  password: { type: String, required: true },
+  password: { type: String },
   email: { type: String, required: true, unique: true },
   phoneNumber: { type: String, required: true },
   name: { type: String },
   age: { type: Number },
-  gender: { type: String, enum: ['male', 'female', 'non-binary', 'other'] },
+  gender: { type: String, enum: ['Male', 'Female', 'non-binary', 'Other'] },
   address: {
     street: { type: String },
     city: { type: String },
@@ -50,13 +50,11 @@ const advancedUserSchema = new mongoose.Schema({
 
 // Pre-save hook to generate a unique customId
 advancedUserSchema.pre('save', async function(next) {
-  if (!this.customId) {
     // Prefix for ID
     const prefix = 'ADV-';
     // Generate a unique ID
     const uniqueId = nanoid(10); // Generates a unique string of length 10
     this.customId = `${prefix}${uniqueId}`;
-  }
   
   // Determine if the user is premium based on the plan
   if (this.plan === 'Premium') {

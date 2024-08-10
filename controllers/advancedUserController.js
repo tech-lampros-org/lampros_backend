@@ -5,7 +5,7 @@ export const createAdvancedUser = async (req, res) => {
   const {
     password,
     email,
-    phoneNumber,
+    phone,
     name,
     age,
     gender,
@@ -29,7 +29,7 @@ export const createAdvancedUser = async (req, res) => {
   const userData = {
     password,
     email,
-    phoneNumber,
+    phoneNumber:phone,
     name,
     age,
     gender,
