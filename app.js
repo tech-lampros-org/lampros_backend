@@ -29,7 +29,7 @@ app.use(requestLoggerMiddleware);
 app.use('/api/advanced-users', advancedUserRoutes);
 
 // Use OTP routes
-app.use('/api/homeowners', otpRoutes);
+app.use('/api/users', otpRoutes);
 
 
 // Example route
