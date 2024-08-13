@@ -40,6 +40,7 @@ export const validateOtp = async (phoneNumber, otp) => {
 };
 
 
+
 // Function to update user details after OTP verification
 export const updateUserDetails = async (phoneNumber, name, age, otherDetails) => {
   const otpRecord = await Otp.findOne({ phoneNumber });
