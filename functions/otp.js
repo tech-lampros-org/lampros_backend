@@ -11,7 +11,25 @@ export const createOtpRequest = async (phoneNumber) => {
 
 // Function to validate OTP
 export const validateOtp = async (phoneNumber, otp) => {
+  // Check for existing OTP records for the phone number
+  const existingOtpRecord = await Otp.findOne({ phoneNumber, isVerified: false });
+  
+  if (existingOtpRecord) {
+    // Check if the existing OTP is still valid
+    if (Date.now() <= existingOtpRecord.expiresAt) {
+      throw new Error('An OTP has already been sent to this phone number.');
+    } else {
+      // If the existing OTP has expired, delete it
+      await Otp.deleteMany({
+        phoneNumber,
+        expiresAt: { $lt: Date.now() }
+      });
+    }
+  }
+
+  // Find the OTP record for the phone number and OTP
   const otpRecord = await Otp.findOne({ phoneNumber, otp });
+  
   if (!otpRecord) throw new Error('Invalid OTP.');
   if (Date.now() > otpRecord.expiresAt) throw new Error('OTP has expired.');
 
@@ -20,6 +38,7 @@ export const validateOtp = async (phoneNumber, otp) => {
 
   return { message: 'OTP verified successfully.' };
 };
+
 
 // Function to update user details after OTP verification
 export const updateUserDetails = async (phoneNumber, name, age, otherDetails) => {
