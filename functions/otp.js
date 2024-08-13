@@ -3,17 +3,8 @@ import Otp from '../models/otp.js';
 
 // Function to create an OTP request
 export const createOtpRequest = async (phoneNumber) => {
-  const otp = new Otp({ phoneNumber });
-  otp.generateOtp();
-  await otp.save();
-  return { message: 'OTP sent successfully.' };
-};
-
-// Function to validate OTP
-export const validateOtp = async (phoneNumber, otp) => {
   // Check for existing OTP records for the phone number
   const existingOtpRecord = await Otp.findOne({ phoneNumber, isVerified: false });
-  
   if (existingOtpRecord) {
     // Check if the existing OTP is still valid
     if (Date.now() <= existingOtpRecord.expiresAt) {
@@ -26,6 +17,16 @@ export const validateOtp = async (phoneNumber, otp) => {
       });
     }
   }
+
+  const otp = new Otp({ phoneNumber });
+  otp.generateOtp();
+  await otp.save();
+  return { message: 'OTP sent successfully.' };
+};
+
+// Function to validate OTP
+export const validateOtp = async (phoneNumber, otp) => {
+  
 
   // Find the OTP record for the phone number and OTP
   const otpRecord = await Otp.findOne({ phoneNumber, otp });
