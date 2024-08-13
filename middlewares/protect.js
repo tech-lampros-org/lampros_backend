@@ -1,7 +1,7 @@
 import express from 'express';
-import { verifyToken } from '../config/jwtConfig.js';
+import { verifyToken } from '../config/jwt.js';
 
-const protect = (req, res, next) => {
+export const protect = (req, res, next) => {
   let token;
 
   if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {

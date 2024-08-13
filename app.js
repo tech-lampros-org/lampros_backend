@@ -6,7 +6,6 @@ import requestLoggerMiddleware from './middlewares/requestLogger.js';
 import config from './config/serverConfig.js';
 import rateLimiter from './middlewares/rateLimiter.js';
 import errorHandler from './middlewares/errorHandler.js';
-import advancedUserRoutes from './routes/advancedUserRoutes.js';
 import ro_user from './routes/user.js'
 
 const app = express();
@@ -22,7 +21,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(corsMiddleware);
 app.use(requestLoggerMiddleware);
 
-app.use('/api/advanced-users', advancedUserRoutes);
 
 // Use OTP routes
 app.use('/api/user', ro_user);

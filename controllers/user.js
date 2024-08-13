@@ -1,6 +1,6 @@
 import { createOtpRequest, validateOtp, updateUserDetails, loginWithOtp } from '../functions/otp.js';
 import { generateToken, verifyToken } from '../config/jwt.js';
-import User from '../models/User.js';
+import User from '../models/user.js';
 
 export const requestOtp = async (req, res) => {
   try {
