@@ -29,7 +29,7 @@ app.use('/api/user', ro_user);
 
 // Example route
 app.get('/', (req, res) => {
-  res.json({"status":"running in feature branch..."})
+  res.json({"status":"running in feature branch now..."})
 });
 
 // Use error handler middleware (after all routes and other middleware)
