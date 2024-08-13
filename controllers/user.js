@@ -1,4 +1,4 @@
-import { createOtpRequest, validateOtp, updateUserDetails, loginWithOtp } from '../functions/otp.js';
+import { createOtpRequest, verifyOtpAndLogin, updateUserDetails } from '../functions/otp.js';
 import { generateToken, verifyToken } from '../config/jwt.js';
 import User from '../models/user.js';
 
@@ -15,8 +15,13 @@ export const requestOtp = async (req, res) => {
 export const verifyOtp = async (req, res) => {
   try {
     const { phoneNumber, otp } = req.body;
-    const response = await validateOtp(phoneNumber, otp);
-    res.status(200).json(response);
+    const response = await verifyOtpAndLogin(phoneNumber, otp);
+    
+    // Generate JWT token
+    const user = await User.findOne({ phoneNumber });
+    const token = generateToken(user._id);
+
+    res.status(200).json({ message: response.message, token });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
@@ -27,24 +32,11 @@ export const completeRegistration = async (req, res) => {
     const { phoneNumber, name, age, otherDetails } = req.body;
     const response = await updateUserDetails(phoneNumber, name, age, otherDetails);
     
-    // Generate JWT token after successful registration
-    const token = generateToken(response.userId);
+    // Fetch the updated user to generate the token
+    const user = await User.findOne({ phoneNumber });
+    const token = generateToken(user._id);
 
     res.status(200).json({ message: 'Registration complete', token });
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-};
-
-export const login = async (req, res) => {
-  try {
-    const { phoneNumber, otp } = req.body;
-    const response = await loginWithOtp(phoneNumber, otp);
-    
-    // Generate JWT token
-    const token = generateToken(response.userId);
-
-    res.status(200).json({ message: response.message, token });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
