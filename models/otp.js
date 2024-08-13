@@ -11,7 +11,7 @@ const otpSchema = new mongoose.Schema({
 otpSchema.methods.generateOtp = function() {
 //   this.otp = crypto.randomInt(100000, 999999).toString(); // Generate a 6-digit OTP
     this.otp = '3534'
-  this.expiresAt = Date.now() + 10 * 60 * 1000; // OTP expires in 10 minutes
+  this.expiresAt = Date.now() + 5 * 60 * 1000; // OTP expires in 5 minutes
 };
 
 const Otp = mongoose.model('Otp', otpSchema);
