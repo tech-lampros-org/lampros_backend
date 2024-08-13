@@ -24,10 +24,8 @@ export const createOtpRequest = async (phoneNumber) => {
   return { message: 'OTP sent successfully.' };
 };
 
-// Function to validate OTP
-export const validateOtp = async (phoneNumber, otp) => {
-  
-
+// Function to verify OTP and log in a user, with registration if no details found
+export const verifyOtpAndLogin = async (phoneNumber, otp) => {
   // Find the OTP record for the phone number and OTP
   const otpRecord = await Otp.findOne({ phoneNumber, otp });
   
@@ -37,28 +35,6 @@ export const validateOtp = async (phoneNumber, otp) => {
   otpRecord.isVerified = true;
   await otpRecord.save();
 
-  return { message: 'OTP verified successfully.' };
-};
-
-
-
-// Function to update user details after OTP verification
-export const updateUserDetails = async (phoneNumber, name, age, otherDetails) => {
-  const otpRecord = await Otp.findOne({ phoneNumber });
-  if (!otpRecord?.isVerified) throw new Error('OTP not verified.');
-
-  const user = await User.findOne({ phoneNumber });
-  if (!user) throw new Error('User not found.');
-
-  Object.assign(user, { name, age, ...otherDetails });
-  await user.save();
-
-  return { message: 'User details updated successfully.' };
-};
-
-// Function to log in a user using OTP, with registration if no details found
-export const loginWithOtp = async (phoneNumber, otp) => {
-  await validateOtp(phoneNumber, otp);
   let user = await User.findOne({ phoneNumber });
 
   if (!user) {
@@ -76,4 +52,18 @@ export const loginWithOtp = async (phoneNumber, otp) => {
   }
 
   return { message: 'User logged in successfully.' };
+};
+
+// Function to update user details after OTP verification
+export const updateUserDetails = async (phoneNumber, name, age, otherDetails) => {
+  const otpRecord = await Otp.findOne({ phoneNumber });
+  if (!otpRecord?.isVerified) throw new Error('OTP not verified.');
+
+  const user = await User.findOne({ phoneNumber });
+  if (!user) throw new Error('User not found.');
+
+  Object.assign(user, { name, age, ...otherDetails });
+  await user.save();
+
+  return { message: 'User details updated successfully.' };
 };
