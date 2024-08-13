@@ -1,5 +1,5 @@
 import express from 'express';
-import { requestOtp, verifyOtp, completeRegistration, login, getProfile } from '../controllers/user.js';
+import { requestOtp, verifyOtp, completeRegistration, getProfile } from '../controllers/user.js';
 import { protect } from '../middlewares/protect.js';
 
 const router = express.Router();
