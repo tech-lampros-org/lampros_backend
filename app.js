@@ -14,6 +14,7 @@ const app = express();
 connectDB();
 
 
+
 app.use(rateLimiter);
 // Body parser middleware
 app.use(express.json()); // Parse JSON bodies
