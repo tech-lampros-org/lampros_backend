@@ -7,7 +7,7 @@ import config from './config/serverConfig.js';
 import rateLimiter from './middlewares/rateLimiter.js';
 import errorHandler from './middlewares/errorHandler.js';
 import advancedUserRoutes from './routes/advancedUserRoutes.js';
-import otpRoutes from './routes/otpRoutes.js'
+import ro_user from './routes/user.js'
 
 const app = express();
 
@@ -19,17 +19,13 @@ app.use(rateLimiter);
 // Body parser middleware
 app.use(express.json()); // Parse JSON bodies
 app.use(express.urlencoded({ extended: true }));
-
-// Use CORS middleware
 app.use(corsMiddleware);
-
-// Use request logger middleware
 app.use(requestLoggerMiddleware);
 
 app.use('/api/advanced-users', advancedUserRoutes);
 
 // Use OTP routes
-app.use('/api/users', otpRoutes);
+app.use('/api/user', ro_user);
 
 
 // Example route

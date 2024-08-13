@@ -1,11 +1,11 @@
 import mongoose from 'mongoose';
 import { nanoid } from 'nanoid'; // For generating unique IDs
 
-const advancedUserSchema = new mongoose.Schema({
+const UserSchema = new mongoose.Schema({
   customId: { type: String }, // Custom unique ID field
   password: { type: String },
-  email: { type: String, required: true, unique: true },
-  phoneNumber: { type: String, required: true },
+  email: { type: String },
+  phoneNumber: { type: String, required: true,unique: true },
   name: { type: String },
   age: { type: Number },
   gender: { type: String, enum: ['Male', 'Female', 'non-binary', 'Other'] },
@@ -29,11 +29,9 @@ const advancedUserSchema = new mongoose.Schema({
     companyPhone: { type: String },
     companyGstNumber: { type: String },
   },
-  plan: { type: String },
   role: { type: String },
   type: { type: String },
   duration: { type: String },
-  place: { type: String },
   premium: {
     isPremium: { type: Boolean, default: false },
     category: {
@@ -49,9 +47,9 @@ const advancedUserSchema = new mongoose.Schema({
 });
 
 // Pre-save hook to generate a unique customId
-advancedUserSchema.pre('save', async function(next) {
+UserSchema.pre('save', async function(next) {
     // Prefix for ID
-    const prefix = 'ADV-';
+    const prefix = `${this.role || 'USER'}-`;
     // Generate a unique ID
     const uniqueId = nanoid(10); // Generates a unique string of length 10
     this.customId = `${prefix}${uniqueId}`;
@@ -68,6 +66,6 @@ advancedUserSchema.pre('save', async function(next) {
   next();
 });
 
-const AdvancedUser = mongoose.model('AdvancedUser', advancedUserSchema);
+const User = mongoose.model('User', UserSchema);
 
-export default AdvancedUser;
+export default User;
