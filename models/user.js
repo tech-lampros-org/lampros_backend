@@ -35,7 +35,7 @@ const UserSchema = new mongoose.Schema({
   profileImage: { type: String }, // New profileImage field for storing image URL
   address: addressSchema,        // Use the personal address schema here
   companyDetails: companyDetailsSchema, // Use the company details schema with updated address structure
-  role: { type: String },
+  role: { type: String, enum: ['Service Provider', 'Product Seller'] },
   type: { type: String },
   premium: {
     isPremium: { type: Boolean, default: false },
@@ -58,17 +58,6 @@ UserSchema.pre('save', async function(next) {
   const prefix = `${this.role || 'USER'}-`;
   const uniqueId = nanoid(10); // Generates a unique string of length 10
   this.customId = `${prefix}${uniqueId}`;
-
-  // Determine if the user is premium based on the plan
-  if (this.plan === 'Premium') {
-    this.premium.isPremium = true;
-    this.premium.category = 'premium';
-    this.premium.duration = 'premium'; // Set duration to 'premium'
-  } else {
-    this.premium.isPremium = false;
-    this.premium.category = 'basic';
-    this.premium.duration = 'basic'; // Set default duration to 'basic'
-  }
 
   next();
 });
