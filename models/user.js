@@ -3,21 +3,13 @@ import { nanoid } from 'nanoid'; // For generating unique IDs
 
 // Schema for personal address
 const addressSchema = new mongoose.Schema({
-  street: { type: String },
-  thaluk: { type: String },
-  district: { type: String },
-  city: { type: String },
-  state: { type: String },
-  country: { type: String },
-  pincode: { type: Number }, // pincode as Number
+  place: { type: String } ,
+  pincode: { type: Number },// pincode as Number
 });
 
 // Schema for company address without street and area fields
 const companyAddressSchema = new mongoose.Schema({
-  buildingName: { type: String },  // Example field specific to company address
-  city: { type: String },
-  state: { type: String },
-  country: { type: String },
+  place: { type: String },  
   pincode: { type: Number },      // pincode as Number
 });
 
@@ -52,7 +44,7 @@ const UserSchema = new mongoose.Schema({
       enum: ['basic', 'standard', 'premium', 'elite'],
       default: 'basic',
     },
-    duration: { type: String, default: 'basic' }, // Set default duration to 'basic'
+    duration: { type: String, default: '6 Months' }, // Set default duration to 'basic'
   },
   extraRoleFields: {
     professionalSpecificField: { type: String },
