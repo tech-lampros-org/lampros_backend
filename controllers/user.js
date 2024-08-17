@@ -49,6 +49,50 @@ export const completeBasic = async (req, res) => {
   }
 };
 
+export const completeRegistration = async (req, res) => {
+  try {
+    const { 
+      phoneNumber, 
+      f_name, 
+      l_name, 
+      profileImage, 
+      type,
+      role, 
+      email, 
+      companyDetails, 
+      address 
+    } = req.body;
+
+    // Update user details without password, customId, and premium fields
+    const updatedFields = { 
+      f_name, 
+      l_name, 
+      profileImage, 
+      role,
+      type, 
+      email, 
+      companyDetails, 
+      address 
+    };
+    
+    const response = await updateUserDetails(phoneNumber, updatedFields);
+
+    // Fetch the updated user to generate the token
+    const user = await User.findOne({ phoneNumber });
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Generate a token for the user
+    const token = generateToken(user._id);
+
+    res.status(200).json({ message: 'Registration complete', token });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
 export const getProfile = async (req, res) => {
   try {
     // Get the user ID from the request (set by the protect middleware)
