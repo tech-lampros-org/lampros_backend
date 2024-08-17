@@ -60,6 +60,7 @@ const UserSchema = new mongoose.Schema({
   },
 });
 
+
 // Pre-save hook to generate a unique customId
 UserSchema.pre('save', async function(next) {
   const prefix = `${this.role || 'USER'}-`;
