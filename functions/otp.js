@@ -55,14 +55,18 @@ export const verifyOtpAndLogin = async (phoneNumber, otp) => {
 };
 
 // Function to update user details after OTP verification
-export const updateUserDetails = async (phoneNumber, name, age, otherDetails) => {
+export const updateUserDetails = async (phoneNumber, updateFields) => {
+  // Check if OTP is verified
   const otpRecord = await Otp.findOne({ phoneNumber });
   if (!otpRecord?.isVerified) throw new Error('OTP not verified.');
 
+  // Find the user
   const user = await User.findOne({ phoneNumber });
   if (!user) throw new Error('User not found.');
 
-  Object.assign(user, { name, age, ...otherDetails });
+  // Update the user details with the provided fields
+  Object.assign(user, updateFields);
+
   await user.save();
 
   return { message: 'User details updated successfully.' };

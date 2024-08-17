@@ -7,6 +7,7 @@ import config from './config/serverConfig.js';
 import rateLimiter from './middlewares/rateLimiter.js';
 import errorHandler from './middlewares/errorHandler.js';
 import ro_user from './routes/user.js'
+import ro_utils from './routes/utils.js'
 
 const app = express();
 
@@ -25,6 +26,7 @@ app.use(requestLoggerMiddleware);
 
 // Use OTP routes
 app.use('/api/user', ro_user);
+app.use('/api/utils', ro_utils);
 
 
 // Example route
