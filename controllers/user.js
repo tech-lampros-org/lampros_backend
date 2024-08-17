@@ -51,30 +51,43 @@ export const completeBasic = async (req, res) => {
 
 export const completeRegistration = async (req, res) => {
   try {
-    const { 
-      phoneNumber, 
-      f_name, 
-      l_name, 
-      profileImage, 
-      type,
-      role, 
-      email, 
-      companyDetails, 
-      address 
-    } = req.body;
+    const { phoneNumber, f_name, l_name, profileImage, role, type, email, companyDetails, address } = req.body;
 
-    // Update user details without password, customId, and premium fields
-    const updatedFields = { 
-      f_name, 
-      l_name, 
-      profileImage, 
+    const isNotEmpty = (value) => value !== undefined && value !== null && value !== '';
+
+    // Array to track empty required fields
+    const emptyFields = [];
+
+    if (!isNotEmpty(f_name)) emptyFields.push('f_name');
+    if (!isNotEmpty(l_name)) emptyFields.push('l_name');
+    if (!isNotEmpty(role)) emptyFields.push('role');
+    if (!isNotEmpty(type)) emptyFields.push('type');
+    if (!isNotEmpty(email)) emptyFields.push('email');
+    if (!isNotEmpty(address)) emptyFields.push('address');
+
+    // If any required fields are empty, return an error response
+    if (emptyFields.length > 0) {
+      return res.status(400).json({
+        message: 'The following required fields are empty:',
+        emptyFields,
+      });
+    }
+
+    // Proceed to build the updated fields object
+    const updatedFields = {
+      f_name,
+      l_name,
+      profileImage: isNotEmpty(profileImage)
+        ? profileImage
+        : 'https://static.vecteezy.com/system/resources/previews/009/734/564/non_2x/default-avatar-profile-icon-of-social-media-user-vector.jpg',
       role,
-      type, 
-      email, 
-      companyDetails, 
-      address 
+      type,
+      email,
+      ...(isNotEmpty(companyDetails) && { companyDetails }),
+      ...(isNotEmpty(address) && { address }),
     };
-    
+
+    // Update user details
     const response = await updateUserDetails(phoneNumber, updatedFields);
 
     // Fetch the updated user to generate the token
