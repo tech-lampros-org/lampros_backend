@@ -27,13 +27,20 @@ export const verifyOtp = async (req, res) => {
   }
 };
 
-export const completeRegistration = async (req, res) => {
+export const completeBasic = async (req, res) => {
   try {
-    const { phoneNumber, name, age, otherDetails } = req.body;
-    const response = await updateUserDetails(phoneNumber, name, age, otherDetails);
-    
+    const { phoneNumber, f_name, l_name, profileImage, role } = req.body;
+
+    // Update user details
+    const response = await updateUserDetails(phoneNumber, { f_name, l_name, profileImage, role });
+
     // Fetch the updated user to generate the token
     const user = await User.findOne({ phoneNumber });
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
     const token = generateToken(user._id);
 
     res.status(200).json({ message: 'Registration complete', token });
@@ -59,3 +66,23 @@ export const getProfile = async (req, res) => {
     res.status(400).json({ message: error.message });
   }
 };
+
+export const uploadImage = async (req, res) => {
+  try {
+    // Handle image upload
+    if (!req.file) {
+      return res.status(400).json({ message: 'No file uploaded' });
+    }
+
+    res.status(200).json({
+      message: 'File uploaded successfully',
+      file: {
+        filename: req.file.originalname,
+        url: req.file.secure_url
+      }
+    });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+

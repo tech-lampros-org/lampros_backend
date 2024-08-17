@@ -29,6 +29,7 @@
   "homepage": "https://github.com/tech-lampros-org/lampros_backend#readme",
   "dependencies": {
     "@vonage/server-sdk": "^3.16.0",
+    "cloudinary": "^1.41.3",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
     "dotenv": "^16.4.5",
@@ -39,7 +40,10 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.5.2",
     "morgan": "^1.10.0",
+    "multer": "^1.4.5-lts.1",
+    "multer-storage-cloudinary": "^4.0.0",
     "nanoid": "^5.0.7",
+    "node-fetch": "^3.3.2",
     "pm2": "^5.4.2",
     "winston": "^3.13.1",
     "winston-daily-rotate-file": "^5.0.0"
