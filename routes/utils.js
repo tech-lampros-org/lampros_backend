@@ -3,6 +3,6 @@ import { getPincodeDetails } from '../controllers/utils.js';
 
 const router = express.Router();
 
-router.get('/serch-picode',getPincodeDetails);
+router.get('/serch-pincode',getPincodeDetails);
 
 export default router;
