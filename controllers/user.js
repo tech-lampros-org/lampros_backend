@@ -77,7 +77,6 @@ export const uploadImage = async (req, res) => {
     res.status(200).json({
       message: 'File uploaded successfully',
       file: {
-        filename: req.file.originalname,
         url: req.file.secure_url
       }
     });
