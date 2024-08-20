@@ -51,15 +51,15 @@ export const completeBasic = async (req, res) => {
 
 export const completeRegistration = async (req, res) => {
   try {
-    const { phoneNumber, f_name, l_name, profileImage, role, type, email, companyDetails, address } = req.body;
+    const { phoneNumber, fname, lname, profileImage, role, type, email, companyDetails, address } = req.body;
 
     const isNotEmpty = (value) => value !== undefined && value !== null && value !== '';
 
     // Array to track empty required fields
     const emptyFields = [];
 
-    if (!isNotEmpty(f_name)) emptyFields.push('f_name');
-    if (!isNotEmpty(l_name)) emptyFields.push('l_name');
+    if (!isNotEmpty(fname)) emptyFields.push('fname');
+    if (!isNotEmpty(lname)) emptyFields.push('lname');
     if (!isNotEmpty(role)) emptyFields.push('role');
     if (!isNotEmpty(type)) emptyFields.push('type');
     if (!isNotEmpty(email)) emptyFields.push('email');
@@ -75,8 +75,8 @@ export const completeRegistration = async (req, res) => {
 
     // Proceed to build the updated fields object
     const updatedFields = {
-      f_name,
-      l_name,
+      fname,
+      lname,
       profileImage: isNotEmpty(profileImage)
         ? profileImage
         : 'https://static.vecteezy.com/system/resources/previews/009/734/564/non_2x/default-avatar-profile-icon-of-social-media-user-vector.jpg',
