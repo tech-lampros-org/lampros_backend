@@ -28,8 +28,8 @@ const UserSchema = new mongoose.Schema({
   email: { type: String },
   isVerified: { type: Boolean, default: false }, // New isVerified field for email verification
   phoneNumber: { type: String, required: true, unique: true },
-  f_name: { type: String }, // First name
-  l_name: { type: String }, // Last name
+  fname: { type: String }, // First name
+  lname: { type: String }, // Last name
   age: { type: Number },
   gender: { type: String, enum: ['Male', 'Female', 'non-binary', 'Other'] },
   profileImage: { type: String }, // New profileImage field for storing image URL
