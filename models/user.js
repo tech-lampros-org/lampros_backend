@@ -3,14 +3,14 @@ import { nanoid } from 'nanoid'; // For generating unique IDs
 
 // Schema for personal address
 const addressSchema = new mongoose.Schema({
-  place: { type: String } ,
-  pincode: { type: Number },// pincode as Number
+  place: { type: String },
+  pincode: { type: Number }, // pincode as Number
 });
 
 // Schema for company address without street and area fields
 const companyAddressSchema = new mongoose.Schema({
-  place: { type: String },  
-  pincode: { type: Number },      // pincode as Number
+  place: { type: String },
+  pincode: { type: Number }, // pincode as Number
 });
 
 const companyDetailsSchema = new mongoose.Schema({
@@ -22,39 +22,41 @@ const companyDetailsSchema = new mongoose.Schema({
   companyGstNumber: { type: String },
 });
 
-const UserSchema = new mongoose.Schema({
-  customId: { type: String }, // Custom unique ID field
-  password: { type: String },
-  email: { type: String },
-  isVerified: { type: Boolean, default: false }, // New isVerified field for email verification
-  phoneNumber: { type: String, required: true, unique: true },
-  fname: { type: String }, // First name
-  lname: { type: String }, // Last name
-  age: { type: Number },
-  gender: { type: String, enum: ['Male', 'Female', 'non-binary', 'Other'] },
-  profileImage: { type: String }, // New profileImage field for storing image URL
-  address: addressSchema,        // Use the personal address schema here
-  companyDetails: companyDetailsSchema, // Use the company details schema with updated address structure
-  role: { type: String, enum: ['Service Provider', 'Product Seller'] },
-  type: { type: String },
-  premium: {
-    isPremium: { type: Boolean, default: false },
-    category: {
-      type: String,
-      enum: ['basic', 'standard', 'premium', 'elite'],
-      default: 'basic',
+const UserSchema = new mongoose.Schema(
+  {
+    customId: { type: String }, // Custom unique ID field
+    password: { type: String },
+    email: { type: String },
+    isVerified: { type: Boolean, default: false }, // New isVerified field for email verification
+    phoneNumber: { type: String, required: true, unique: true },
+    fname: { type: String }, // First name
+    lname: { type: String }, // Last name
+    age: { type: Number },
+    gender: { type: String, enum: ['Male', 'Female', 'non-binary', 'Other'] },
+    profileImage: { type: String }, // New profileImage field for storing image URL
+    address: addressSchema, // Use the personal address schema here
+    companyDetails: companyDetailsSchema, // Use the company details schema with updated address structure
+    role: { type: String, enum: ['Service Provider', 'Product Seller'] },
+    type: { type: String },
+    premium: {
+      isPremium: { type: Boolean, default: false },
+      category: {
+        type: String,
+        enum: ['basic', 'standard', 'premium', 'elite'],
+        default: 'basic',
+      },
+      duration: { type: String, default: '6 Months' }, // Set default duration to 'basic'
     },
-    duration: { type: String, default: '6 Months' }, // Set default duration to 'basic'
+    extraRoleFields: {
+      professionalSpecificField: { type: String },
+      affiliateSpecificField: { type: String },
+    },
   },
-  extraRoleFields: {
-    professionalSpecificField: { type: String },
-    affiliateSpecificField: { type: String },
-  },
-});
-
+  { timestamps: true } // Enable timestamps here
+);
 
 // Pre-save hook to generate a unique customId
-UserSchema.pre('save', async function(next) {
+UserSchema.pre('save', async function (next) {
   const prefix = `${this.role || 'USER'}-`;
   const uniqueId = nanoid(10); // Generates a unique string of length 10
   this.customId = `${prefix}${uniqueId}`;
