@@ -26,9 +26,9 @@ export const createOtpRequest = async (phoneNumber) => {
 
 // Function to verify OTP and log in a user, with registration if no details found
 export const verifyOtpAndLogin = async (phoneNumber, otp) => {
-  // Find the OTP record for the phone number and OTP
-  const otpRecord = await Otp.findOne({ phoneNumber, otp });
-  
+  // Find the latest OTP record for the phone number and OTP
+  const otpRecord = await Otp.findOne({ phoneNumber, otp }).sort({ createdAt: -1 });
+
   if (!otpRecord) throw new Error('Invalid OTP.');
   if (Date.now() > otpRecord.expiresAt) throw new Error('OTP has expired.');
 
@@ -53,6 +53,7 @@ export const verifyOtpAndLogin = async (phoneNumber, otp) => {
 
   return { message: 'User logged in successfully.' };
 };
+
 
 // Function to update user details after OTP verification
 export const updateUserDetails = async (phoneNumber, updateFields) => {
