@@ -12,6 +12,6 @@ router.post('/posts', protect,  addPost);
 router.get('/posts/all', listAllPosts);
 
 // Route to list posts created by the authenticated user (GET /api/posts/user)
-router.get('/posts/user', listUserPosts);
+router.get('/posts/user',protect, listUserPosts);
 
 export default router;
