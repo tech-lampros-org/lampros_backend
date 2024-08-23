@@ -6,8 +6,11 @@ import requestLoggerMiddleware from './middlewares/requestLogger.js';
 import config from './config/serverConfig.js';
 import rateLimiter from './middlewares/rateLimiter.js';
 import errorHandler from './middlewares/errorHandler.js';
+
+
 import ro_user from './routes/user.js'
 import ro_utils from './routes/utils.js'
+import ro_posts from './routes/pro-post.js'
 
 const app = express();
 
@@ -27,6 +30,7 @@ app.use(requestLoggerMiddleware);
 // Use OTP routes
 app.use('/api/user', ro_user);
 app.use('/api/utils', ro_utils);
+app.use('/api/posts', ro_posts)
 
 
 // Example route
