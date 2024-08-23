@@ -43,7 +43,7 @@ export const listAllPosts = async (req, res) => {
 export const listUserPosts = async (req, res) => {
   try {
     // Fetch posts created by the authenticated user
-    const posts = await Post.find({ createdBy: req.user._id });
+    const posts = await Post.find({ createdBy: req.user });
 
     // Send the posts as a response
     res.status(200).json(posts);
