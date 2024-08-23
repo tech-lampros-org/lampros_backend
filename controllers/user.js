@@ -131,10 +131,12 @@ export const uploadImage = async (req, res) => {
       return res.status(400).json({ message: 'No file uploaded' });
     }
 
+    console.log(req)
+
     res.status(200).json({
       message: 'File uploaded successfully',
       file: {
-        url: req.file.secure_url
+        url: req.file
       }
     });
   } catch (error) {
