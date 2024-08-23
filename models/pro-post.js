@@ -14,8 +14,8 @@ const priceSchema = new mongoose.Schema({
   isLaborOnly: { type: String }, // No enum, free text field
 });
 
-// Main Product schema
-const ProductSchema = new mongoose.Schema({
+// Main Post schema
+const postSchema = new mongoose.Schema({
   title: { type: String },
   captions: { type: String },
   tags: [{ type: String }], // Array of strings for tags
@@ -25,6 +25,6 @@ const ProductSchema = new mongoose.Schema({
   createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }, // Reference to the user who created the post
 }, { timestamps: true });
 
-const Product = mongoose.model('Product', ProductSchema);
+const Post = mongoose.model('Post', postSchema);
 
-export default Product;
+export default Post;
