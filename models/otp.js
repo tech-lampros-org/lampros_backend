@@ -6,11 +6,11 @@ const otpSchema = new mongoose.Schema({
   otp: { type: String, required: true },
   expiresAt: { type: Date, required: true },
   isVerified: { type: Boolean, default: false }, // Track OTP verification status
+  createdAt: { type: Date, default: Date.now }, // Track when the OTP was created
 });
 
 otpSchema.methods.generateOtp = function() {
-//   this.otp = crypto.randomInt(100000, 999999).toString(); // Generate a 6-digit OTP
-    this.otp = '3534'
+  this.otp = '3535'; // Update OTP value
   this.expiresAt = Date.now() + 5 * 60 * 1000; // OTP expires in 5 minutes
 };
 
