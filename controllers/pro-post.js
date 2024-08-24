@@ -30,7 +30,7 @@ export const addPost = async (req, res) => {
 export const listAllPosts = async (req, res) => {
   try {
     // Fetch all posts
-    const posts = await Post.find().populate('createdBy', 'f_name l_name email'); // Optionally populate user info
+    const posts = await Post.find().populate('createdBy', '-password');// Optionally populate user info
 
     // Send the posts as a response
     res.status(200).json(posts);
