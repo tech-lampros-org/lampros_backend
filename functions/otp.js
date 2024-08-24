@@ -1,5 +1,6 @@
 import User from '../models/user.js';
 import Otp from '../models/otp.js';
+import { sendSmsvia2fact } from '../services/smsService.js'
 
 // Function to create an OTP request
 export const createOtpRequest = async (phoneNumber) => {
@@ -21,6 +22,7 @@ export const createOtpRequest = async (phoneNumber) => {
   const otp = new Otp({ phoneNumber });
   otp.generateOtp();
   await otp.save();
+  await sendSmsvia2fact(phoneNumber, otp.otp);
   return { message: 'OTP sent successfully.' };
 };
 
