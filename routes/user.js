@@ -1,5 +1,5 @@
 import express from 'express';
-import { requestOtp, verifyOtp, completeBasic, completeRegistration, getProfile, uploadImage  } from '../controllers/user.js';
+import { requestOtp, verifyOtp, completeBasic, completeRegistration, getProfile, uploadImage, uploadImages  } from '../controllers/user.js';
 import upload from '../config/multerConfig.js';
 import { protect } from '../middlewares/protect.js'; 
 
@@ -14,5 +14,6 @@ router.get('/protected-route', protect, getProfile);
 
 // Image upload route
 router.post('/upload-image', upload.single('image'), uploadImage);
+router.post('/upload-images', upload.array('image', 10), uploadImages);
 
 export default router;
