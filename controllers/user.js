@@ -145,3 +145,31 @@ export const uploadImage = async (req, res) => {
   }
 };
 
+
+export const uploadImages = async (req, res) => {
+  try {
+    // Check if files were uploaded
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).json({ message: 'No files uploaded' });
+    }
+
+    // Log the entire request for debugging
+    console.log(req);
+
+    // Prepare an array of uploaded file URLs
+    const uploadedFiles = req.files.map(file => ({
+      url: file.path, // Cloudinary URL
+      filename: file.filename // Cloudinary filename
+    }));
+
+    res.status(200).json({
+      message: 'Files uploaded successfully',
+      files: uploadedFiles
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(400).json({ message: error.message });
+  }
+};
+
+
