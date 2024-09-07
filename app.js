@@ -8,10 +8,12 @@ import rateLimiter from './middlewares/rateLimiter.js';
 import errorHandler from './middlewares/errorHandler.js';
 
 
+
 import ro_user from './routes/user.js'
 import ro_utils from './routes/utils.js'
 import ro_posts from './routes/pro-post.js'
 import ro_projects from './routes/pro-projects.js'
+import ro_products from './routes/pro-products.js'
 
 const app = express();
 
@@ -32,7 +34,8 @@ app.use(requestLoggerMiddleware);
 app.use('/api/user', ro_user);
 app.use('/api/utils', ro_utils);
 app.use('/api/posts', ro_posts)
-app.use('/api/projects', ro_projects)
+app.use('/api/projects', ro_projects);
+app.use('/api/products', ro_products);
 
 
 // Example route
