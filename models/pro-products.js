@@ -63,6 +63,7 @@ const productSchema = new mongoose.Schema({
   manufactureDetails: manufactureDetailsSchema, // Manufacture details
   warrantyAndCertifications: warrantyAndCertificationsSchema, // Warranty and certifications
   images: [productImagesSchema], // Array of images
+  createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
 }, { timestamps: true });
 
 // Pre-save middleware to auto-generate an incremented product code
