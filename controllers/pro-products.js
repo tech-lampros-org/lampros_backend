@@ -8,6 +8,11 @@ export const addProduct = async (req, res) => {
       manufactureDetails, warrantyAndCertifications, images
     } = req.body;
 
+    // Validate required fields
+    if (!name || !price || !quantity) {
+      return res.status(400).json({ message: 'Name, price, and quantity are required.' });
+    }
+
     // Create a new product with the data and the logged-in user as the creator
     const product = new ProProduct({
       seller,
@@ -35,11 +40,19 @@ export const addProduct = async (req, res) => {
   }
 };
 
-// Controller to list all products
+// Controller to list all products with optional pagination
 export const listAllProducts = async (req, res) => {
   try {
-    // Fetch all products
-    const products = await ProProduct.find().populate('createdBy', '-password'); // Optionally populate user info
+    // Pagination parameters
+    const page = parseInt(req.query.page, 10) || 1;
+    const limit = parseInt(req.query.limit, 10) || 10;
+    const skip = (page - 1) * limit;
+
+    // Fetch all products with pagination
+    const products = await ProProduct.find()
+      .skip(skip)
+      .limit(limit)
+      .populate('createdBy', '-password'); // Optionally populate user info
 
     // Send the products as a response
     res.status(200).json(products);
@@ -52,7 +65,7 @@ export const listAllProducts = async (req, res) => {
 export const listUserProducts = async (req, res) => {
   try {
     // Fetch products created by the authenticated user
-    const products = await ProProduct.find({ createdBy: req.user });
+    const products = await ProProduct.find({ createdBy: req.user._id });
 
     // Send the products as a response
     res.status(200).json(products);
@@ -74,6 +87,7 @@ export const filterProducts = async (req, res) => {
       category,
       subCategory,
       type,
+      subType,
       minPrice,
       maxPrice,
       minQuantity,
@@ -104,6 +118,10 @@ export const filterProducts = async (req, res) => {
 
     if (type) {
       query.type = { $in: type.split(',') };
+    }
+
+    if (subType) {
+      query.subType = { $in: subType.split(',') };
     }
 
     if (minPrice || maxPrice) {
