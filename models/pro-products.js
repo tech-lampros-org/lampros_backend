@@ -56,6 +56,7 @@ const productSchema = new mongoose.Schema({
   category: { type: String }, // Product category
   subCategory: { type: String }, // Product sub-category
   type: { type: String }, // Product type
+  subType: { type: String }, // Product sub-type  <-- Add this line
   price: { type: Number }, // Product price
   quantity: { type: Number }, // Available quantity
   about: { type: String }, // Description of the product
