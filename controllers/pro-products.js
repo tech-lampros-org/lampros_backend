@@ -5,7 +5,7 @@ export const addProduct = async (req, res) => {
   try {
     const {
       seller, name, category, subCategory, type, price, quantity, about, technicalDetails,
-      manufactureDetails, warrantyAndCertifications, images
+      manufactureDetails, warrantyAndCertifications, images,subType
     } = req.body;
 
     // Validate required fields
@@ -20,6 +20,7 @@ export const addProduct = async (req, res) => {
       category,
       subCategory,
       type,
+      subType,
       price,
       quantity,
       about,
