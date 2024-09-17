@@ -32,7 +32,11 @@ const technicalDetailsSchema = new mongoose.Schema({
   seatMaterial: { type: String },// Material of the seat
   shape: { type: String },       // Shape of the product
   specialFeatures: { type: String }, // Special features
+  productModelNumber: { type: String }, // Product model number
+  asinNumber: { type: String },   // ASIN number
+  productCareInstructions: { type: String } // Product care instructions
 });
+
 
 // Schema for manufacture details
 const manufactureDetailsSchema = new mongoose.Schema({
