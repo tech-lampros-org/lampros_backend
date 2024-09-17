@@ -171,7 +171,7 @@ export const filterProjects = async (req, res) => {
     }
 
     // Fetch projects based on the dynamic query
-    const projects = await ProProject.find(query);
+    const projects = await ProProject.find(query).populate('createdBy', '-password');
 
     // Send the filtered projects as a response
     res.status(200).json(projects);
