@@ -179,9 +179,7 @@ export const filterProjects = async (req, res) => {
     res.status(500).json({ message: 'Failed to retrieve projects', error: error.message });
   }
 };
-
-
-import { ProProject } from './models/ProProject'; // Update with your actual model path
+// Update with your actual model path
 
 export const generalSearchProjects = async (req, res) => {
   try {
