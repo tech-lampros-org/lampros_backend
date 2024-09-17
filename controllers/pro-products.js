@@ -168,8 +168,6 @@ export const filterProducts = async (req, res) => {
 };
 
 
-import { ProProduct } from './models/ProProduct'; // Update with your actual model path
-
 export const searchProducts = async (req, res) => {
   try {
     // Extract query parameters from the request
