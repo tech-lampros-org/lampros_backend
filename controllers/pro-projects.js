@@ -179,3 +179,155 @@ export const filterProjects = async (req, res) => {
     res.status(500).json({ message: 'Failed to retrieve projects', error: error.message });
   }
 };
+
+
+import { ProProject } from './models/ProProject'; // Update with your actual model path
+
+export const generalSearchProjects = async (req, res) => {
+  try {
+    // Extract query parameters from the request
+    const {
+      query, // General search query
+      sellerName,
+      sellerPhoneNumber,
+      projectType,
+      projectLocation,
+      constructionType,
+      houseType,
+      style,
+      numberOfBathrooms,
+      minArea,
+      maxArea,
+      minCost,
+      maxCost,
+      propertyOwnership,
+      transactionTypeForProperty,
+      plotSizeForProperty,
+      boundaryWall,
+      cornerProperty,
+      propertyAge
+    } = req.query;
+
+    // Initialize the query object
+    let queryObject = {};
+
+    // General search query with fuzzy matching (partial matches)
+    if (query) {
+      const regex = new RegExp(query.split('').join('.*'), 'i'); // Fuzzy matching regex
+      queryObject = {
+        $or: [
+          { sellerName: regex },
+          { sellerPhoneNumber: regex },
+          { projectType: regex },
+          { projectLocation: regex },
+          { constructionType: regex },
+          { houseType: regex },
+          { style: regex },
+          { numberOfBathrooms: regex },
+          { propertyOwnership: regex },
+          { transactionTypeForProperty: regex },
+          { plotSizeForProperty: regex },
+          { propertyAge: regex }
+        ]
+      };
+    }
+
+    // Add additional filters to the query object
+    if (sellerName) {
+      queryObject.sellerName = { $in: sellerName.split(',') };
+    }
+
+    if (sellerPhoneNumber) {
+      queryObject.sellerPhoneNumber = { $in: sellerPhoneNumber.split(',') };
+    }
+
+    if (projectType) {
+      queryObject.projectType = { $in: projectType.split(',') };
+    }
+
+    if (projectLocation) {
+      queryObject.projectLocation = { $in: projectLocation.split(',') };
+    }
+
+    if (constructionType) {
+      queryObject.constructionType = { $in: constructionType.split(',') };
+    }
+
+    if (houseType) {
+      queryObject.houseType = { $in: houseType.split(',') };
+    }
+
+    if (style) {
+      queryObject.style = { $in: style.split(',') };
+    }
+
+    if (numberOfBathrooms) {
+      queryObject.numberOfBathrooms = { $in: numberOfBathrooms.split(',') };
+    }
+
+    if (minArea || maxArea) {
+      queryObject.areaSquareFeet = {};
+      if (minArea) queryObject.areaSquareFeet.$gte = Number(minArea);
+      if (maxArea) queryObject.areaSquareFeet.$lte = Number(maxArea);
+    }
+
+    if (minCost || maxCost) {
+      queryObject.cost = {};
+      if (minCost) queryObject.cost.$gte = Number(minCost);
+      if (maxCost) queryObject.cost.$lte = Number(maxCost);
+    }
+
+    if (propertyOwnership) {
+      queryObject.propertyOwnership = { $in: propertyOwnership.split(',') };
+    }
+
+    if (transactionTypeForProperty) {
+      queryObject.transactionTypeForProperty = { $in: transactionTypeForProperty.split(',') };
+    }
+
+    if (plotSizeForProperty) {
+      queryObject.plotSizeForProperty = { $in: plotSizeForProperty.split(',') };
+    }
+
+    if (boundaryWall) {
+      queryObject.boundaryWall = boundaryWall === 'true';
+    }
+
+    if (cornerProperty) {
+      queryObject.cornerProperty = cornerProperty === 'true';
+    }
+
+    if (propertyAge) {
+      queryObject.propertyAge = { $in: propertyAge.split(',') };
+    }
+
+    // Fetch projects based on the query object
+    const projects = await ProProject.find(queryObject).populate('createdBy', '-password');
+
+    // Categorize results
+    const categorizedResults = {
+      general: projects,
+      sellerNameMatches: projects.filter(p => sellerName && p.sellerName && sellerName.split(',').includes(p.sellerName)),
+      sellerPhoneNumberMatches: projects.filter(p => sellerPhoneNumber && p.sellerPhoneNumber && sellerPhoneNumber.split(',').includes(p.sellerPhoneNumber)),
+      projectTypeMatches: projects.filter(p => projectType && p.projectType && projectType.split(',').includes(p.projectType)),
+      projectLocationMatches: projects.filter(p => projectLocation && p.projectLocation && projectLocation.split(',').includes(p.projectLocation)),
+      constructionTypeMatches: projects.filter(p => constructionType && p.constructionType && constructionType.split(',').includes(p.constructionType)),
+      houseTypeMatches: projects.filter(p => houseType && p.houseType && houseType.split(',').includes(p.houseType)),
+      styleMatches: projects.filter(p => style && p.style && style.split(',').includes(p.style)),
+      numberOfBathroomsMatches: projects.filter(p => numberOfBathrooms && p.numberOfBathrooms && numberOfBathrooms.split(',').includes(p.numberOfBathrooms.toString())),
+      rangeMatches: projects.filter(p => {
+        const areaCheck = (minArea || maxArea) ? (p.areaSquareFeet >= (minArea || 0) && p.areaSquareFeet <= (maxArea || Infinity)) : true;
+        const costCheck = (minCost || maxCost) ? (p.cost >= (minCost || 0) && p.cost <= (maxCost || Infinity)) : true;
+        return areaCheck && costCheck;
+      }),
+      boundaryWallMatches: projects.filter(p => boundaryWall !== undefined && p.boundaryWall === (boundaryWall === 'true')),
+      cornerPropertyMatches: projects.filter(p => cornerProperty !== undefined && p.cornerProperty === (cornerProperty === 'true')),
+      propertyAgeMatches: projects.filter(p => propertyAge && p.propertyAge && propertyAge.split(',').includes(p.propertyAge.toString()))
+    };
+
+    // Send the categorized response
+    res.status(200).json(categorizedResults);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to search projects', error: error.message });
+  }
+};
