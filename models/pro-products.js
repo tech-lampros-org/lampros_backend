@@ -1,94 +1,91 @@
-import mongoose from 'mongoose';
+// Controller to filter products based on query parameters
+export const filterProducts = async (req, res) => {
+  try {
+    // Initialize a query object
+    let query = {};
 
-// Schema for product images
-const productImagesSchema = new mongoose.Schema({
-  category: { type: String }, // Category of the image (e.g., front view, side view)
-  url: { type: String },      // Image URL
-});
+    // Extract query parameters from the request
+    const {
+      sellerName,
+      sellerPhoneNumber,
+      category,
+      subCategory,
+      type,
+      subType,
+      minPrice,
+      maxPrice,
+      minQuantity,
+      maxQuantity,
+      brand,
+      color,
+      material,
+      warranty,
+      isoCertified,
+    } = req.query;
 
-// Schema for seller details
-const sellerSchema = new mongoose.Schema({
-  name: { type: String, required: true },  // Seller name
-  phoneNumber: { type: String, required: true }, // Seller phone number
-  location: { type: String }, // Seller location
-});
-
-// Schema for technical details of the product
-const technicalDetailsSchema = new mongoose.Schema({
-  brand: { type: String },       // Brand of the product
-  color: { type: String },       // Product color
-  material: { type: String },    // Material used in the product
-  productDimensions: {           // Dimensions of the product (Width, Height, Depth)
-    width: { type: Number },
-    height: { type: Number },
-    depth: { type: Number },
-  },
-  weight: { type: Number },      // Weight of the product
-  baseWidth: { type: Number },   // Base width
-  style: { type: String },       // Style of the product
-  installationType: { type: String }, // Installation type
-  finishType: { type: String },  // Finish type
-  drainType: { type: String },   // Drain type
-  seatMaterial: { type: String },// Material of the seat
-  shape: { type: String },       // Shape of the product
-  specialFeatures: { type: String }, // Special features
-});
-
-// Schema for manufacture details
-const manufactureDetailsSchema = new mongoose.Schema({
-  countryOfOrigin: { type: String }, // Country of origin
-  manufacturer: { type: String },    // Manufacturer details
-  deliveryCharge: { type: Number },  // Delivery charges
-});
-
-// Schema for product warranty and certification details
-const warrantyAndCertificationsSchema = new mongoose.Schema({
-  warrantyDuration: { type: Number },   // Warranty duration in months/years
-  isoCertified: { type: Boolean },      // Whether ISO certified
-  warranty: { type: Boolean },          // Warranty available or not
-});
-
-// Main Product schema
-const productSchema = new mongoose.Schema({
-  seller: sellerSchema, // Seller details
-  name: { type: String, required: true }, // Product name
-  code: { type: String, unique: true }, // Auto-incrementing product code
-  category: { type: String }, // Product category
-  subCategory: { type: String }, // Product sub-category
-  type: { type: String }, // Product type
-  subType: { type: String }, // Product sub-type  <-- Add this line
-  price: { type: Number }, // Product price
-  quantity: { type: Number }, // Available quantity
-  about: { type: String }, // Description of the product
-  technicalDetails: technicalDetailsSchema, // Technical details
-  manufactureDetails: manufactureDetailsSchema, // Manufacture details
-  warrantyAndCertifications: warrantyAndCertificationsSchema, // Warranty and certifications
-  images: [productImagesSchema], // Array of images
-  createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-}, { timestamps: true });
-
-// Pre-save middleware to auto-generate an incremented product code
-productSchema.pre('save', async function (next) {
-  if (!this.code) {
-    try {
-      // Find the last saved product and get its code
-      const lastProduct = await mongoose.model('Product').findOne().sort({ createdAt: -1 });
-
-      // If a previous product exists, increment its code by 1; otherwise, start with 10000
-      const lastCode = lastProduct ? parseInt(lastProduct.code, 10) : 9999;
-
-      // Increment the last code by 1 and pad it to 5 digits
-      this.code = (lastCode + 1).toString().padStart(5, '0');
-
-      next();
-    } catch (err) {
-      next(err);
+    // Add filters to the query object based on the request parameters
+    if (sellerName) {
+      query['seller.name'] = { $in: sellerName.split(',') };
     }
-  } else {
-    next();
+
+    if (sellerPhoneNumber) {
+      query['seller.phoneNumber'] = { $in: sellerPhoneNumber.split(',') };
+    }
+
+    if (category) {
+      query.category = { $in: category.split(',') };
+    }
+
+    if (subCategory) {
+      query.subCategory = { $in: subCategory.split(',') };
+    }
+
+    if (type) {
+      query.type = { $in: type.split(',') };
+    }
+
+    if (subType) {
+      query.subType = { $in: subType.split(',') };
+    }
+
+    if (minPrice || maxPrice) {
+      query.price = {};
+      if (minPrice) query.price.$gte = Number(minPrice);
+      if (maxPrice) query.price.$lte = Number(maxPrice);
+    }
+
+    if (minQuantity || maxQuantity) {
+      query.quantity = {};
+      if (minQuantity) query.quantity.$gte = Number(minQuantity);
+      if (maxQuantity) query.quantity.$lte = Number(maxQuantity);
+    }
+
+    if (brand) {
+      query['technicalDetails.brand'] = { $in: brand.split(',') };
+    }
+
+    if (color) {
+      query['technicalDetails.color'] = { $in: color.split(',') };
+    }
+
+    if (material) {
+      query['technicalDetails.material'] = { $in: material.split(',') };
+    }
+
+    if (warranty) {
+      query['warrantyAndCertifications.warranty'] = warranty === 'true';
+    }
+
+    if (isoCertified) {
+      query['warrantyAndCertifications.isoCertified'] = isoCertified === 'true';
+    }
+
+    // Fetch products based on the dynamic query
+    const products = await Product.find(query).populate('createdBy', '-password');
+
+    // Send the filtered products as a response
+    res.status(200).json(products);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to retrieve products', error: error.message });
   }
-});
-
-const Product = mongoose.model('Product', productSchema);
-
-export default Product;
+};
