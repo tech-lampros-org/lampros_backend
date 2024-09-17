@@ -166,3 +166,142 @@ export const filterProducts = async (req, res) => {
     res.status(500).json({ message: 'Failed to retrieve products', error: error.message });
   }
 };
+
+
+import { ProProduct } from './models/ProProduct'; // Update with your actual model path
+
+export const searchProducts = async (req, res) => {
+  try {
+    // Extract query parameters from the request
+    const {
+      query, // General search query
+      sellerName,
+      sellerPhoneNumber,
+      category,
+      subCategory,
+      type,
+      subType,
+      minPrice,
+      maxPrice,
+      minQuantity,
+      maxQuantity,
+      brand,
+      color,
+      material,
+      warranty,
+      isoCertified
+    } = req.query;
+
+    // Initialize the query object
+    let queryObject = {};
+
+    // General search query with partial matching (fuzzy search)
+    if (query) {
+      const regex = new RegExp(query.split('').join('.*'), 'i'); // Fuzzy matching regex
+      queryObject = {
+        $or: [
+          { 'seller.name': regex },
+          { 'seller.phoneNumber': regex },
+          { category: regex },
+          { subCategory: regex },
+          { type: regex },
+          { subType: regex },
+          { 'technicalDetails.brand': regex },
+          { 'technicalDetails.color': regex },
+          { 'technicalDetails.material': regex },
+          { price: regex }, // Adjust if price is stored as a string
+          { quantity: regex } // Adjust if quantity is stored as a string
+        ]
+      };
+    }
+
+    // Add additional filters to the query object
+    if (sellerName) {
+      queryObject['seller.name'] = { $in: sellerName.split(',') };
+    }
+
+    if (sellerPhoneNumber) {
+      queryObject['seller.phoneNumber'] = { $in: sellerPhoneNumber.split(',') };
+    }
+
+    if (category) {
+      queryObject.category = { $in: category.split(',') };
+    }
+
+    if (subCategory) {
+      queryObject.subCategory = { $in: subCategory.split(',') };
+    }
+
+    if (type) {
+      queryObject.type = { $in: type.split(',') };
+    }
+
+    if (subType) {
+      queryObject.subType = { $in: subType.split(',') };
+    }
+
+    if (minPrice || maxPrice) {
+      queryObject.price = {};
+      if (minPrice) queryObject.price.$gte = Number(minPrice);
+      if (maxPrice) queryObject.price.$lte = Number(maxPrice);
+    }
+
+    if (minQuantity || maxQuantity) {
+      queryObject.quantity = {};
+      if (minQuantity) queryObject.quantity.$gte = Number(minQuantity);
+      if (maxQuantity) queryObject.quantity.$lte = Number(maxQuantity);
+    }
+
+    if (brand) {
+      queryObject['technicalDetails.brand'] = { $in: brand.split(',') };
+    }
+
+    if (color) {
+      queryObject['technicalDetails.color'] = { $in: color.split(',') };
+    }
+
+    if (material) {
+      queryObject['technicalDetails.material'] = { $in: material.split(',') };
+    }
+
+    if (warranty) {
+      queryObject['warrantyAndCertifications.warranty'] = warranty === 'true';
+    }
+
+    if (isoCertified) {
+      queryObject['warrantyAndCertifications.isoCertified'] = isoCertified === 'true';
+    }
+
+    // Fetch products based on the dynamic query
+    const products = await ProProduct.find(queryObject).populate('createdBy', '-password');
+
+    // Categorize results
+    const categorizedResults = {
+      general: products,
+      sellerNameMatches: products.filter(p => sellerName && p.seller.name && sellerName.split(',').includes(p.seller.name)),
+      sellerPhoneNumberMatches: products.filter(p => sellerPhoneNumber && p.seller.phoneNumber && sellerPhoneNumber.split(',').includes(p.seller.phoneNumber)),
+      categoryMatches: products.filter(p => category && p.category && category.split(',').includes(p.category)),
+      subCategoryMatches: products.filter(p => subCategory && p.subCategory && subCategory.split(',').includes(p.subCategory)),
+      typeMatches: products.filter(p => type && p.type && type.split(',').includes(p.type)),
+      subTypeMatches: products.filter(p => subType && p.subType && subType.split(',').includes(p.subType)),
+      brandMatches: products.filter(p => brand && p.technicalDetails.brand && brand.split(',').includes(p.technicalDetails.brand)),
+      colorMatches: products.filter(p => color && p.technicalDetails.color && color.split(',').includes(p.technicalDetails.color)),
+      materialMatches: products.filter(p => material && p.technicalDetails.material && material.split(',').includes(p.technicalDetails.material)),
+      priceRangeMatches: products.filter(p => {
+        const priceCheck = (minPrice || maxPrice) ? (p.price >= (minPrice || 0) && p.price <= (maxPrice || Infinity)) : true;
+        return priceCheck;
+      }),
+      quantityRangeMatches: products.filter(p => {
+        const quantityCheck = (minQuantity || maxQuantity) ? (p.quantity >= (minQuantity || 0) && p.quantity <= (maxQuantity || Infinity)) : true;
+        return quantityCheck;
+      }),
+      warrantyMatches: products.filter(p => warranty !== undefined && p.warrantyAndCertifications.warranty === (warranty === 'true')),
+      isoCertifiedMatches: products.filter(p => isoCertified !== undefined && p.warrantyAndCertifications.isoCertified === (isoCertified === 'true'))
+    };
+
+    // Send the categorized response
+    res.status(200).json(categorizedResults);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to search products', error: error.message });
+  }
+};

@@ -1,5 +1,5 @@
 import express from 'express';
-import { addProduct, listAllProducts, listUserProducts, filterProducts } from '../controllers/pro-products.js';
+import { addProduct, listAllProducts, listUserProducts, filterProducts, searchProducts } from '../controllers/pro-products.js';
 import { protect } from '../middlewares/protect.js'; 
 
 // Initialize the router
@@ -16,5 +16,6 @@ router.get('/products/user', protect, listUserProducts);
 
 // Route to filter products based on query parameters (GET /api/products/filter)
 router.get('/products/filter', protect, filterProducts);
+router.get('/products/search', protect, searchProducts);
 
 export default router;
