@@ -1,5 +1,5 @@
 import express from 'express';
-import { addProject, listAllProjects, listUserProjects, filterProjects } from '../controllers/pro-projects.js';
+import { addProject, listAllProjects, listUserProjects, filterProjects, generalSearchProjects } from '../controllers/pro-projects.js';
 import { protect } from '../middlewares/protect.js'; 
 
 // Initialize the router
@@ -14,6 +14,7 @@ router.get('/projects/all', protect, listAllProjects);
 // Route to list projects created by the authenticated user (GET /api/projects/user)
 router.get('/projects/user', protect, listUserProjects);
 
-router.get('/projects/filter',protect, filterProjects)
+router.get('/projects/filter',protect, filterProjects);
+router.get('/projects/search',protect, generalSearchProjects);
 
 export default router;
