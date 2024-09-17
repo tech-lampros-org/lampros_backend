@@ -207,9 +207,7 @@ export const searchProducts = async (req, res) => {
           { subType: regex },
           { 'technicalDetails.brand': regex },
           { 'technicalDetails.color': regex },
-          { 'technicalDetails.material': regex },
-          { price: regex }, // Adjust if price is stored as a string
-          { quantity: regex } // Adjust if quantity is stored as a string
+          { 'technicalDetails.material': regex }
         ]
       };
     }
@@ -304,3 +302,4 @@ export const searchProducts = async (req, res) => {
     res.status(500).json({ message: 'Failed to search products', error: error.message });
   }
 };
+
