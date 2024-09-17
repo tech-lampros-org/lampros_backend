@@ -221,7 +221,6 @@ export const generalSearchProjects = async (req, res) => {
           { constructionType: regex },
           { houseType: regex },
           { style: regex },
-          { numberOfBathrooms: regex },
           { propertyOwnership: regex },
           { transactionTypeForProperty: regex },
           { plotSizeForProperty: regex },
@@ -260,7 +259,7 @@ export const generalSearchProjects = async (req, res) => {
     }
 
     if (numberOfBathrooms) {
-      queryObject.numberOfBathrooms = { $in: numberOfBathrooms.split(',') };
+      queryObject.numberOfBathrooms = { $in: numberOfBathrooms.split(',').map(Number) }; // Ensure numeric comparison
     }
 
     if (minArea || maxArea) {
@@ -296,7 +295,7 @@ export const generalSearchProjects = async (req, res) => {
     }
 
     if (propertyAge) {
-      queryObject.propertyAge = { $in: propertyAge.split(',') };
+      queryObject.propertyAge = { $in: propertyAge.split(',').map(Number) }; // Ensure numeric comparison
     }
 
     // Fetch projects based on the query object
@@ -312,7 +311,7 @@ export const generalSearchProjects = async (req, res) => {
       constructionTypeMatches: projects.filter(p => constructionType && p.constructionType && constructionType.split(',').includes(p.constructionType)),
       houseTypeMatches: projects.filter(p => houseType && p.houseType && houseType.split(',').includes(p.houseType)),
       styleMatches: projects.filter(p => style && p.style && style.split(',').includes(p.style)),
-      numberOfBathroomsMatches: projects.filter(p => numberOfBathrooms && p.numberOfBathrooms && numberOfBathrooms.split(',').includes(p.numberOfBathrooms.toString())),
+      numberOfBathroomsMatches: projects.filter(p => numberOfBathrooms && p.numberOfBathrooms && numberOfBathrooms.split(',').map(Number).includes(p.numberOfBathrooms)),
       rangeMatches: projects.filter(p => {
         const areaCheck = (minArea || maxArea) ? (p.areaSquareFeet >= (minArea || 0) && p.areaSquareFeet <= (maxArea || Infinity)) : true;
         const costCheck = (minCost || maxCost) ? (p.cost >= (minCost || 0) && p.cost <= (maxCost || Infinity)) : true;
@@ -320,7 +319,7 @@ export const generalSearchProjects = async (req, res) => {
       }),
       boundaryWallMatches: projects.filter(p => boundaryWall !== undefined && p.boundaryWall === (boundaryWall === 'true')),
       cornerPropertyMatches: projects.filter(p => cornerProperty !== undefined && p.cornerProperty === (cornerProperty === 'true')),
-      propertyAgeMatches: projects.filter(p => propertyAge && p.propertyAge && propertyAge.split(',').includes(p.propertyAge.toString()))
+      propertyAgeMatches: projects.filter(p => propertyAge && p.propertyAge && propertyAge.split(',').map(Number).includes(p.propertyAge))
     };
 
     // Send the categorized response
@@ -329,3 +328,4 @@ export const generalSearchProjects = async (req, res) => {
     res.status(500).json({ message: 'Failed to search projects', error: error.message });
   }
 };
+
