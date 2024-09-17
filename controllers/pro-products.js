@@ -158,7 +158,7 @@ export const filterProducts = async (req, res) => {
     }
 
     // Fetch products based on the dynamic query
-    const products = await ProProduct.find(query).populate('createdBy', '-password');
+    const products = await Product.find(query).populate('createdBy', '-password');
 
     // Send the filtered products as a response
     res.status(200).json(products);
@@ -166,6 +166,7 @@ export const filterProducts = async (req, res) => {
     res.status(500).json({ message: 'Failed to retrieve products', error: error.message });
   }
 };
+
 
 
 export const searchProducts = async (req, res) => {
