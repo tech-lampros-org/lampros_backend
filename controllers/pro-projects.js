@@ -98,7 +98,9 @@ export const filterProjects = async (req, res) => {
       plotSizeForProperty,
       boundaryWall,
       cornerProperty,
-      propertyAge
+      propertyAge,
+      sortBy, // New: Field to sort by
+      order,  // New: Sorting order (asc or desc)
     } = req.query;
 
     // Add filters to the query object based on the request parameters
@@ -115,7 +117,9 @@ export const filterProjects = async (req, res) => {
     }
 
     if (projectLocation) {
-      query.projectLocation = { $in: projectLocation.split(',') };
+      query.projectLocation = { 
+        place: { $in: projectLocation.split(',') }
+      };
     }
 
     if (constructionType) {
@@ -170,8 +174,17 @@ export const filterProjects = async (req, res) => {
       query.propertyAge = { $in: propertyAge.split(',') };
     }
 
-    // Fetch projects based on the dynamic query
-    const projects = await ProProject.find(query).populate('createdBy', '-password');
+    // Create sort options
+    let sortOptions = {};
+    if (sortBy) {
+      const sortOrder = order === 'desc' ? -1 : 1; // Use -1 for descending, 1 for ascending
+      sortOptions[sortBy] = sortOrder;
+    }
+
+    // Fetch projects based on the dynamic query with sorting
+    const projects = await ProProject.find(query)
+      .populate('createdBy', '-password')
+      .sort(sortOptions); // Apply sorting here
 
     // Send the filtered projects as a response
     res.status(200).json(projects);
@@ -179,6 +192,7 @@ export const filterProjects = async (req, res) => {
     res.status(500).json({ message: 'Failed to retrieve projects', error: error.message });
   }
 };
+
 // Update with your actual model path
 
 export const generalSearchProjects = async (req, res) => {
