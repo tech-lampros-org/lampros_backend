@@ -239,7 +239,18 @@ export const filterProducts = async (req, res) => {
 };
 
 
+// Controller to list products created by the authenticated user
+export const listUserProducts = async (req, res) => {
+  try {
+    // Fetch products created by the authenticated user
+    const products = await ProProduct.find({ createdBy: req.user._id });
 
+    // Send the products as a response
+    res.status(200).json(products);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to retrieve user products', error: error.message });
+  }
+};
 
 export const searchProducts = async (req, res) => {
   try {
