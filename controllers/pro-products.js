@@ -63,19 +63,6 @@ export const listAllProducts = async (req, res) => {
 };
 
 // Controller to list products created by the authenticated user
-export const listUserProducts = async (req, res) => {
-  try {
-    // Fetch products created by the authenticated user
-    const products = await ProProduct.find({ createdBy: req.user._id });
-
-    // Send the products as a response
-    res.status(200).json(products);
-  } catch (error) {
-    res.status(500).json({ message: 'Failed to retrieve user products', error: error.message });
-  }
-};
-
-// Controller to filter products based on query parameters
 export const filterProducts = async (req, res) => {
   try {
     // Initialize a query object
@@ -85,6 +72,7 @@ export const filterProducts = async (req, res) => {
     const {
       sellerName,
       sellerPhoneNumber,
+      location,
       category,
       subCategory,
       type,
@@ -96,8 +84,24 @@ export const filterProducts = async (req, res) => {
       brand,
       color,
       material,
-      warranty,
+      productDimensions,
+      weight,
+      baseWidth,
+      style,
+      installationType,
+      finishType,
+      drainType,
+      seatMaterial,
+      shape,
+      specialFeatures,
+      productModelNumber,
+      asinNumber,
+      productCareInstructions,
+      warrantyDuration,
       isoCertified,
+      warranty,
+      sortBy,
+      order,
     } = req.query;
 
     // Add filters to the query object based on the request parameters
@@ -107,6 +111,10 @@ export const filterProducts = async (req, res) => {
 
     if (sellerPhoneNumber) {
       query['seller.phoneNumber'] = { $in: sellerPhoneNumber.split(',') };
+    }
+
+    if (location) {
+      query['seller.location'] = location; // Assuming exact match for location
     }
 
     if (category) {
@@ -149,6 +157,60 @@ export const filterProducts = async (req, res) => {
       query['technicalDetails.material'] = { $in: material.split(',') };
     }
 
+    // Add additional technical details filters
+    if (weight) {
+      query['technicalDetails.weight'] = Number(weight);
+    }
+
+    if (baseWidth) {
+      query['technicalDetails.baseWidth'] = Number(baseWidth);
+    }
+
+    if (style) {
+      query['technicalDetails.style'] = style; // Assuming exact match for style
+    }
+
+    if (installationType) {
+      query['technicalDetails.installationType'] = installationType;
+    }
+
+    if (finishType) {
+      query['technicalDetails.finishType'] = finishType;
+    }
+
+    if (drainType) {
+      query['technicalDetails.drainType'] = drainType;
+    }
+
+    if (seatMaterial) {
+      query['technicalDetails.seatMaterial'] = seatMaterial;
+    }
+
+    if (shape) {
+      query['technicalDetails.shape'] = shape;
+    }
+
+    if (specialFeatures) {
+      query['technicalDetails.specialFeatures'] = { $in: specialFeatures.split(',') };
+    }
+
+    if (productModelNumber) {
+      query['technicalDetails.productModelNumber'] = productModelNumber;
+    }
+
+    if (asinNumber) {
+      query['technicalDetails.asinNumber'] = asinNumber;
+    }
+
+    if (productCareInstructions) {
+      query['technicalDetails.productCareInstructions'] = productCareInstructions;
+    }
+
+    // Warranty and certifications filters
+    if (warrantyDuration) {
+      query['warrantyAndCertifications.warrantyDuration'] = Number(warrantyDuration);
+    }
+
     if (warranty) {
       query['warrantyAndCertifications.warranty'] = warranty === 'true';
     }
@@ -157,8 +219,17 @@ export const filterProducts = async (req, res) => {
       query['warrantyAndCertifications.isoCertified'] = isoCertified === 'true';
     }
 
-    // Fetch products based on the dynamic query
-    const products = await ProProduct.find(query).populate('createdBy', '-password');
+    // Create sort options
+    let sortOptions = {};
+    if (sortBy) {
+      const sortOrder = order === 'desc' ? -1 : 1; // Use -1 for descending, 1 for ascending
+      sortOptions[sortBy] = sortOrder;
+    }
+
+    // Fetch products based on the dynamic query with sorting
+    const products = await Product.find(query)
+      .populate('createdBy', '-password')
+      .sort(sortOptions); // Apply sorting here
 
     // Send the filtered products as a response
     res.status(200).json(products);
@@ -166,6 +237,7 @@ export const filterProducts = async (req, res) => {
     res.status(500).json({ message: 'Failed to retrieve products', error: error.message });
   }
 };
+
 
 
 
