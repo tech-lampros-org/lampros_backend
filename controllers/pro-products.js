@@ -227,7 +227,7 @@ export const filterProducts = async (req, res) => {
     }
 
     // Fetch products based on the dynamic query with sorting
-    const products = await Product.find(query)
+    const products = await ProProduct.find(query)
       .populate('createdBy', '-password')
       .sort(sortOptions); // Apply sorting here
 
