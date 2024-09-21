@@ -62,7 +62,6 @@ export const listAllProducts = async (req, res) => {
   }
 };
 
-// Controller to list products created by the authenticated user
 export const filterProducts = async (req, res) => {
   try {
     // Initialize a query object
@@ -84,7 +83,6 @@ export const filterProducts = async (req, res) => {
       brand,
       color,
       material,
-      productDimensions,
       weight,
       baseWidth,
       style,
@@ -145,6 +143,7 @@ export const filterProducts = async (req, res) => {
       if (maxQuantity) query.quantity.$lte = Number(maxQuantity);
     }
 
+    // Accept multiple values for technical details
     if (brand) {
       query['technicalDetails.brand'] = { $in: brand.split(',') };
     }
@@ -157,37 +156,36 @@ export const filterProducts = async (req, res) => {
       query['technicalDetails.material'] = { $in: material.split(',') };
     }
 
-    // Add additional technical details filters
     if (weight) {
-      query['technicalDetails.weight'] = Number(weight);
+      query['technicalDetails.weight'] = { $in: weight.split(',').map(Number) };
     }
 
     if (baseWidth) {
-      query['technicalDetails.baseWidth'] = Number(baseWidth);
+      query['technicalDetails.baseWidth'] = { $in: baseWidth.split(',').map(Number) };
     }
 
     if (style) {
-      query['technicalDetails.style'] = style; // Assuming exact match for style
+      query['technicalDetails.style'] = { $in: style.split(',') };
     }
 
     if (installationType) {
-      query['technicalDetails.installationType'] = installationType;
+      query['technicalDetails.installationType'] = { $in: installationType.split(',') };
     }
 
     if (finishType) {
-      query['technicalDetails.finishType'] = finishType;
+      query['technicalDetails.finishType'] = { $in: finishType.split(',') };
     }
 
     if (drainType) {
-      query['technicalDetails.drainType'] = drainType;
+      query['technicalDetails.drainType'] = { $in: drainType.split(',') };
     }
 
     if (seatMaterial) {
-      query['technicalDetails.seatMaterial'] = seatMaterial;
+      query['technicalDetails.seatMaterial'] = { $in: seatMaterial.split(',') };
     }
 
     if (shape) {
-      query['technicalDetails.shape'] = shape;
+      query['technicalDetails.shape'] = { $in: shape.split(',') };
     }
 
     if (specialFeatures) {
@@ -195,20 +193,20 @@ export const filterProducts = async (req, res) => {
     }
 
     if (productModelNumber) {
-      query['technicalDetails.productModelNumber'] = productModelNumber;
+      query['technicalDetails.productModelNumber'] = { $in: productModelNumber.split(',') };
     }
 
     if (asinNumber) {
-      query['technicalDetails.asinNumber'] = asinNumber;
+      query['technicalDetails.asinNumber'] = { $in: asinNumber.split(',') };
     }
 
     if (productCareInstructions) {
-      query['technicalDetails.productCareInstructions'] = productCareInstructions;
+      query['technicalDetails.productCareInstructions'] = { $in: productCareInstructions.split(',') };
     }
 
     // Warranty and certifications filters
     if (warrantyDuration) {
-      query['warrantyAndCertifications.warrantyDuration'] = Number(warrantyDuration);
+      query['warrantyAndCertifications.warrantyDuration'] = { $in: warrantyDuration.split(',').map(Number) };
     }
 
     if (warranty) {
@@ -237,6 +235,7 @@ export const filterProducts = async (req, res) => {
     res.status(500).json({ message: 'Failed to retrieve products', error: error.message });
   }
 };
+
 
 
 // Controller to list products created by the authenticated user
