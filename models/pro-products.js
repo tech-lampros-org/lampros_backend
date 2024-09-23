@@ -47,10 +47,14 @@ const manufactureDetailsSchema = new mongoose.Schema({
 
 // Schema for product warranty and certification details
 const warrantyAndCertificationsSchema = new mongoose.Schema({
-  warrantyDuration: { type: Number },   // Warranty duration in months/years
-  isoCertified: { type: Boolean },      // Whether ISO certified
-  warranty: { type: Boolean },          // Warranty available or not
+  warrantyDuration: {
+    months: { type: Number, default: 0 }, // Warranty duration in months
+    years: { type: Number, default: 0 }   // Warranty duration in years
+  },
+  isoCertified: { type: Boolean },        // Whether ISO certified
+  warranty: { type: Boolean }              // Warranty available or not
 });
+
 
 // Main Product schema
 const productSchema = new mongoose.Schema({
@@ -60,7 +64,8 @@ const productSchema = new mongoose.Schema({
   category: { type: String }, // Product category
   subCategory: { type: String }, // Product sub-category
   type: { type: String }, // Product type
-  subType: { type: String }, // Product sub-type  <-- Add this line
+  subType: { type: String }, // Product sub-type
+  brand: { type: mongoose.Schema.Types.ObjectId, ref: 'Brand' }, // Reference to the Brand schema
   price: { type: Number }, // Product price
   quantity: { type: Number }, // Available quantity
   about: { type: String }, // Description of the product
@@ -70,6 +75,7 @@ const productSchema = new mongoose.Schema({
   images: [productImagesSchema], // Array of images
   createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
 }, { timestamps: true });
+
 
 // Pre-save middleware to auto-generate an incremented product code
 productSchema.pre('save', async function (next) {
