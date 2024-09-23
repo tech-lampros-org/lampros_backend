@@ -15,7 +15,8 @@ export const addBrand = async (req, res) => {
     const brand = new Brand({
       name,
       description,
-      imageUrl
+      imageUrl,
+      createdBy: req.user._id,
     });
 
     // Save the brand to the database
