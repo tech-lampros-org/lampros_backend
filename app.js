@@ -16,6 +16,7 @@ import ro_posts from './routes/pro-post.js'
 import ro_projects from './routes/pro-projects.js'
 import ro_products from './routes/pro-products.js'
 import category from './routes/catogory.js'
+import ro_brands from './routes/brand.js'
 
 const app = express();
 
@@ -39,7 +40,7 @@ app.use('/api/posts', ro_posts)
 app.use('/api/projects', ro_projects);
 app.use('/api/products', ro_products);
 app.use('/api/category',protect, category);
-
+app.use('/api/brand', ro_brands)
 
 
 // Example route
