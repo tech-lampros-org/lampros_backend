@@ -1,16 +1,23 @@
 import ProProduct from '../models/pro-products.js';
+import Brand from '../models/brand.js';
 
-// Controller to handle adding a new product
+// Controller to handle adding a new product with brand reference
 export const addProduct = async (req, res) => {
   try {
     const {
-      seller, name, category, subCategory, type, price, quantity, about, technicalDetails,
-      manufactureDetails, warrantyAndCertifications, images,subType
+      seller, name, category, subCategory, type, subType, price, quantity, about, technicalDetails,
+      manufactureDetails, warrantyAndCertifications, images, brandId
     } = req.body;
 
     // Validate required fields
-    if (!name || !price || !quantity) {
-      return res.status(400).json({ message: 'Name, price, and quantity are required.' });
+    if (!name || !price || !quantity || !brandId) {
+      return res.status(400).json({ message: 'Name, price, quantity, and brand are required.' });
+    }
+
+    // Check if the brand exists and is approved
+    const brand = await Brand.findById(brandId);
+    if (!brand || !brand.adminApproved) {
+      return res.status(400).json({ message: 'Brand not found or not approved by admin.' });
     }
 
     // Create a new product with the data and the logged-in user as the creator
@@ -21,6 +28,7 @@ export const addProduct = async (req, res) => {
       subCategory,
       type,
       subType,
+      brand: brandId,  // Reference to the brand
       price,
       quantity,
       about,
@@ -41,6 +49,7 @@ export const addProduct = async (req, res) => {
   }
 };
 
+
 // Controller to list all products with optional pagination
 export const listAllProducts = async (req, res) => {
   try {
@@ -49,11 +58,12 @@ export const listAllProducts = async (req, res) => {
     const limit = parseInt(req.query.limit, 10) || 10;
     const skip = (page - 1) * limit;
 
-    // Fetch all products with pagination
+    // Fetch all products with pagination and populate 'createdBy' and 'brand'
     const products = await ProProduct.find()
       .skip(skip)
       .limit(limit)
-      .populate('createdBy', '-password'); // Optionally populate user info
+      .populate('createdBy', '-password') // Exclude password field from 'createdBy'
+      .populate('brand'); // Populate 'brand' with all fields
 
     // Send the products as a response
     res.status(200).json(products);
@@ -144,10 +154,6 @@ export const filterProducts = async (req, res) => {
     }
 
     // Accept multiple values for technical details
-    if (brand) {
-      query['technicalDetails.brand'] = { $in: brand.split(',') };
-    }
-
     if (color) {
       query['technicalDetails.color'] = { $in: color.split(',') };
     }
@@ -217,17 +223,20 @@ export const filterProducts = async (req, res) => {
       query['warrantyAndCertifications.isoCertified'] = isoCertified === 'true';
     }
 
-    // Create sort options
-    let sortOptions = {};
-    if (sortBy) {
-      const sortOrder = order === 'desc' ? -1 : 1; // Use -1 for descending, 1 for ascending
-      sortOptions[sortBy] = sortOrder;
-    }
-
-    // Fetch products based on the dynamic query with sorting
+    // Fetch products and populate brands first
     const products = await ProProduct.find(query)
       .populate('createdBy', '-password')
-      .sort(sortOptions); // Apply sorting here
+      .populate('brand') // Populate the brand to access its name
+      .exec();
+
+    // Filter products based on the brand name if provided
+    if (brand) {
+      const brandNames = brand.split(',');
+      const filteredProducts = products.filter(product =>
+        brandNames.includes(product.brand.name) // Adjust this based on your brand schema
+      );
+      return res.status(200).json(filteredProducts);
+    }
 
     // Send the filtered products as a response
     res.status(200).json(products);
@@ -238,11 +247,14 @@ export const filterProducts = async (req, res) => {
 
 
 
+
 // Controller to list products created by the authenticated user
 export const listUserProducts = async (req, res) => {
   try {
-    // Fetch products created by the authenticated user
-    const products = await ProProduct.find({ createdBy: req.user._id });
+    // Fetch products created by the authenticated user and populate the brand
+    const products = await ProProduct.find({ createdBy: req.user._id })
+      .populate('brand') // Populate only the brand name
+      .populate('createdBy', '-password'); // Optionally populate user info without password
 
     // Send the products as a response
     res.status(200).json(products);
@@ -250,6 +262,7 @@ export const listUserProducts = async (req, res) => {
     res.status(500).json({ message: 'Failed to retrieve user products', error: error.message });
   }
 };
+
 
 export const searchProducts = async (req, res) => {
   try {
