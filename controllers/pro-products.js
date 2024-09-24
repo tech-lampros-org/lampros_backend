@@ -16,7 +16,7 @@ export const addProduct = async (req, res) => {
 
     // Check if the brand exists and is approved
     const brand = await Brand.findById(brandId);
-    if (!brand || !brand.adminApproved) {
+    if (!brand) {
       return res.status(400).json({ message: 'Brand not found or not approved by admin.' });
     }
 
@@ -41,6 +41,7 @@ export const addProduct = async (req, res) => {
 
     // Save the product to the database
     await product.save();
+    product.brand = brand; // Set the brand reference in the product
 
     // Send a success response
     res.status(201).json({ message: 'Product created successfully', product });
