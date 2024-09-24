@@ -4,6 +4,7 @@ import Brand from '../models/brand.js';
 // Controller to handle adding a new product with brand reference
 export const addProduct = async (req, res) => {
   try {
+    
     const {
       seller, name, category, subCategory, type, subType, price, quantity, about, technicalDetails,
       manufactureDetails, warrantyAndCertifications, images, brandId
