@@ -14,12 +14,7 @@ export const sendSmsvia2fact = (to, message, next) => {
         logger.error(err);
         reject(err);
       } else {
-        if (responseData.messages[0].status === "0") {
-          resolve(responseData);
-          if (typeof next === 'function') next(); // Call next if it's a function
-        } else {
-          reject(new Error(responseData.messages[0]['error-text']));
-        }
+        resolve(responseData)
       }
     });
   });
