@@ -254,7 +254,7 @@ export const filterProducts = async (req, res) => {
 export const listUserProducts = async (req, res) => {
   try {
     // Fetch products created by the authenticated user and populate the brand
-    const products = await ProProduct.find({ createdBy: req.user._id })
+    const products = await ProProduct.find({ createdBy: req.user })
       .populate('brand') // Populate only the brand name
       .populate('createdBy', '-password'); // Optionally populate user info without password
 
