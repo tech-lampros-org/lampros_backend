@@ -1,5 +1,5 @@
 // controllers/searchController.js
-import Category from '../models/category.js';
+import Category from '../models/catogory.js';
 import Brand from '../models/brand.js';
 import Product from '../models/pro-products.js';
 import ProProject from '../models/pro-projects.js';
