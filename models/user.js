@@ -20,6 +20,7 @@ const companyDetailsSchema = new mongoose.Schema({
   isCompanyEmailVerified: { type: Boolean, default: false }, // New field for company email verification
   companyPhone: { type: String },
   companyGstNumber: { type: String },
+  experience: { type: Number , default: 0 }, // Experience in years
 });
 
 const UserSchema = new mongoose.Schema(
@@ -36,7 +37,7 @@ const UserSchema = new mongoose.Schema(
     profileImage: { type: String }, // New profileImage field for storing image URL
     address: addressSchema, // Use the personal address schema here
     companyDetails: companyDetailsSchema, // Use the company details schema with updated address structure
-    role: { type: String, enum: ['Service Provider', 'Product Seller'] },
+    role: { type: String, enum: ['Realtor', 'Product Seller', 'Professionals', 'Home Owner'], default: 'Home Owner' },
     type: { type: String },
     premium: {
       isPremium: { type: Boolean, default: false },
