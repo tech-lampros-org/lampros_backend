@@ -1,6 +1,8 @@
 import { createOtpRequest, verifyOtpAndLogin, updateUserDetails } from '../functions/otp.js';
 import { generateToken, verifyToken } from '../config/jwt.js';
 import User from '../models/user.js';
+import ProProject from '../models/pro-projects.js';
+import Product from '../models/pro-products.js';
 
 export const requestOtp = async (req, res) => {
   try {
@@ -173,3 +175,51 @@ export const uploadImages = async (req, res) => {
 };
 
 
+export const filterUsersWithProjectsOrProducts = async (req, res) => {
+  try {
+    const { role, type } = req.query; // Extract role and type from query parameters
+
+    // Build a filter object for MongoDB
+    const filter = {};
+
+    if (role) {
+      filter.role = role; // Filter by role if provided
+    }
+
+    if (type) {
+      filter.type = type; // Filter by type if provided
+    }
+
+    // Find users based on the role and type
+    let users = await User.find(filter).select('-password -__v'); // Exclude password and other unnecessary fields
+
+    // Prepare an array to store users with their projects/products
+    const usersWithProjectsOrProducts = [];
+
+    for (const user of users) {
+      let userWithDetails = user.toObject(); // Convert Mongoose doc to plain object
+
+      // Depending on the role, fetch related projects or products
+      if (role === 'Realtor' || role === 'Professionals') {
+        // Fetch ProProjects where createdBy matches the user's _id
+        const projects = await ProProject.find({ createdBy: user._id });
+        userWithDetails.projects = projects; // Add projects to the user object
+      } else if (role === 'Product Seller') {
+        // Fetch Products where createdBy matches the user's _id
+        const products = await Product.find({ createdBy: user._id });
+        userWithDetails.products = products; // Add products to the user object
+      }
+
+      usersWithProjectsOrProducts.push(userWithDetails); // Add user with projects/products to the result array
+    }
+
+    if (usersWithProjectsOrProducts.length === 0) {
+      return res.status(404).json({ message: 'No users found with matching projects or products' });
+    }
+
+    // Return the filtered users with their projects/products
+    res.status(200).json(usersWithProjectsOrProducts);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
