@@ -29,6 +29,7 @@
   "homepage": "https://github.com/tech-lampros-org/lampros_backend#readme",
   "dependencies": {
     "@vonage/server-sdk": "^3.16.0",
+    "axios": "^1.7.7",
     "cloudinary": "^1.41.3",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
