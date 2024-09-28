@@ -1,24 +1,50 @@
 import { Vonage } from '@vonage/server-sdk';
 import {logger} from '../config/loggingConfig.js';
-import fetch from 'node-fetch';
+import axios from 'axios'
 
 const vonage = new Vonage({
   apiKey: process.env.VONAGE_API_KEY,
   apiSecret: process.env.VONAGE_API_SECRET,
 });
 
+// export const sendSmsvia2fact = (to, message, next) => {
+//   return new Promise((resolve, reject) => {
+//     vonage.sms.send({ to, from: process.env.VONAGE_PHONE_NUMBER, text: message }, (err, responseData) => {
+//       if (err) {
+//         logger.error(err);
+//         reject(err);
+//       } else {
+//         resolve(responseData)
+//       }
+//     });
+//   });
+// };
+
 export const sendSmsvia2fact = (to, message, next) => {
-  return new Promise((resolve, reject) => {
-    vonage.sms.send({ to, from: process.env.VONAGE_PHONE_NUMBER, text: message }, (err, responseData) => {
-      if (err) {
-        logger.error(err);
-        reject(err);
-      } else {
-        resolve(responseData)
+  return new Promise(async (resolve, reject) => {
+    try {
+      // Remove '+' from the phone number if present
+      let formattedNumber = to.replace('+', '');
+
+      // Ensure phone number starts with '91'
+      if (!formattedNumber.startsWith('91')) {
+        formattedNumber = `91${formattedNumber}`;
       }
-    });
+
+      // Construct the API URL
+      const apiUrl = `https://wabot-b0kk.onrender.com/send?nm=${formattedNumber}&message=${message}`;
+
+      // Send the request using axios
+      const response = await axios.get(apiUrl);
+
+      resolve(response.data); // Resolve with the response data
+    } catch (err) {
+      logger.error(err);
+      reject(err); // Reject in case of an error
+    }
   });
 };
+
 
 // export const sendSmsvia2fact = async (phoneNumber, otp) => {
 //   const apiKey = process.env.TWO_FACTOR_SMS_API_KEY; // Your 2Factor API key
