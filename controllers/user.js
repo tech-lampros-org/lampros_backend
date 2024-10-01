@@ -214,7 +214,7 @@ export const filterUsersWithProjectsOrProducts = async (req, res) => {
     }
 
     if (usersWithProjectsOrProducts.length === 0) {
-      return res.status(404).json({ message: 'No users found with matching projects or products' });
+      return res.status(200).json([]);
     }
 
     // Return the filtered users with their projects/products
