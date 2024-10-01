@@ -28,7 +28,7 @@ export const fuzzySearchAll = async (req, res) => {
             Product.find(letterSupport === 'yes' 
                 ? { $or: [{ name: { $regex: regex } }, { about: { $regex: regex } }] }
                 : { name: regex }
-            ).lean(),
+            ).populate('brand').lean(),
             ProProject.find(letterSupport === 'yes' 
                 ? { $or: [{ projectType: { $regex: regex } }, { about: { $regex: regex } }] }
                 : { projectType: regex }
