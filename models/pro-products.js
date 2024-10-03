@@ -74,6 +74,7 @@ const productSchema = new mongoose.Schema({
   warrantyAndCertifications: warrantyAndCertificationsSchema, // Warranty and certifications
   images: [productImagesSchema], // Array of images
   createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  updatedAt: { type: Date, default: Date.now }, // Automatically set the update date            
 }, { timestamps: true });
 
 
