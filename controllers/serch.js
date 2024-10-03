@@ -32,14 +32,10 @@ export const fuzzySearchAll = async (req, res) => {
                 ]
             }).lean(),
             User.find({
-                $and: [
-                    { role: { $in: userRoles } }, // Optional: Remove if not needed
-                    {
-                        $or: [
-                            { name: regex },
-                            { role: regex }
-                        ]
-                    }
+                $or: [
+                    { fname: regex },
+                    { lname: regex },
+                    { role: regex }
                 ]
             }).lean(),
         ]);
