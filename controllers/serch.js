@@ -35,7 +35,6 @@ export const fuzzySearchAll = async (req, res) => {
                 $or: [
                     { fname: regex },
                     { lname: regex },
-                    { role: regex }
                 ]
             }).lean(),
         ]);
@@ -104,7 +103,7 @@ export const fuzzySearchAll = async (req, res) => {
                 categories: categories.length,
                 brands: brands.length,
                 products: products.length,
-                proProjects: proProjects.length,
+                projects: proProjects.length,
                 users: usersWithDetails.length, // Updated count
             },
         });
