@@ -97,7 +97,7 @@ export const fuzzySearchAll = async (req, res) => {
                 categories,
                 brands,
                 products,
-                proProjects,
+                projects: proProjects,
                 users: usersWithDetails, // Use enhanced user data
             },
             totalResults: {
