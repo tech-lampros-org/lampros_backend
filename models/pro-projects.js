@@ -37,7 +37,9 @@ const proProjectSchema = new mongoose.Schema({
   boundaryWall: { type: Boolean }, // Whether there is a boundary wall or not
   cornerProperty: { type: Boolean }, // Whether it is a corner property or not
   propertyAge: { type: Number }, // Age of the property in years
-  createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }, // Reference to the user who created the project
+  createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  createdAt: { type: Date, default: Date.now }, // Automatically set the creation date
+  updatedAt: { type: Date, default: Date.now }, // Automatically set the update date
 }, { timestamps: true });
 
 const ProProject = mongoose.model('ProProject', proProjectSchema);
