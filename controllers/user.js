@@ -181,8 +181,10 @@ export const filterUsersWithProjectsOrProducts = async (req, res) => {
     // Build a filter object for MongoDB
     const filter = {};
 
+    let roleArray = [];
+    let typeArray = [];
     if (role) {
-      const roleArray = role.split(','); // Split by comma for multiple roles
+      roleArray = role.split(','); // Split by comma for multiple roles
       filter.role = { $in: roleArray }; // Use $in to filter by multiple roles
     }
 
