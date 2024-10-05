@@ -63,7 +63,6 @@ export const completeRegistration = async (req, res) => {
     if (!isNotEmpty(fname)) emptyFields.push('fname');
     if (!isNotEmpty(lname)) emptyFields.push('lname');
     if (!isNotEmpty(role)) emptyFields.push('role');
-    if (!isNotEmpty(type)) emptyFields.push('type');
     if (!isNotEmpty(email)) emptyFields.push('email');
     if (!isNotEmpty(address)) emptyFields.push('address');
 
@@ -183,11 +182,13 @@ export const filterUsersWithProjectsOrProducts = async (req, res) => {
     const filter = {};
 
     if (role) {
-      filter.role = role; // Filter by role if provided
+      const roleArray = role.split(','); // Split by comma for multiple roles
+      filter.role = { $in: roleArray }; // Use $in to filter by multiple roles
     }
 
     if (type) {
-      filter.type = type; // Filter by type if provided
+      const typeArray = type.split(','); // Split by comma for multiple types
+      filter.type = { $in: typeArray }; // Use $in to filter by multiple types
     }
 
     // Find users based on the role and type
@@ -200,11 +201,11 @@ export const filterUsersWithProjectsOrProducts = async (req, res) => {
       let userWithDetails = user.toObject(); // Convert Mongoose doc to plain object
 
       // Depending on the role, fetch related projects or products
-      if (role === 'Realtor' || role === 'Professionals') {
+      if (roleArray.includes('Realtor') || roleArray.includes('Professionals')) {
         // Fetch ProProjects where createdBy matches the user's _id
         const projects = await ProProject.find({ createdBy: user._id });
         userWithDetails.projects = projects; // Add projects to the user object
-      } else if (role === 'Product Seller') {
+      } else if (roleArray.includes('Product Seller')) {
         // Fetch Products where createdBy matches the user's _id
         const products = await Product.find({ createdBy: user._id });
         userWithDetails.products = products; // Add products to the user object
