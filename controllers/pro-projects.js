@@ -7,7 +7,7 @@ export const addProject = async (req, res) => {
       sellerName, sellerPhoneNumber, projectType, projectLocation, constructionType, houseType,
       style, layout, numberOfBathrooms, areaSquareFeet, plotSize, scope, cost, about, images,
       floors, numberOfParkings, propertyOwnership, transactionTypeForProperty, plotSizeForProperty,
-      boundaryWall, cornerProperty, propertyAge
+      boundaryWall, cornerProperty, propertyAge,tags 
     } = req.body;
 
     // Create a new project with the data and the logged-in user as the creator
@@ -35,6 +35,7 @@ export const addProject = async (req, res) => {
       boundaryWall,
       cornerProperty,
       propertyAge,
+      tags,
       createdBy: req.user, // Assumes req.user contains the authenticated user's data
     });
 
@@ -99,6 +100,7 @@ export const filterProjects = async (req, res) => {
       boundaryWall,
       cornerProperty,
       propertyAge,
+      tags,
       sortBy, // New: Field to sort by
       order,  // New: Sorting order (asc or desc)
     } = req.query;
@@ -173,6 +175,9 @@ export const filterProjects = async (req, res) => {
     if (propertyAge) {
       query.propertyAge = { $in: propertyAge.split(',') };
     }
+    if (tags) {
+      query.tags = { $elemMatch: { name: { $in: tags.split(',') } } }; // Filter projects by tag names
+    }
 
     // Create sort options
     let sortOptions = {};
@@ -217,7 +222,8 @@ export const generalSearchProjects = async (req, res) => {
       plotSizeForProperty,
       boundaryWall,
       cornerProperty,
-      propertyAge
+      propertyAge,
+      tags,
     } = req.query;
 
     // Initialize the query object
@@ -311,7 +317,9 @@ export const generalSearchProjects = async (req, res) => {
     if (propertyAge) {
       queryObject.propertyAge = { $in: propertyAge.split(',').map(Number) }; // Ensure numeric comparison
     }
-
+    if (tags) {
+      queryObject.tags = { $elemMatch: { name: { $in: tags.split(',') } } }; // Filter projects by tag names
+    }
     // Fetch projects based on the query object
     const projects = await ProProject.find(queryObject).populate('createdBy', '-password');
 
