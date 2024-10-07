@@ -6,6 +6,12 @@ const projectLocationSchema = new mongoose.Schema({
   pincode: { type: Number },
 });
 
+const tagSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  image: { type: String, required: true }
+});
+
+
 // Schema for project images categorized by different types
 const projectImagesSchema = new mongoose.Schema({
   category: { type: String }, // Category of the image (e.g., front view, interior)
@@ -37,6 +43,7 @@ const proProjectSchema = new mongoose.Schema({
   boundaryWall: { type: Boolean }, // Whether there is a boundary wall or not
   cornerProperty: { type: Boolean }, // Whether it is a corner property or not
   propertyAge: { type: Number }, // Age of the property in years
+  tags: { type: [tagSchema], default: [] },
   createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   createdAt: { type: Date, default: Date.now }, // Automatically set the creation date
   updatedAt: { type: Date, default: Date.now }, // Automatically set the update date
