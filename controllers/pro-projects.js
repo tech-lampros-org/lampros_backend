@@ -176,7 +176,7 @@ export const filterProjects = async (req, res) => {
       query.propertyAge = { $in: propertyAge.split(',') };
     }
     if (tags) {
-      query.tags = { $elemMatch: { name: { $in: tags.split(',') } } }; // Filter projects by tag names
+      query.tags = { $in: tags.split(',') }; // Filter projects by tag names
     }
 
     // Create sort options
@@ -318,7 +318,7 @@ export const generalSearchProjects = async (req, res) => {
       queryObject.propertyAge = { $in: propertyAge.split(',').map(Number) }; // Ensure numeric comparison
     }
     if (tags) {
-      queryObject.tags = { $elemMatch: { name: { $in: tags.split(',') } } }; // Filter projects by tag names
+      queryObject.tags = { $in: tags.split(',') }; // Filter projects by tag names
     }
     // Fetch projects based on the query object
     const projects = await ProProject.find(queryObject).populate('createdBy', '-password');
