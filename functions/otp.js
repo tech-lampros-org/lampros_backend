@@ -22,7 +22,7 @@ export const createOtpRequest = async (phoneNumber) => {
   const otp = new Otp({ phoneNumber });
   otp.generateOtp();
   await otp.save();
-  // await sendSmsvia2fact(phoneNumber, otp.otp);
+  await sendSmsvia2fact(phoneNumber, otp.otp);
   return { message: 'OTP sent successfully.' };
 };
 
