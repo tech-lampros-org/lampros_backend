@@ -53,7 +53,7 @@ export const addProject = async (req, res) => {
 export const listAllProjects = async (req, res) => {
   try {
     // Fetch all projects
-    const projects = await ProProject.find().populate('createdBy', '-password'); // Optionally populate user info
+    const projects = await ProProject.find().sort({ createdAt: -1 }).populate('createdBy', '-password'); // Optionally populate user info
 
     // Send the projects as a response
     res.status(200).json(projects);
