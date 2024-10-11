@@ -6,8 +6,7 @@ const storage = new CloudinaryStorage({
   cloudinary: cloudinary.v2,
   params: {
     folder: 'lampros_profiles', // Folder in Cloudinary where images will be stored
-    allowed_formats: ['jpg', 'png', 'gif'],
-    transformation: [{ width: 800, height: 800, crop: 'limit' }]
+    allowed_formats: ['jpg', 'png', 'gif']
   }
 });
 
