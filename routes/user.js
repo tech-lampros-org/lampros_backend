@@ -1,5 +1,5 @@
 import express from 'express';
-import { requestOtp, verifyOtp, completeBasic, completeRegistration, getProfile, uploadImage, uploadImages, filterUsersWithProjectsOrProducts  } from '../controllers/user.js';
+import { requestOtp, verifyOtp, completeBasic, completeRegistration, getProfile, uploadImage, uploadImages, filterUsersWithProjectsOrProducts ,deleteAccount } from '../controllers/user.js';
 import upload from '../config/multerConfig.js';
 import { protect } from '../middlewares/protect.js'; 
 
@@ -11,6 +11,7 @@ router.post('/basic-registration', completeBasic);
 router.post('/complete-registration', completeRegistration);
 router.get('/protected-route', protect, getProfile);
 router.get('/user-filter',protect,filterUsersWithProjectsOrProducts )
+router.delete('/delete',protect,deleteAccount)
 
 
 // Image upload route
