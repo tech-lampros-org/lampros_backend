@@ -3,6 +3,8 @@ import { generateToken, verifyToken } from '../config/jwt.js';
 import User from '../models/user.js';
 import ProProject from '../models/pro-projects.js';
 import Product from '../models/pro-products.js';
+import Brand from '../models/brand.js';
+import Category from '../models/catogory.js';
 
 export const requestOtp = async (req, res) => {
   try {
@@ -11,6 +13,31 @@ export const requestOtp = async (req, res) => {
     res.status(200).json(response);
   } catch (error) {
     res.status(400).json({ message: error.message });
+  }
+};
+
+export const deleteAccount = async (req, res) => {
+  try {
+    const userId = req.user._id;
+      // Delete the user document
+      await User.findByIdAndDelete(userId)
+
+      // Delete all ProProjects created by the user
+      await ProProject.deleteMany({ createdBy: userId })
+  
+      // Delete all Products created by the user
+      await Product.deleteMany({ createdBy: userId })
+  
+      // Delete all Brands created by the user
+      await Brand.deleteMany({ createdBy: userId })
+  
+      // Delete all Categories created by the user (if applicable)
+      await Category.deleteMany({ createdBy: userId })
+
+    res.status(200).json({  message: 'Account and all associated data deleted successfully.' });
+  } catch (error) {
+    console.error('Error deleting account:', error);
+    res.status(500).json({ message: 'Failed to delete account. Please try again later.' });
   }
 };
 
