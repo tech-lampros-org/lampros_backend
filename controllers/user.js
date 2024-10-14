@@ -5,6 +5,7 @@ import ProProject from '../models/pro-projects.js';
 import Product from '../models/pro-products.js';
 import Brand from '../models/brand.js';
 import Category from '../models/catogory.js';
+import { sendSmsvia2fact } from '../services/smsService.js';
 
 export const requestOtp = async (req, res) => {
   try {
@@ -127,6 +128,13 @@ export const completeRegistration = async (req, res) => {
 
     // Generate a token for the user
     const token = generateToken(user._id);
+
+    await sendSmsvia2fact(phoneNumber,`Hello ${user.fname} ${user.lname} Thanks For Completing Our Registation prosess 
+    
+    
+    
+    
+    `)
 
     res.status(200).json({ message: 'Registration complete', token });
   } catch (error) {
