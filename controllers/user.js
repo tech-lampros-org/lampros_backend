@@ -128,6 +128,13 @@ export const completeRegistration = async (req, res) => {
     // Generate a token for the user
     const token = generateToken(user._id);
 
+    await sendSmsvia2fact(phoneNumber,`Hello ${user.fname} ${user.lname} Thanks For Completing Our Registation prosess 
+    
+    
+    
+    
+    `)
+
     res.status(200).json({ message: 'Registration complete', token });
   } catch (error) {
     res.status(400).json({ message: error.message });
