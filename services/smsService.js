@@ -32,7 +32,7 @@ export const sendSmsvia2fact = (to, message, next) => {
       }
 
       // Construct the API URL
-      const apiUrl = `https://rail-way-bot.onrender.com/send/${formattedNumber}/${message}`;
+      const apiUrl = `https://whatsapp-bot-q1u3.onrender.com/send/${formattedNumber}/${message}`;
 
       // Send the request using axios
       const response = await axios.get(apiUrl);

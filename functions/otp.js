@@ -47,7 +47,7 @@ export const verifyOtpAndLogin = async (phoneNumber, otp) => {
   }
 
   // Check if essential details are present
-  const isCompleteProfile = user.f_name && user.email;
+  const isCompleteProfile = user.fname && user.email;
 
   if (!isCompleteProfile) {
     return { message: 'User exists, but registration incomplete. Please complete your details.' };
