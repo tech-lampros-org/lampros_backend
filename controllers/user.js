@@ -31,9 +31,6 @@ export const deleteAccount = async (req, res) => {
   
       // Delete all Brands created by the user
       await Brand.deleteMany({ createdBy: userId })
-  
-      // Delete all Categories created by the user (if applicable)
-      await Category.deleteMany({ createdBy: userId })
 
     res.status(200).json({  message: 'Account and all associated data deleted successfully.' });
   } catch (error) {
