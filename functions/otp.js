@@ -5,19 +5,24 @@ import { sendSmsvia2fact } from '../services/smsService.js'
 // Function to create an OTP request
 export const createOtpRequest = async (phoneNumber) => {
   // Check for existing OTP records for the phone number
-  const existingOtpRecord = await Otp.findOne({ phoneNumber, isVerified: false });
-  if (existingOtpRecord) {
-    // Check if the existing OTP is still valid
-    if (Date.now() <= existingOtpRecord.expiresAt) {
-      throw new Error('An OTP has already been sent to this phone number.');
-    } else {
-      // If the existing OTP has expired, delete it
-      await Otp.deleteMany({
-        phoneNumber,
-        expiresAt: { $lt: Date.now() }
-      });
-    }
-  }
+  // const existingOtpRecord = await Otp.findOne({ phoneNumber, isVerified: false });
+  // if (existingOtpRecord) {
+  //   // Check if the existing OTP is still valid
+  //   if (Date.now() <= existingOtpRecord.expiresAt) {
+  //     throw new Error('An OTP has already been sent to this phone number.');
+  //   } else {
+  //     // If the existing OTP has expired, delete it
+  //     await Otp.deleteMany({
+  //       phoneNumber,
+  //       expiresAt: { $lt: Date.now() }
+  //     });
+  //   }
+  // }
+
+  await Otp.deleteMany({
+          phoneNumber,
+          expiresAt: { $lt: Date.now() }
+        });
 
   const otp = new Otp({ phoneNumber });
   otp.generateOtp();
