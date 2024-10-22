@@ -76,7 +76,7 @@ export const completeBasic = async (req, res) => {
 
 export const completeRegistration = async (req, res) => {
   try {
-    const { phoneNumber, fname, lname, profileImage, role, type, email, companyDetails, address } = req.body;
+    const { phoneNumber, fname, lname, profileImage, role, type, email, companyDetails, address, couponCode } = req.body;
 
     const isNotEmpty = (value) => value !== undefined && value !== null && value !== '';
 
@@ -88,6 +88,7 @@ export const completeRegistration = async (req, res) => {
     if (!isNotEmpty(role)) emptyFields.push('role');
     if (!isNotEmpty(email)) emptyFields.push('email');
     if (!isNotEmpty(address)) emptyFields.push('address');
+    if (!isNotEmpty(couponCode) || couponCode !== 'OCT2024') return res.status(400).json({ message: 'Invalid Coupon Code' });  
 
     // If any required fields are empty, return an error response
     if (emptyFields.length > 0) {
