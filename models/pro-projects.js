@@ -23,6 +23,7 @@ const proProjectSchema = new mongoose.Schema({
   constructionType: { type: String }, // Free text field (e.g., New, Renovation)
   houseType: { type: String }, // Free text field (e.g., Apartment, Villa)
   style: { type: String }, // Free text field (e.g., Modern, Traditional)
+  title: { type: String },
   layout: { type: String }, // Free text field (e.g., 2BHK, 3BHK)
   numberOfBathrooms: { type: Number },
   areaSquareFeet: { type: Number }, // Area in square feet
