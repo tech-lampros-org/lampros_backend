@@ -7,7 +7,7 @@ export const addProject = async (req, res) => {
       sellerName, sellerPhoneNumber, projectType, projectLocation, constructionType, houseType,
       style, layout, numberOfBathrooms, areaSquareFeet, plotSize, scope, cost, about, images,
       floors, numberOfParkings, propertyOwnership, transactionTypeForProperty, plotSizeForProperty,
-      boundaryWall, cornerProperty, propertyAge,tags 
+      boundaryWall, cornerProperty, propertyAge,tags , title
     } = req.body;
 
     // Create a new project with the data and the logged-in user as the creator
@@ -19,6 +19,7 @@ export const addProject = async (req, res) => {
       constructionType,
       houseType,
       style,
+      title,
       layout,
       numberOfBathrooms,
       areaSquareFeet,
@@ -89,6 +90,7 @@ export const filterProjects = async (req, res) => {
       constructionType,
       houseType,
       style,
+      title,
       numberOfBathrooms,
       minArea,
       maxArea,
@@ -126,6 +128,10 @@ export const filterProjects = async (req, res) => {
 
     if (constructionType) {
       query.constructionType = { $in: constructionType.split(',') };
+    }
+
+    if (title) {
+      query.title = { $in: title.split(',') };
     }
 
     if (houseType) {
@@ -213,6 +219,7 @@ export const generalSearchProjects = async (req, res) => {
       houseType,
       style,
       numberOfBathrooms,
+      title,
       minArea,
       maxArea,
       minCost,
@@ -242,6 +249,7 @@ export const generalSearchProjects = async (req, res) => {
           { houseType: regex },
           { style: regex },
           { propertyOwnership: regex },
+          { title: regex },
           { transactionTypeForProperty: regex },
           { plotSizeForProperty: regex },
           { propertyAge: regex }
