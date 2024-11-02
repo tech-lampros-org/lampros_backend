@@ -381,19 +381,6 @@ export const filterProjects = async (req, res) => {
       });
     }
 
-    // If brand filter is provided, filter projects based on brand name
-    if (brand) {
-      const brandNames = brand.split(',');
-      const filteredProjects = projects.filter(project =>
-        project.brand && brandNames.includes(project.brand.name)
-      );
-      return res.status(200).json({
-        currentPage: page,
-        totalPages,
-        totalProjects: filteredProjects.length,
-        projects: filteredProjects,
-      });
-    }
 
     // Send the paginated and filtered projects as a response
     res.status(200).json({
