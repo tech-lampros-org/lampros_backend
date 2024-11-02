@@ -356,7 +356,6 @@ export const filterProjects = async (req, res) => {
     // Fetch projects with pagination, sorting, and populate fields
     const projectsPromise = ProProject.find(queryObject)
       .populate('createdBy', '-password')
-      .populate('brand')
       .sort(sortOptions)
       .skip(skip)
       .limit(limit)
