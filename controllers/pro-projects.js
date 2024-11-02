@@ -231,7 +231,6 @@ export const filterProjects = async (req, res) => {
       cornerProperty,
       propertyAge,
       tags,
-      brand,
       color,
       material,
       warranty,
@@ -253,9 +252,6 @@ export const filterProjects = async (req, res) => {
         { style: regex },
         { title: regex },
         { numberOfBathrooms: regex },
-        { 'technicalDetails.brand': regex },
-        { 'technicalDetails.color': regex },
-        { 'technicalDetails.material': regex },
       ];
     }
 
@@ -336,9 +332,6 @@ export const filterProjects = async (req, res) => {
       queryObject.tags = { $in: tags.split(',') };
     }
 
-    if (brand) {
-      queryObject['technicalDetails.brand'] = { $in: brand.split(',') };
-    }
 
     if (color) {
       queryObject['technicalDetails.color'] = { $in: color.split(',') };
