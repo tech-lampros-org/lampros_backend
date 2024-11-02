@@ -53,162 +53,162 @@ export const addProject = async (req, res) => {
 // Controller to list all projects
 export const listAllProjects = async (req, res) => {
   try {
-    // Fetch all projects
-    const projects = await ProProject.find().sort({ createdAt: -1 }).populate('createdBy', '-password'); // Optionally populate user info
+    // Extract and parse pagination parameters from query, set default values
+    let { page = 1, limit = 10, sortBy = 'createdAt', order = 'desc' } = req.query;
 
-    // Send the projects as a response
-    res.status(200).json(projects);
+    // Convert page and limit to integers
+    page = parseInt(page, 10);
+    limit = parseInt(limit, 10);
+
+    // Validate page and limit
+    if (isNaN(page) || page < 1) {
+      page = 1;
+    }
+    if (isNaN(limit) || limit < 1) {
+      limit = 10;
+    }
+
+    // Determine sort order
+    const sortOrder = order === 'asc' ? 1 : -1;
+
+    // Calculate the number of documents to skip
+    const skip = (page - 1) * limit;
+
+    // Fetch projects with pagination, sorting, and populate fields
+    const projectsPromise = ProProject.find()
+      .populate('createdBy', '-password') // Populate 'createdBy' and exclude 'password'
+      .sort({ [sortBy]: sortOrder }) // Sort based on query parameters
+      .skip(skip)
+      .limit(limit)
+      .exec();
+
+    // Get total count of projects
+    const countPromise = ProProject.countDocuments().exec();
+
+    // Execute both queries in parallel
+    const [projects, total] = await Promise.all([projectsPromise, countPromise]);
+
+    // Calculate total pages
+    const totalPages = Math.ceil(total / limit);
+
+    // Handle case where requested page exceeds total pages
+    if (page > totalPages && totalPages !== 0) {
+      return res.status(400).json({
+        message: 'Page number exceeds total pages.',
+        currentPage: page,
+        totalPages,
+        totalProjects: total,
+        projects: [],
+      });
+    }
+
+    // Send the paginated response
+    res.status(200).json({
+      currentPage: page,
+      totalPages,
+      totalProjects: total,
+      projects,
+    });
   } catch (error) {
+    console.error('Error retrieving projects:', error);
     res.status(500).json({ message: 'Failed to retrieve projects', error: error.message });
   }
 };
+
 
 // Controller to list projects created by the authenticated user
 export const listUserProjects = async (req, res) => {
   try {
-    // Fetch projects created by the authenticated user
-    const projects = await ProProject.find({ createdBy: req.user });
+    // Extract and parse pagination parameters from query, set default values
+    let { page = 1, limit = 10, sortBy = 'createdAt', order = 'desc' } = req.query;
 
-    // Send the projects as a response
-    res.status(200).json(projects);
+    // Convert page and limit to integers
+    page = parseInt(page, 10);
+    limit = parseInt(limit, 10);
+
+    // Validate page and limit
+    if (isNaN(page) || page < 1) {
+      page = 1;
+    }
+    if (isNaN(limit) || limit < 1) {
+      limit = 10;
+    }
+
+    // Determine sort order
+    const sortOrder = order === 'asc' ? 1 : -1;
+
+    // Calculate the number of documents to skip
+    const skip = (page - 1) * limit;
+
+    // Fetch projects created by the authenticated user with pagination and populate fields
+    const projectsPromise = ProProject.find({ createdBy: req.user._id })
+      .populate('createdBy', '-password') // Populate 'createdBy' and exclude 'password'
+      .sort({ [sortBy]: sortOrder }) // Sort based on query parameters
+      .skip(skip)
+      .limit(limit)
+      .exec();
+
+    // Get total count of user's projects
+    const countPromise = ProProject.countDocuments({ createdBy: req.user._id }).exec();
+
+    // Execute both queries in parallel
+    const [projects, total] = await Promise.all([projectsPromise, countPromise]);
+
+    // Calculate total pages
+    const totalPages = Math.ceil(total / limit);
+
+    // Handle case where requested page exceeds total pages
+    if (page > totalPages && totalPages !== 0) {
+      return res.status(400).json({
+        message: 'Page number exceeds total pages.',
+        currentPage: page,
+        totalPages,
+        totalProjects: total,
+        projects: [],
+      });
+    }
+
+    // Send the paginated response
+    res.status(200).json({
+      currentPage: page,
+      totalPages,
+      totalProjects: total,
+      projects,
+    });
   } catch (error) {
+    console.error('Error retrieving user projects:', error);
     res.status(500).json({ message: 'Failed to retrieve user projects', error: error.message });
   }
 };
 
+
 export const filterProjects = async (req, res) => {
   try {
-    // Initialize a query object
-    let query = {};
+    // Initialize the query object
+    let queryObject = {};
 
-    // Extract query parameters from the request
-    const {
-      sellerName,
-      sellerPhoneNumber,
-      projectType,
-      projectLocation,
-      constructionType,
-      houseType,
-      style,
-      title,
-      numberOfBathrooms,
-      minArea,
-      maxArea,
-      minCost,
-      maxCost,
-      propertyOwnership,
-      transactionTypeForProperty,
-      plotSizeForProperty,
-      boundaryWall,
-      cornerProperty,
-      propertyAge,
-      tags,
-      sortBy, // New: Field to sort by
-      order,  // New: Sorting order (asc or desc)
-    } = req.query;
+    // Extract pagination and sorting parameters from query, set default values
+    let { page = 1, limit = 10, sortBy = 'createdAt', order = 'desc' } = req.query;
 
-    // Add filters to the query object based on the request parameters
-    if (sellerName) {
-      query.sellerName = { $in: sellerName.split(',') };
+    // Convert page and limit to integers
+    page = parseInt(page, 10);
+    limit = parseInt(limit, 10);
+
+    // Validate page and limit
+    if (isNaN(page) || page < 1) {
+      page = 1;
+    }
+    if (isNaN(limit) || limit < 1) {
+      limit = 10;
     }
 
-    if (sellerPhoneNumber) {
-      query.sellerPhoneNumber = { $in: sellerPhoneNumber.split(',') };
-    }
+    // Determine sort order
+    const sortOrder = order === 'asc' ? 1 : -1;
 
-    if (projectType) {
-      query.projectType = { $in: projectType.split(',') };
-    }
+    // Calculate the number of documents to skip
+    const skip = (page - 1) * limit;
 
-    if (projectLocation) {
-      query.projectLocation = { 
-        place: { $in: projectLocation.split(',') }
-      };
-    }
-
-    if (constructionType) {
-      query.constructionType = { $in: constructionType.split(',') };
-    }
-
-    if (title) {
-      query.title = { $in: title.split(',') };
-    }
-
-    if (houseType) {
-      query.houseType = { $in: houseType.split(',') };
-    }
-
-    if (style) {
-      query.style = { $in: style.split(',') };
-    }
-
-    if (numberOfBathrooms) {
-      query.numberOfBathrooms = { $in: numberOfBathrooms.split(',') };
-    }
-
-    if (minArea || maxArea) {
-      query.areaSquareFeet = {};
-      if (minArea) query.areaSquareFeet.$gte = Number(minArea);
-      if (maxArea) query.areaSquareFeet.$lte = Number(maxArea);
-    }
-
-    if (minCost || maxCost) {
-      query.cost = {};
-      if (minCost) query.cost.$gte = Number(minCost);
-      if (maxCost) query.cost.$lte = Number(maxCost);
-    }
-
-    if (propertyOwnership) {
-      query.propertyOwnership = { $in: propertyOwnership.split(',') };
-    }
-
-    if (transactionTypeForProperty) {
-      query.transactionTypeForProperty = { $in: transactionTypeForProperty.split(',') };
-    }
-
-    if (plotSizeForProperty) {
-      query.plotSizeForProperty = { $in: plotSizeForProperty.split(',') };
-    }
-
-    if (boundaryWall) {
-      query.boundaryWall = boundaryWall === 'true';
-    }
-
-    if (cornerProperty) {
-      query.cornerProperty = cornerProperty === 'true';
-    }
-
-    if (propertyAge) {
-      query.propertyAge = { $in: propertyAge.split(',') };
-    }
-    if (tags) {
-      query.tags = { $in: tags.split(',') }; // Filter projects by tag names
-    }
-
-    // Create sort options
-    let sortOptions = {};
-    if (sortBy) {
-      const sortOrder = order === 'desc' ? -1 : 1; // Use -1 for descending, 1 for ascending
-      sortOptions[sortBy] = sortOrder;
-    }
-
-    // Fetch projects based on the dynamic query with sorting
-    const projects = await ProProject.find(query)
-      .populate('createdBy', '-password')
-      .sort(sortOptions); // Apply sorting here
-
-    // Send the filtered projects as a response
-    res.status(200).json(projects);
-  } catch (error) {
-    res.status(500).json({ message: 'Failed to retrieve projects', error: error.message });
-  }
-};
-
-// Update with your actual model path
-
-export const generalSearchProjects = async (req, res) => {
-  try {
-    // Extract query parameters from the request
+    // Extract other query parameters from the request
     const {
       query, // General search query
       sellerName,
@@ -218,8 +218,8 @@ export const generalSearchProjects = async (req, res) => {
       constructionType,
       houseType,
       style,
-      numberOfBathrooms,
       title,
+      numberOfBathrooms,
       minArea,
       maxArea,
       minCost,
@@ -231,30 +231,28 @@ export const generalSearchProjects = async (req, res) => {
       cornerProperty,
       propertyAge,
       tags,
+      brand,
+      sortBy: sortByParam,
+      order: orderParam,
     } = req.query;
 
-    // Initialize the query object
-    let queryObject = {};
-
-    // General search query with fuzzy matching (partial matches)
+    // General search query with partial matching (fuzzy search)
     if (query) {
       const regex = new RegExp(query.split('').join('.*'), 'i'); // Fuzzy matching regex
-      queryObject = {
-        $or: [
-          { sellerName: regex },
-          { sellerPhoneNumber: regex },
-          { projectType: regex },
-          { projectLocation: regex },
-          { constructionType: regex },
-          { houseType: regex },
-          { style: regex },
-          { propertyOwnership: regex },
-          { title: regex },
-          { transactionTypeForProperty: regex },
-          { plotSizeForProperty: regex },
-          { propertyAge: regex }
-        ]
-      };
+      queryObject.$or = [
+        { sellerName: regex },
+        { sellerPhoneNumber: regex },
+        { projectType: regex },
+        { projectLocation: regex },
+        { constructionType: regex },
+        { houseType: regex },
+        { style: regex },
+        { title: regex },
+        { numberOfBathrooms: regex },
+        { 'technicalDetails.brand': regex },
+        { 'technicalDetails.color': regex },
+        { 'technicalDetails.material': regex },
+      ];
     }
 
     // Add additional filters to the query object
@@ -271,11 +269,15 @@ export const generalSearchProjects = async (req, res) => {
     }
 
     if (projectLocation) {
-      queryObject.projectLocation = { $in: projectLocation.split(',') };
+      queryObject['projectLocation.place'] = { $in: projectLocation.split(',') };
     }
 
     if (constructionType) {
       queryObject.constructionType = { $in: constructionType.split(',') };
+    }
+
+    if (title) {
+      queryObject.title = { $in: title.split(',') };
     }
 
     if (houseType) {
@@ -287,7 +289,7 @@ export const generalSearchProjects = async (req, res) => {
     }
 
     if (numberOfBathrooms) {
-      queryObject.numberOfBathrooms = { $in: numberOfBathrooms.split(',').map(Number) }; // Ensure numeric comparison
+      queryObject.numberOfBathrooms = { $in: numberOfBathrooms.split(',') };
     }
 
     if (minArea || maxArea) {
@@ -323,39 +325,284 @@ export const generalSearchProjects = async (req, res) => {
     }
 
     if (propertyAge) {
-      queryObject.propertyAge = { $in: propertyAge.split(',').map(Number) }; // Ensure numeric comparison
+      queryObject.propertyAge = { $in: propertyAge.split(',') };
     }
+
     if (tags) {
-      queryObject.tags = { $in: tags.split(',') }; // Filter projects by tag names
+      queryObject.tags = { $in: tags.split(',') };
     }
-    // Fetch projects based on the query object
-    const projects = await ProProject.find(queryObject).populate('createdBy', '-password');
 
-    // Categorize results
-    const categorizedResults = {
-      general: projects,
-      sellerNameMatches: projects.filter(p => sellerName && p.sellerName && sellerName.split(',').includes(p.sellerName)),
-      sellerPhoneNumberMatches: projects.filter(p => sellerPhoneNumber && p.sellerPhoneNumber && sellerPhoneNumber.split(',').includes(p.sellerPhoneNumber)),
-      projectTypeMatches: projects.filter(p => projectType && p.projectType && projectType.split(',').includes(p.projectType)),
-      projectLocationMatches: projects.filter(p => projectLocation && p.projectLocation && projectLocation.split(',').includes(p.projectLocation)),
-      constructionTypeMatches: projects.filter(p => constructionType && p.constructionType && constructionType.split(',').includes(p.constructionType)),
-      houseTypeMatches: projects.filter(p => houseType && p.houseType && houseType.split(',').includes(p.houseType)),
-      styleMatches: projects.filter(p => style && p.style && style.split(',').includes(p.style)),
-      numberOfBathroomsMatches: projects.filter(p => numberOfBathrooms && p.numberOfBathrooms && numberOfBathrooms.split(',').map(Number).includes(p.numberOfBathrooms)),
-      rangeMatches: projects.filter(p => {
-        const areaCheck = (minArea || maxArea) ? (p.areaSquareFeet >= (minArea || 0) && p.areaSquareFeet <= (maxArea || Infinity)) : true;
-        const costCheck = (minCost || maxCost) ? (p.cost >= (minCost || 0) && p.cost <= (maxCost || Infinity)) : true;
-        return areaCheck && costCheck;
-      }),
-      boundaryWallMatches: projects.filter(p => boundaryWall !== undefined && p.boundaryWall === (boundaryWall === 'true')),
-      cornerPropertyMatches: projects.filter(p => cornerProperty !== undefined && p.cornerProperty === (cornerProperty === 'true')),
-      propertyAgeMatches: projects.filter(p => propertyAge && p.propertyAge && propertyAge.split(',').map(Number).includes(p.propertyAge))
-    };
+    if (brand) {
+      queryObject['technicalDetails.brand'] = { $in: brand.split(',') };
+    }
 
-    // Send the categorized response
-    res.status(200).json(categorizedResults);
+    if (color) {
+      queryObject['technicalDetails.color'] = { $in: color.split(',') };
+    }
+
+    if (material) {
+      queryObject['technicalDetails.material'] = { $in: material.split(',') };
+    }
+
+    if (warranty) {
+      queryObject['warrantyAndCertifications.warranty'] = warranty === 'true';
+    }
+
+    if (isoCertified) {
+      queryObject['warrantyAndCertifications.isoCertified'] = isoCertified === 'true';
+    }
+
+    // Build sort options
+    const sortOptions = {};
+    sortOptions[sortBy] = order === 'asc' ? 1 : -1;
+
+    // Fetch projects with pagination, sorting, and populate fields
+    const projectsPromise = ProProject.find(queryObject)
+      .populate('createdBy', '-password')
+      .populate('brand')
+      .sort(sortOptions)
+      .skip(skip)
+      .limit(limit)
+      .exec();
+
+    // Get total count of projects matching the query
+    const countPromise = ProProject.countDocuments(queryObject).exec();
+
+    // Execute both queries in parallel
+    const [projects, total] = await Promise.all([projectsPromise, countPromise]);
+
+    // Calculate total pages
+    const totalPages = Math.ceil(total / limit);
+
+    // Handle case where requested page exceeds total pages
+    if (page > totalPages && totalPages !== 0) {
+      return res.status(400).json({
+        message: 'Page number exceeds total pages.',
+        currentPage: page,
+        totalPages,
+        totalProjects: total,
+        projects: [],
+      });
+    }
+
+    // If brand filter is provided, filter projects based on brand name
+    if (brand) {
+      const brandNames = brand.split(',');
+      const filteredProjects = projects.filter(project =>
+        project.brand && brandNames.includes(project.brand.name)
+      );
+      return res.status(200).json({
+        currentPage: page,
+        totalPages,
+        totalProjects: filteredProjects.length,
+        projects: filteredProjects,
+      });
+    }
+
+    // Send the paginated and filtered projects as a response
+    res.status(200).json({
+      currentPage: page,
+      totalPages,
+      totalProjects: total,
+      projects,
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to retrieve projects', error: error.message });
+  }
+};
+
+
+// Update with your actual model path
+
+export const generalSearchProjects = async (req, res) => {
+  try {
+    // Initialize the query object
+    let queryObject = {};
+
+    // Extract pagination and sorting parameters from query, set default values
+    let { page = 1, limit = 10, sortBy = 'createdAt', order = 'desc', query } = req.query;
+
+    // Convert page and limit to integers
+    page = parseInt(page, 10);
+    limit = parseInt(limit, 10);
+
+    // Validate page and limit
+    if (isNaN(page) || page < 1) {
+      page = 1;
+    }
+    if (isNaN(limit) || limit < 1) {
+      limit = 10;
+    }
+
+    // Determine sort order
+    const sortOrder = order === 'asc' ? 1 : -1;
+
+    // Calculate the number of documents to skip
+    const skip = (page - 1) * limit;
+
+    // Extract other query parameters from the request
+    const {
+      sellerName,
+      sellerPhoneNumber,
+      projectType,
+      projectLocation,
+      constructionType,
+      houseType,
+      style,
+      numberOfBathrooms,
+      title,
+      minArea,
+      maxArea,
+      minCost,
+      maxCost,
+      propertyOwnership,
+      transactionTypeForProperty,
+      plotSizeForProperty,
+      boundaryWall,
+      cornerProperty,
+      propertyAge,
+      tags,
+    } = req.query;
+
+    // General search query with fuzzy matching (partial matches)
+    if (query) {
+      const regex = new RegExp(query.split('').join('.*'), 'i'); // Fuzzy matching regex
+      queryObject.$or = [
+        { sellerName: regex },
+        { sellerPhoneNumber: regex },
+        { projectType: regex },
+        { projectLocation: regex },
+        { constructionType: regex },
+        { houseType: regex },
+        { style: regex },
+        { propertyOwnership: regex },
+        { title: regex },
+        { transactionTypeForProperty: regex },
+        { plotSizeForProperty: regex },
+        { propertyAge: regex },
+      ];
+    }
+
+    // Add additional filters to the query object
+    if (sellerName) {
+      queryObject.sellerName = { $in: sellerName.split(',') };
+    }
+
+    if (sellerPhoneNumber) {
+      queryObject.sellerPhoneNumber = { $in: sellerPhoneNumber.split(',') };
+    }
+
+    if (projectType) {
+      queryObject.projectType = { $in: projectType.split(',') };
+    }
+
+    if (projectLocation) {
+      queryObject.projectLocation = { $in: projectLocation.split(',') };
+    }
+
+    if (constructionType) {
+      queryObject.constructionType = { $in: constructionType.split(',') };
+    }
+
+    if (houseType) {
+      queryObject.houseType = { $in: houseType.split(',') };
+    }
+
+    if (style) {
+      queryObject.style = { $in: style.split(',') };
+    }
+
+    if (numberOfBathrooms) {
+      queryObject.numberOfBathrooms = { $in: numberOfBathrooms.split(',').map(Number) }; // Ensure numeric comparison
+    }
+
+    if (title) {
+      queryObject.title = { $in: title.split(',') };
+    }
+
+    if (minArea || maxArea) {
+      queryObject.areaSquareFeet = {};
+      if (minArea) queryObject.areaSquareFeet.$gte = Number(minArea);
+      if (maxArea) queryObject.areaSquareFeet.$lte = Number(maxArea);
+    }
+
+    if (minCost || maxCost) {
+      queryObject.cost = {};
+      if (minCost) queryObject.cost.$gte = Number(minCost);
+      if (maxCost) queryObject.cost.$lte = Number(maxCost);
+    }
+
+    if (propertyOwnership) {
+      queryObject.propertyOwnership = { $in: propertyOwnership.split(',') };
+    }
+
+    if (transactionTypeForProperty) {
+      queryObject.transactionTypeForProperty = { $in: transactionTypeForProperty.split(',') };
+    }
+
+    if (plotSizeForProperty) {
+      queryObject.plotSizeForProperty = { $in: plotSizeForProperty.split(',') };
+    }
+
+    if (boundaryWall) {
+      queryObject.boundaryWall = boundaryWall === 'true';
+    }
+
+    if (cornerProperty) {
+      queryObject.cornerProperty = cornerProperty === 'true';
+    }
+
+    if (propertyAge) {
+      queryObject.propertyAge = { $in: propertyAge.split(',').map(Number) };
+    }
+
+    if (tags) {
+      queryObject.tags = { $in: tags.split(',') };
+    }
+
+    // Build sort options
+    const sortOptions = {};
+    sortOptions[sortBy] = sortOrder;
+
+    // Fetch projects with pagination, sorting, and populate fields
+    const projectsPromise = ProProject.find(queryObject)
+      .populate('createdBy', '-password')
+      .populate('brand')
+      .sort(sortOptions)
+      .skip(skip)
+      .limit(limit)
+      .exec();
+
+    // Get total count of projects matching the query
+    const countPromise = ProProject.countDocuments(queryObject).exec();
+
+    // Execute both queries in parallel
+    const [projects, total] = await Promise.all([projectsPromise, countPromise]);
+
+    // Calculate total pages
+    const totalPages = Math.ceil(total / limit);
+
+    // Handle case where requested page exceeds total pages
+    if (page > totalPages && totalPages !== 0) {
+      return res.status(400).json({
+        message: 'Page number exceeds total pages.',
+        currentPage: page,
+        totalPages,
+        totalProjects: total,
+        projects: [],
+      });
+    }
+
+    // Send the paginated and filtered projects as a response
+    res.status(200).json({
+      currentPage: page,
+      totalPages,
+      totalProjects: total,
+      projects,
+    });
   } catch (error) {
     res.status(500).json({ message: 'Failed to search projects', error: error.message });
   }
 };
+
 

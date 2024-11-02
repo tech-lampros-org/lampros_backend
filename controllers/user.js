@@ -209,55 +209,84 @@ export const uploadImages = async (req, res) => {
 };
 
 
+
 export const filterUsersWithProjectsOrProducts = async (req, res) => {
   try {
-    const { role, type } = req.query; // Extract role and type from query parameters
+    // Extract query parameters and pagination settings
+    const { role, type, page = 1, limit = 10 } = req.query;
+
+    // Parse and validate pagination parameters
+    const parsedPage = parseInt(page, 10) < 1 ? 1 : parseInt(page, 10);
+    const parsedLimit = parseInt(limit, 10) < 1 ? 10 : parseInt(limit, 10);
+    const skip = (parsedPage - 1) * parsedLimit;
 
     // Build a filter object for MongoDB
     const filter = {};
 
-    let roleArray = [];
-    let typeArray = [];
     if (role) {
-      roleArray = role.split(','); // Split by comma for multiple roles
-      filter.role = { $in: roleArray }; // Use $in to filter by multiple roles
+      const roleArray = role.split(','); // Split by comma for multiple roles
+      filter.role = { $in: roleArray };
     }
 
     if (type) {
       const typeArray = type.split(','); // Split by comma for multiple types
-      filter.type = { $in: typeArray }; // Use $in to filter by multiple types
+      filter.type = { $in: typeArray };
     }
 
-    // Find users based on the role and type
-    let users = await User.find(filter).select('-password -__v'); // Exclude password and other unnecessary fields
+    // Fetch users based on the role and type with pagination
+    const usersPromise = User.find(filter)
+      .select('-password -__v') // Exclude password and other unnecessary fields
+      .skip(skip)
+      .limit(parsedLimit)
+      .exec();
+
+    const countPromise = User.countDocuments(filter).exec();
+
+    const [users, total] = await Promise.all([usersPromise, countPromise]);
 
     // Prepare an array to store users with their projects/products
-    const usersWithProjectsOrProducts = [];
+    const usersWithProjectsOrProducts = await Promise.all(
+      users.map(async (user) => {
+        let userWithDetails = user.toObject(); // Convert Mongoose doc to plain object
 
-    for (const user of users) {
-      let userWithDetails = user.toObject(); // Convert Mongoose doc to plain object
+        // Depending on the role, fetch related projects or products
+        if (user.role === 'Realtor' || user.role === 'Professionals') {
+          // Fetch ProProjects where createdBy matches the user's _id
+          const projects = await ProProject.find({ createdBy: user._id }).exec();
+          userWithDetails.projects = projects; // Add projects to the user object
+        } else if (user.role === 'Product Seller') {
+          // Fetch Products where createdBy matches the user's _id
+          const products = await Product.find({ createdBy: user._id }).exec();
+          userWithDetails.products = products; // Add products to the user object
+        }
 
-      // Depending on the role, fetch related projects or products
-      if (roleArray.includes('Realtor') || roleArray.includes('Professionals')) {
-        // Fetch ProProjects where createdBy matches the user's _id
-        const projects = await ProProject.find({ createdBy: user._id });
-        userWithDetails.projects = projects; // Add projects to the user object
-      } else if (roleArray.includes('Product Seller')) {
-        // Fetch Products where createdBy matches the user's _id
-        const products = await Product.find({ createdBy: user._id });
-        userWithDetails.products = products; // Add products to the user object
-      }
+        return userWithDetails;
+      })
+    );
 
-      usersWithProjectsOrProducts.push(userWithDetails); // Add user with projects/products to the result array
+    // Calculate total pages
+    const totalPages = Math.ceil(total / parsedLimit);
+
+    // Handle case where requested page exceeds total pages
+    if (parsedPage > totalPages && totalPages !== 0) {
+      return res.status(400).json({
+        message: 'Page number exceeds total pages.',
+        currentPage: parsedPage,
+        totalPages,
+        totalUsers: total,
+        users: [],
+      });
     }
 
-    if (usersWithProjectsOrProducts.length === 0) {
-      return res.status(200).json([]);
-    }
-
-    // Return the filtered users with their projects/products
-    res.status(200).json(usersWithProjectsOrProducts);
+    // Return the filtered users with their projects/products and pagination info
+    res.status(200).json({
+      currentPage: parsedPage,
+      totalPages,
+      totalUsers: total,
+      users: usersWithProjectsOrProducts,
+    });
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    console.error('Error retrieving users with projects/products:', error);
+    res.status(500).json({ message: 'Failed to retrieve users with projects/products', error: error.message });
   }
 };
