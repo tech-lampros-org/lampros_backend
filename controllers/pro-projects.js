@@ -232,6 +232,10 @@ export const filterProjects = async (req, res) => {
       propertyAge,
       tags,
       brand,
+      color,
+      material,
+      warranty,
+      isoCertified,
       sortBy: sortByParam,
       order: orderParam,
     } = req.query;
