@@ -96,17 +96,55 @@ export const deleteSubCategory = async (req, res) => {
 // Get all categories, including subcategories, types, and images
 export const getCategories = async (req, res) => {
   try {
-    // Find all categories
+    // Extract page and limit from query parameters, set default values if not provided
+    let { page = 1, limit = 10 } = req.query;
+
+    // Convert page and limit to integers
+    page = parseInt(page);
+    limit = parseInt(limit);
+
+    // Validate page and limit
+    if (isNaN(page) || page < 1) {
+      page = 1;
+    }
+    if (isNaN(limit) || limit < 1) {
+      limit = 10;
+    }
+
+    // Calculate the number of documents to skip
+    const skip = (page - 1) * limit;
+
+    // Fetch categories with pagination and populate nested subcategories and types
     const categories = await Category.find()
-      .populate('subCategories.types') // Populate nested subcategories and types
+      .populate({
+        path: 'subCategories',
+        populate: {
+          path: 'types',
+          model: 'Type', // Replace with your actual Type model name if different
+        },
+      })
+      .skip(skip)
+      .limit(limit)
       .exec();
 
-    // Send the list of categories along with their subcategories and types
-    res.json(categories);
+    // Get total count of categories for pagination info
+    const total = await Category.countDocuments();
+
+    // Calculate total pages
+    const totalPages = Math.ceil(total / limit);
+
+    // Send the paginated response
+    res.status(200).json({
+      currentPage: page,
+      totalPages,
+      totalCategories: total,
+      categories,
+    });
   } catch (error) {
-    res.status(500).json({ message: 'Error fetching categories', error });
+    res.status(500).json({ message: 'Error fetching categories', error: error.message });
   }
 };
+
 
 // Get a single category by ID, including subcategories, types, and images
 export const getCategoryById = async (req, res) => {
@@ -134,28 +172,48 @@ export const getCategoryById = async (req, res) => {
 export const getSubCategories = async (req, res) => {
   try {
     const { categoryId } = req.params;
+    let { page = 1, limit = 10 } = req.query;
 
-    // Find the category by its ID and populate subcategories, including their types
+    page = parseInt(page);
+    limit = parseInt(limit);
+
+    if (isNaN(page) || page < 1) {
+      page = 1;
+    }
+    if (isNaN(limit) || limit < 1) {
+      limit = 10;
+    }
+
     const category = await Category.findById(categoryId)
       .populate({
         path: 'subCategories',
         populate: {
-          path: 'types', // Populate types within subcategories
+          path: 'types',
         },
       })
       .exec();
 
-    // If category is not found, return a 404 status
     if (!category) {
       return res.status(404).json({ message: 'Category not found' });
     }
 
-    // Send the subcategories along with their types and images
-    res.json(category.subCategories);
+    const total = category.subCategories.length;
+    const totalPages = Math.ceil(total / limit);
+    const start = (page - 1) * limit;
+    const end = start + limit;
+    const paginatedSubCategories = category.subCategories.slice(start, end);
+
+    res.status(200).json({
+      currentPage: page,
+      totalPages,
+      totalSubCategories: total,
+      subCategories: paginatedSubCategories,
+    });
   } catch (error) {
-    res.status(500).json({ message: 'Error fetching subcategories', error });
+    res.status(500).json({ message: 'Error fetching subcategories', error: error.message });
   }
 };
+
 
 // Update a specific subcategory within a category
 export const updateSubCategory = async (req, res) => {
