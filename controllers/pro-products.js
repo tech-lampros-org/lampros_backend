@@ -376,9 +376,9 @@ export const listUserProducts = async (req, res) => {
 
     // Calculate the number of documents to skip
     const skip = (page - 1) * limit;
-
+let id = req.user
     // Fetch products created by the authenticated user with pagination and populate fields
-    const productsPromise = await ProProduct.find({ createdBy: req.user })
+    const productsPromise = await ProProduct.find({ createdBy: id })
       .populate('brand') // Populate the brand
       .populate('createdBy', '-password') // Populate 'createdBy' and exclude 'password'
       .sort({ [sortBy]: sortOrder }) // Sort based on query parameters
