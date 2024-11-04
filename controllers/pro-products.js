@@ -387,7 +387,7 @@ export const listUserProducts = async (req, res) => {
       .exec();
 
     // Get total count of user's products
-    const countPromise = ProProduct.countDocuments({ createdBy: req.user._id }).exec();
+    const countPromise = ProProduct.countDocuments({ createdBy: req.user }).exec();
 
     // Execute both queries in parallel
     const [products, total] = await Promise.all([productsPromise, countPromise]);
