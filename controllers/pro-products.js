@@ -1,5 +1,6 @@
 import ProProduct from '../models/pro-products.js';
 import Brand from '../models/brand.js';
+import mongoose from 'mongoose';
 
 // Controller to handle adding a new product with brand reference
 export const addProduct = async (req, res) => {
