@@ -378,7 +378,7 @@ export const listUserProducts = async (req, res) => {
     const skip = (page - 1) * limit;
 
     // Fetch products created by the authenticated user with pagination and populate fields
-    const productsPromise = ProProduct.find({ createdBy: req.user })
+    const productsPromise = await ProProduct.find({ createdBy: req.user })
       .populate('brand') // Populate the brand
       .populate('createdBy', '-password') // Populate 'createdBy' and exclude 'password'
       .sort({ [sortBy]: sortOrder }) // Sort based on query parameters
@@ -387,7 +387,7 @@ export const listUserProducts = async (req, res) => {
       .exec();
 
     // Get total count of user's products
-    const countPromise = ProProduct.countDocuments({ createdBy: req.user }).exec();
+    const countPromise = await ProProduct.countDocuments({ createdBy: req.user }).exec();
     console.log('req.user:', req.user)
     console.log('productsPromise:', productsPromise)
     console.log('countPromise:', countPromise)
