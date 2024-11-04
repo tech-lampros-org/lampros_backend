@@ -356,14 +356,11 @@ export const filterProducts = async (req, res) => {
 // Controller to list products created by the authenticated user
 export const listUserProducts = async (req, res) => {
   try {
-    // Extract and parse pagination parameters from query, set default values
     let { page = 1, limit = 10, sortBy = 'createdAt', order = 'desc' } = req.query;
 
-    // Convert page and limit to integers
     page = parseInt(page, 10);
     limit = parseInt(limit, 10);
 
-    // Validate page and limit
     if (isNaN(page) || page < 1) {
       page = 1;
     }
@@ -371,34 +368,28 @@ export const listUserProducts = async (req, res) => {
       limit = 10;
     }
 
-    // Determine sort order
     const sortOrder = order === 'asc' ? 1 : -1;
-
-    // Calculate the number of documents to skip
     const skip = (page - 1) * limit;
-let id = req.user
-    // Fetch products created by the authenticated user with pagination and populate fields
-    const productsPromise = await ProProduct.find({ createdBy: id })
-      .populate('brand') // Populate the brand
-      .populate('createdBy', '-password') // Populate 'createdBy' and exclude 'password'
-      .sort({ [sortBy]: sortOrder }) // Sort based on query parameters
+
+    // Make sure req.user is converted to ObjectId if needed
+    const userId = mongoose.Types.ObjectId(req.user);
+
+    console.log('User ID:', userId);
+
+    // Fetch products created by the authenticated user
+    const productsPromise = ProProduct.find({ createdBy: userId })
+      .populate('brand')
+      .populate('createdBy', '-password')
+      .sort({ [sortBy]: sortOrder })
       .skip(skip)
-      .limit(limit)
-      .exec();
+      .limit(limit);
 
-    // Get total count of user's products
-    const countPromise = await ProProduct.countDocuments({ createdBy: req.user }).exec();
-    console.log('req.user:', req.user)
-    console.log('productsPromise:', productsPromise)
-    console.log('countPromise:', countPromise)
+    const countPromise = ProProduct.countDocuments({ createdBy: userId });
 
-    // Execute both queries in parallel
     const [products, total] = await Promise.all([productsPromise, countPromise]);
 
-    // Calculate total pages
     const totalPages = Math.ceil(total / limit);
 
-    // Handle case where requested page exceeds total pages
     if (page > totalPages && totalPages !== 0) {
       return res.status(400).json({
         message: 'Page number exceeds total pages.',
@@ -409,7 +400,6 @@ let id = req.user
       });
     }
 
-    // Send the paginated response
     res.status(200).json({
       currentPage: page,
       totalPages,
