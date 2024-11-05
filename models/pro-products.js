@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import mongoosePaginate from 'mongoose-paginate-v2';
 
 // Schema for product images
 const productImagesSchema = new mongoose.Schema({
@@ -99,6 +100,8 @@ productSchema.pre('save', async function (next) {
     next();
   }
 });
+
+productSchema.plugin(mongoosePaginate);
 
 const Product = mongoose.model('Product', productSchema);
 
