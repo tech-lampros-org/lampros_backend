@@ -56,43 +56,20 @@ export const addProduct = async (req, res) => {
 // Controller to list all products with optional pagination
 export const listAllProducts = async (req, res) => {
   try {
-    // Extract pagination, sorting, filtering, and search parameters from query, set default values
-    let {
-      page = 1,
-      limit = 10,
-      sortBy = 'createdAt',
-      order = 'desc',
-      brand, // Filter by brand ID
-      search, // Search term for product name
-    } = req.query;
+    let { page = 1, limit = 10, sortBy = 'createdAt', order = 'desc', brand, search } = req.query;
 
-    // Convert page and limit to integers
     page = parseInt(page, 10);
     limit = parseInt(limit, 10);
 
-    // Validate page and limit
-    if (isNaN(page) || page < 1) {
-      page = 1;
-    }
-    if (isNaN(limit) || limit < 1) {
-      limit = 10;
-    }
+    if (isNaN(page) || page < 1) page = 1;
+    if (isNaN(limit) || limit < 1) limit = 10;
 
-    // Determine sort order
     const sortOrder = order === 'asc' ? 1 : -1;
-
-    // Build filter object
     const filter = {};
 
-    if (brand) {
-      filter.brand = brand; // Assuming 'brand' is the ObjectId of the brand
-    }
+    if (brand) filter.brand = brand;
+    if (search) filter.name = { $regex: search, $options: 'i' };
 
-    if (search) {
-      filter.name = { $regex: search, $options: 'i' }; // Case-insensitive search on 'name'
-    }
-
-    // Set up pagination options
     const options = {
       page,
       limit,
@@ -105,10 +82,8 @@ export const listAllProducts = async (req, res) => {
       leanWithId: false,
     };
 
-    // Execute the paginate query with filters
     const result = await ProProduct.paginate(filter, options);
 
-    // Send the paginated response
     res.status(200).json({
       currentPage: result.page,
       totalPages: result.totalPages,
