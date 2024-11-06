@@ -18,6 +18,10 @@ import ro_products from './routes/pro-products.js'
 import category from './routes/catogory.js'
 import ro_brands from './routes/brand.js'
 import searchRoutes from './routes/serch.js'
+import ro_message from './routes/message.js'
+import ro_notification from './routes/notification.js'
+import ro_order from './routes/order.js'
+
 
 const app = express();
 
@@ -43,6 +47,10 @@ app.use('/api/products', ro_products);
 app.use('/api/category', category);
 app.use('/api/brand', ro_brands);
 app.use('/api', protect, searchRoutes);
+app.use('/api', protect, ro_message);
+app.use('/api', protect, ro_notification);
+app.use('/api', protect, ro_order);
+
 
 
 // Example route
