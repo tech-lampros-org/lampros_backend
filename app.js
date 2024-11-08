@@ -2,9 +2,7 @@ import express from 'express';
 import {logger} from './config/loggingConfig.js';
 import connectDB from './config/dbConfig.js';
 import corsMiddleware from './middlewares/corsMiddleware.js';
-import requestLoggerMiddleware from './middlewares/requestLogger.js';
 import config from './config/serverConfig.js';
-import rateLimiter from './middlewares/rateLimiter.js';
 import errorHandler from './middlewares/errorHandler.js';
 import { protect } from './middlewares/protect.js'; 
 
