@@ -58,7 +58,7 @@ export const verifyOtpAndLogin = async (phoneNumber, otp) => {
     return { message: 'User exists, but registration incomplete. Please complete your details.' };
   }
 
-  return { message: 'User logged in successfully.' };
+  return { message: 'User logged in successfully.' , role: user.role };
 };
 
 
