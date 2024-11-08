@@ -64,9 +64,12 @@ export const verifyOtpAndLogin = async (phoneNumber, otp) => {
 
 // Function to update user details after OTP verification
 export const updateUserDetails = async (phoneNumber, updateFields) => {
-  // Check if OTP is verified
-  const otpRecord = await Otp.findOne({ phoneNumber });
-  if (!otpRecord?.isVerified) throw new Error('OTP not verified.');
+  // Find the most recent OTP record for this phone number and check if it's verified
+  const otpRecord = await Otp.findOne({ phoneNumber })
+    .sort({ createdAt: -1 }) // Sort by creation date in descending order to get the latest record
+    .exec();
+
+  if (!otpRecord || !otpRecord.isVerified) throw new Error('Latest OTP not verified.');
 
   // Find the user
   const user = await User.findOne({ phoneNumber });
@@ -79,3 +82,4 @@ export const updateUserDetails = async (phoneNumber, updateFields) => {
 
   return { message: 'User details updated successfully.' };
 };
+

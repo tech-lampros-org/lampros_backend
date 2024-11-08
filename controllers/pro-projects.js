@@ -120,7 +120,6 @@ export const listAllProjects = async (req, res) => {
 // Controller to list projects created by the authenticated user
 export const listUserProjects = async (req, res) => {
   try {
-    console.log("ID being used for query:", id);
     let user = '670cc620a5f8db5b696876ae';
 
     let id = new mongoose.Types.ObjectId(user);
