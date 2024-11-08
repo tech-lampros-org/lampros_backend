@@ -57,7 +57,7 @@ export const completeBasic = async (req, res) => {
     const { phoneNumber, fname, lname, profileImage, role } = req.body;
 
     // Update user details
-    const response = await updateUserDetails(phoneNumber, { f_name, l_name, profileImage, role });
+    const response = await updateUserDetails(phoneNumber, { fname, lname, profileImage, role });
 
     // Fetch the updated user to generate the token
     const user = await User.findOne({ phoneNumber });
