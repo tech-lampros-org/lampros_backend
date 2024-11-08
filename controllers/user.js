@@ -46,7 +46,7 @@ export const verifyOtp = async (req, res) => {
     const user = await User.findOne({ phoneNumber });
     const token = generateToken(user._id);
 
-    res.status(200).json({ message: response.message, token });
+    res.status(200).json({ message: response.message, token ,role: response?.role });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
