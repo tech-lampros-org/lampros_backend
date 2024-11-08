@@ -31,12 +31,12 @@ connectDB();
 
 
 
-app.use(rateLimiter);
+// app.use(rateLimiter);
 // Body parser middleware
 app.use(express.json()); // Parse JSON bodies
 app.use(express.urlencoded({ extended: true }));
 app.use(corsMiddleware);
-app.use(requestLoggerMiddleware);
+// app.use(requestLoggerMiddleware);
 
 
 // Use OTP routes
