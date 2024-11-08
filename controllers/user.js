@@ -54,7 +54,7 @@ export const verifyOtp = async (req, res) => {
 
 export const completeBasic = async (req, res) => {
   try {
-    const { phoneNumber, f_name, l_name, profileImage, role } = req.body;
+    const { phoneNumber, fname, lname, profileImage, role } = req.body;
 
     // Update user details
     const response = await updateUserDetails(phoneNumber, { f_name, l_name, profileImage, role });

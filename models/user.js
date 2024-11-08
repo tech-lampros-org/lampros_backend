@@ -3,13 +3,13 @@ import { nanoid } from 'nanoid'; // For generating unique IDs
 
 // Delivery Address Schema
 const deliveryAddressSchema = new mongoose.Schema({
-  fullName: { type: String, required: true },
-  mobile: { type: String, required: true },
+  fullName: { type: String },
+  mobile: { type: String },
   altMobile: { type: String }, // Optional alternate mobile number
-  pincode: { type: Number, required: true },
-  district: { type: String, required: true },
-  city: { type: String, required: true },
-  address: { type: String, required: true },
+  pincode: { type: Number },
+  district: { type: String },
+  city: { type: String },
+  address: { type: String},
   landmark: { type: String }, // Optional landmark for delivery address
 }, { timestamps: true });
 
