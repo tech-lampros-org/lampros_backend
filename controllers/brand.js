@@ -72,10 +72,7 @@ export const approveBrand = async (req, res) => {
       const skip = (page - 1) * limit;
   
       // Fetch brands with pagination
-      const brands = await Brand.find()
-        .skip(skip)
-        .limit(limit)
-        .exec();
+      const brands = await Brand.find();
   
       // Get total count of brands for pagination info
       const total = await Brand.countDocuments();
@@ -85,9 +82,6 @@ export const approveBrand = async (req, res) => {
   
       // Send the paginated response
       res.status(200).json({
-        currentPage: page,
-        totalPages,
-        totalBrands: total,
         brands,
       });
     } catch (error) {

@@ -21,6 +21,11 @@ const enquirySchema = new mongoose.Schema({
   lookingFor: {
     type: String
   },
+  
+  serviceLookingFor: [ {
+    type: String
+  }],
+  
 
   timelineMonths: {
     type: String
