@@ -7,30 +7,23 @@ const enquirySchema = new mongoose.Schema({
   },
 
   bhkCount: {
-    type: Number,
-    
+    type: String
   },
 
   areaSqFt: {
-    type: Number,
-    
+    type: String
   },
 
   budgetINR: {
-    min: { type: Number },
-    max: { type: Number },
-    
+    type: String
   },
 
   lookingFor: {
-    type: String,
-    
+    type: String
   },
 
   timelineMonths: {
-    min: { type: Number },
-    max: { type: Number },
-    
+    type: String
   },
 
   pincode: {
@@ -39,8 +32,7 @@ const enquirySchema = new mongoose.Schema({
   },
 
   interested: {
-    type: Boolean,
-    
+    type: String
   },
 
   moreDetails: {
@@ -50,39 +42,32 @@ const enquirySchema = new mongoose.Schema({
 
   scopes: [
     {
-      type: String,
-      
+      type: String
     }
   ],
 
   quantity: {
-    type: Number,
-    
+    type: String
   },
 
   doorsType: [
     {
-      type: String,
-      
+      type: String
     }
   ],
 
   materials: [
     {
-      type: String,
-      
+      type: String
     }
   ],
 
   planToBuyInMonths: {
-    min: { type: Number },
-    max: { type: Number },
-    
+    type: String
   },
 
   createdBy: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    type: String,
     required: true
   }
 });
