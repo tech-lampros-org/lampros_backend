@@ -266,9 +266,18 @@ export const filterProducts = async (req, res) => {
       query['warrantyAndCertifications.isoCertified'] = isoCertified === 'true';
     }
 
-    // Build sort options
-    const sortOptions = {};
-    sortOptions[sortBy] = order === 'asc' ? 1 : -1;
+    // List of allowed fields for sorting to prevent invalid fields
+const allowedSortFields = [
+  'createdAt', 'updatedAt', 'price', 'quantity', 'name', // Add other valid fields based on your schema
+];
+
+// Ensure sortBy and order have valid default values if they are null or undefined
+const sortByField = allowedSortFields.includes(sortBy) && sortBy ? sortBy : 'createdAt';
+const sortOrder = (order && order.toLowerCase() === 'asc') ? 1 : -1;
+
+// Build sort options with validated fields
+const sortOptions = {};
+sortOptions[sortByField] = sortOrder;
 
     // Fetch products with pagination and populate brands
     const productsPromise = ProProduct.find(query)
