@@ -16,7 +16,8 @@ const createEnquiry = async (req, res) => {
       quantity,
       doorsType,
       materials,
-      planToBuyInMonths
+      planToBuyInMonths,
+      serviceLookingFor
     } = req.body;
 
     // Create a new enquiry with the data from the request
@@ -35,6 +36,7 @@ const createEnquiry = async (req, res) => {
       doorsType,
       materials,
       planToBuyInMonths,
+      serviceLookingFor,
       createdBy: req.user // Set the user ID as the creator
     });
 
