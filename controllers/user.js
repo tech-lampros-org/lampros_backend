@@ -56,8 +56,17 @@ export const completeBasic = async (req, res) => {
   try {
     const { phoneNumber, fname, lname, profileImage, address } = req.body;
 
-    // Update user details
-    const response = await updateUserDetails(phoneNumber, { fname, lname, profileImage, address });
+    // Filter out null or undefined fields
+    const updateData = {};
+    if (fname) updateData.fname = fname;
+    if (lname) updateData.lname = lname;
+    if (profileImage) updateData.profileImage = profileImage;
+    if (address) updateData.address = address;
+
+    // Update user details if there is data to update
+    if (Object.keys(updateData).length > 0) {
+      await updateUserDetails(phoneNumber, updateData);
+    }
 
     // Fetch the updated user to generate the token
     const user = await User.findOne({ phoneNumber });
@@ -73,6 +82,7 @@ export const completeBasic = async (req, res) => {
     res.status(400).json({ message: error.message });
   }
 };
+
 
 export const completeRegistration = async (req, res) => {
   try {
