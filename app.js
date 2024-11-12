@@ -20,6 +20,7 @@ import ro_message from './routes/message.js'
 import ro_notification from './routes/notification.js'
 import ro_order from './routes/order.js'
 import ro_enq from './routes/enq.js'
+import fo from './routes/followersRoutes.js'
 
 
 const app = express();
@@ -50,6 +51,7 @@ app.use('/api', protect, ro_message);
 app.use('/api', protect, ro_notification);
 app.use('/api', protect, ro_order);
 app.use('/api',protect, ro_enq);
+app.use('/api',protect, ro_fo);
 
 
 
