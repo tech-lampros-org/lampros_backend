@@ -117,52 +117,64 @@ export const listAllProjects = async (req, res) => {
 };
 
 
-// Controller to list projects created by the authenticated user
 export const listUserProjects = async (req, res) => {
   try {
-    let user = '670cc620a5f8db5b696876ae';
+    // Get the authenticated user ID
+    const userId = req.user;
 
-    let id = new mongoose.Types.ObjectId(user);
-    // Extract and parse pagination parameters from query, set default values
-    // let { page = 1, limit = 10, sortBy = 'createdAt', order = 'desc' } = req.query;
+    // Extract and parse pagination and sorting parameters from the query, with default values
+    let { page = 1, limit = 10, sortBy = 'createdAt', order = 'desc' } = req.query;
 
     // Convert page and limit to integers
-    // page = parseInt(page, 10);
-    // limit = parseInt(limit, 10);
+    page = parseInt(page, 10);
+    limit = parseInt(limit, 10);
 
-    // // Validate page and limit
-    // if (isNaN(page) || page < 1) {
-    //   page = 1;
-    // }
-    // if (isNaN(limit) || limit < 1) {
-    //   limit = 10;
-    // }
+    // Validate page and limit values
+    if (isNaN(page) || page < 1) {
+      page = 1;
+    }
+    if (isNaN(limit) || limit < 1) {
+      limit = 10;
+    }
 
-    // // Determine sort order
-    // const sortOrder = order === 'asc' ? 1 : -1;
+    // Determine the sort order
+    const sortOrder = order === 'asc' ? 1 : -1;
 
-    // // Calculate the number of documents to skip
-    // const skip = (page - 1) * limit;
+    // Calculate the number of documents to skip
+    const skip = (page - 1) * limit;
 
-    // Fetch projects created by the authenticated user with pagination and populate fields
-    const projectsPromise = await ProProject.find({ createdBy : id })
-    console.log(projectsPromise)
+    // Fetch projects created by the authenticated user with pagination and sorting
+    const projectsPromise = ProProject.find({ createdBy: userId })
+      .sort({ [sortBy]: sortOrder })
+      .skip(skip)
+      .limit(limit);
 
-    // Get total count of user's projects
-    const countPromise = await ProProject.countDocuments({ createdBy: user }).exec();
-console.log(projectsPromise)
+    // Get the total count of the user's projects
+    const countPromise = ProProject.countDocuments({ createdBy: userId });
+
     // Execute both queries in parallel
     const [projects, total] = await Promise.all([projectsPromise, countPromise]);
 
-
     // Handle case where requested page exceeds total pages
-    
+    const totalPages = Math.ceil(total / limit);
+    if (page > totalPages && totalPages > 0) {
+      return res.status(404).json({ message: 'Page not found' });
+    }
+
+    // Send the paginated response
+    res.status(200).json({
+      message: 'Projects fetched successfully',
+      currentPage: page,
+      totalPages,
+      totalProjects: total,
+      projects,
+    });
   } catch (error) {
     console.error('Error retrieving user projects:', error);
+    res.status(500).json({ message: 'Server Error' });
   }
 };
 
-listUserProjects()
 
 
 export const filterProjects = async (req, res) => {
