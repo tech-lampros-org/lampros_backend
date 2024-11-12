@@ -5,5 +5,6 @@ const router = express.Router();
 
 // POST route to create an enquiry
 router.post('/enquiries', createEnquiry);
+router.get('/AllEnquiries', getAllEnquiries)
 
 export default router;
