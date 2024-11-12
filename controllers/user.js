@@ -83,6 +83,41 @@ export const completeBasic = async (req, res) => {
   }
 };
 
+export const update = async (req, res) => {
+  try {
+    const { fname, lname, profileImage, role, type, email, companyDetails, address } = req.body;
+
+    const isNotEmpty = (value) => value !== undefined && value !== null && value !== '';
+
+    // Build the fields to update, excluding null or empty values
+    const updatedFields = {
+      ...(isNotEmpty(fname) && { fname }),
+      ...(isNotEmpty(lname) && { lname }),
+      profileImage: isNotEmpty(profileImage)
+        ? profileImage
+        : 'https://static.vecteezy.com/system/resources/previews/009/734/564/non_2x/default-avatar-profile-icon-of-social-media-user-vector.jpg',
+      ...(isNotEmpty(role) && { role }),
+      ...(isNotEmpty(type) && { type }),
+      ...(isNotEmpty(email) && { email }),
+      ...(isNotEmpty(companyDetails) && { companyDetails }),
+      ...(isNotEmpty(address) && { address }),
+    };
+
+    // Update user details using req.user.id
+    const user = await User.findByIdAndUpdate(req.user, updatedFields, { new: true });
+
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+
+    res.status(200).json({ message: 'updated', user });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
 
 export const completeRegistration = async (req, res) => {
   try {
