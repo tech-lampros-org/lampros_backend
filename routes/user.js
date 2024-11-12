@@ -15,6 +15,7 @@ router.get('/user-filter',protect,filterUsersWithProjectsOrProducts )
 router.delete('/delete',protect,deleteAccount)
 
 
+
 // Image upload route
 router.post('/upload-image', upload.single('image'), uploadImage);
 router.post('/upload-images', upload.array('image', 10), uploadImages);
