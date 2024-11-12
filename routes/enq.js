@@ -1,5 +1,5 @@
 import express from 'express';
-import { createEnquiry } from '../controllers/enq.js';
+import { createEnquiry,getAllEnquiries } from '../controllers/enq.js';
 
 const router = express.Router();
 
