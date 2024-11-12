@@ -20,7 +20,7 @@ import ro_message from './routes/message.js'
 import ro_notification from './routes/notification.js'
 import ro_order from './routes/order.js'
 import ro_enq from './routes/enq.js'
-import fo from './routes/followersRoutes.js'
+import ro_fo from './routes/followersRoutes.js'
 
 
 const app = express();
