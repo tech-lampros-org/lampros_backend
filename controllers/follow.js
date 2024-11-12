@@ -33,6 +33,47 @@ export const followUser = async (req, res) => {
   }
 };
 
+
+
+// GET: Get following with pagination
+export const getFollowing = async (req, res) => {
+    const userId = req.user; // Authenticated user's ID
+    const { page = 1, limit = 10 } = req.query; // Default to page 1 and 10 items per page
+  
+    try {
+      // Find the user's following list and populate their details
+      const user = await User.findById(userId)
+        .populate({
+          path: 'following',
+          select: 'fname lname profileImage', // Specify the fields to retrieve
+          options: {
+            skip: (page - 1) * limit,
+            limit: parseInt(limit),
+          },
+        })
+        .exec();
+  
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+  
+      // Get total count of following for pagination metadata
+      const totalFollowing = user.following.length;
+  
+      res.status(200).json({
+        following: user.following,
+        currentPage: page,
+        totalPages: Math.ceil(totalFollowing / limit),
+        totalFollowing,
+      });
+    } catch (error) {
+      res.status(500).json({ message: 'Error retrieving following', error });
+    }
+  };
+  
+
+
+
 // GET: Get followers with pagination
 export const getFollowers = async (req, res) => {
   const userId = req.user; // Authenticated user's ID

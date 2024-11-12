@@ -1,5 +1,5 @@
 import express from 'express';
-import { followUser, getFollowers } from '../controllers/follow.js';
+import { followUser, getFollowers ,getFollowing} from '../controllers/follow.js';
 
 const router = express.Router();
 
@@ -8,5 +8,7 @@ router.post('/follow', followUser);
 
 // Route to get followers with pagination
 router.get('/followers', getFollowers);
+router.get('/following', getFollowing);
+
 
 export default router;
