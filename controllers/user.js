@@ -193,16 +193,16 @@ export const completeRegistration = async (req, res) => {
     // Generate a token for the user
     const token = generateToken(user._id);
 
-    await sendSmsvia2fact(phoneNumber,`*Welcome to Lampros!*
+    // await sendSmsvia2fact(phoneNumber,`*Welcome to Lampros!*
 
-    Thank you for joining the Lampros family. You’re now one step closer to bringing your dream home to life! Explore a wide range of home designs, top-quality products, expert consultations, and connect with trusted professionals—all in one place.
+    // Thank you for joining the Lampros family. You’re now one step closer to bringing your dream home to life! Explore a wide range of home designs, top-quality products, expert consultations, and connect with trusted professionals—all in one place.
     
-    Feel free to start exploring the app, and if you have any questions or need assistance, we’re here to help.
+    // Feel free to start exploring the app, and if you have any questions or need assistance, we’re here to help.
     
-    Welcome aboard, and happy homebuilding!
+    // Welcome aboard, and happy homebuilding!
     
-    *Team Lampros*
-    India’s First Virtual Buildmart`)
+    // *Team Lampros*
+    // India’s First Virtual Buildmart`)
 
     res.status(200).json({ message: 'Registration complete', token });
   } catch (error) {
