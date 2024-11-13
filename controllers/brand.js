@@ -53,34 +53,10 @@ export const approveBrand = async (req, res) => {
   
   export const listAllBrands = async (req, res) => {
     try {
-      // Extract page and limit from query parameters, set default values if not provided
-      let { page = 1, limit = 10 } = req.query;
-  
-      // Convert page and limit to integers
-      page = parseInt(page);
-      limit = parseInt(limit);
-  
-      // Validate page and limit
-      if (isNaN(page) || page < 1) {
-        page = 1;
-      }
-      if (isNaN(limit) || limit < 1) {
-        limit = 10;
-      }
-  
-      // Calculate the number of documents to skip
-      const skip = (page - 1) * limit;
-  
-      // Fetch brands with pagination
+      // Fetch all brands without pagination
       const brands = await Brand.find();
   
-      // Get total count of brands for pagination info
-      const total = await Brand.countDocuments();
-  
-      // Calculate total pages
-      const totalPages = Math.ceil(total / limit);
-  
-      // Send the paginated response
+      // Send the response with all brands
       res.status(200).json({
         brands,
       });
@@ -88,4 +64,5 @@ export const approveBrand = async (req, res) => {
       res.status(500).json({ message: 'Failed to retrieve brands', error: error.message });
     }
   };
+  
   
