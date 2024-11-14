@@ -51,6 +51,7 @@ const UserSchema = new mongoose.Schema(
     companyDetails: companyDetailsSchema, // Use the company details schema with updated address structure
     role: { type: String, enum: ['Realtor', 'Product Seller', 'Professionals', 'Home Owner'], default: 'Home Owner' },
     type: { type: String },
+    token: { type : String },
     followers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     following: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     premium: {

@@ -85,7 +85,7 @@ export const completeBasic = async (req, res) => {
 
 export const update = async (req, res) => {
   try {
-    const { fname, lname, profileImage, role, type, email, companyDetails, address, age, gender } = req.body;
+    const { fname, lname, profileImage, role, type, email, companyDetails, address, age, gender, token } = req.body;
 
     // Helper functions for specific checks
     const isNotEmpty = (value) => value !== undefined && value !== null && value !== '';
@@ -112,6 +112,7 @@ export const update = async (req, res) => {
     // Build the fields to update, excluding null or empty values and validating specific fields
     const updatedFields = {
       ...(isNonEmptyString(fname) && { fname }),
+      ...(isNonEmptyString(token) && { token }),
       ...(isNonEmptyString(lname) && { lname }),
       profileImage: isNotEmpty(profileImage)
         ? profileImage
