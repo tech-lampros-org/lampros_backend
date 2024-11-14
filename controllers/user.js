@@ -87,6 +87,8 @@ export const update = async (req, res) => {
   try {
     const { fname, lname, profileImage, role, type, email, companyDetails, address, age, gender, token } = req.body;
 
+    
+
     // Helper functions for specific checks
     const isNotEmpty = (value) => value !== undefined && value !== null && value !== '';
     const isNonEmptyString = (str) => typeof str === 'string' && str.trim().length > 0;
