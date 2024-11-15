@@ -60,10 +60,7 @@ export const updateProduct = async (req, res) => {
       manufactureDetails, warrantyAndCertifications, images, brandId
     } = req.body;
 
-    // Validate required fields
-    if (!name || !price || !quantity || !brandId) {
-      return res.status(400).json({ message: 'Name, price, quantity, and brand are required.' });
-    }
+   
 
     // Check if the brand exists and is approved
     const brand = await Brand.findById(brandId);
