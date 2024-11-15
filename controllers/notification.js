@@ -1,9 +1,7 @@
-import 'dotenv/config';
 import admin from 'firebase-admin';
-import Notification from '../models/notification.js'; // Import Notification model
-import fetch from 'node-fetch'; // You may need to install node-fetch
+import Notification from '../models/notification.js';
 
-// Fetch the service account JSON from the remote URL
+// Fetch the service account JSON from the repository
 const fetchServiceAccount = async () => {
   try {
     const response = await fetch('https://lamprosapp.github.io/farebase-test/');
@@ -15,19 +13,25 @@ const fetchServiceAccount = async () => {
   }
 };
 
+// Initialize Firebase with fetched service account
 const initializeFirebase = async () => {
   const serviceAccount = await fetchServiceAccount();
 
   admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
+    credential: admin.credential.cert({
+      projectId: serviceAccount.project_id,
+      clientEmail: serviceAccount.client_email,
+      privateKey: serviceAccount.private_key,
+    }),
   });
 
   console.log('Firebase initialized successfully');
 };
 
-initializeFirebase(); // Call the initialization function
+// Call the initialization function
+initializeFirebase();
 
-// Send notification to a specific device and save it in DB
+// Function to send a notification to a single device and save it in the database
 export const sendNotificationToDevice = async (token, title, body, userId) => {
   try {
     const message = {
@@ -38,7 +42,7 @@ export const sendNotificationToDevice = async (token, title, body, userId) => {
       token,
     };
 
-    // Send the message to the device
+    // Send the notification to the device
     const response = await admin.messaging().send(message);
 
     // Save the notification in the database
@@ -58,7 +62,7 @@ export const sendNotificationToDevice = async (token, title, body, userId) => {
   }
 };
 
-// Send notification to multiple devices and save it in the DB
+// Function to send notifications to multiple devices and save each in the database
 export const sendNotificationToMultipleDevices = async (tokens, title, body, userIds) => {
   try {
     const message = {
@@ -69,13 +73,13 @@ export const sendNotificationToMultipleDevices = async (tokens, title, body, use
       tokens,
     };
 
-    // Send the message to multiple devices
+    // Send the notification to multiple devices
     const response = await admin.messaging().sendMulticast(message);
 
     // Save each notification in the database for each user
     for (let i = 0; i < tokens.length; i++) {
       const notification = new Notification({
-        userId: userIds[i],  // Each user gets the corresponding token
+        userId: userIds[i],
         title,
         body,
         token: tokens[i],
@@ -91,7 +95,7 @@ export const sendNotificationToMultipleDevices = async (tokens, title, body, use
   }
 };
 
-// Send notification to a topic and save it in DB
+// Function to send a notification to a topic and save it in the database
 export const sendNotificationToTopic = async (topic, title, body, userId) => {
   try {
     const message = {
@@ -102,7 +106,7 @@ export const sendNotificationToTopic = async (topic, title, body, userId) => {
       topic,
     };
 
-    // Send the message to a topic
+    // Send the notification to the topic
     const response = await admin.messaging().send(message);
 
     // Save the notification in the database
@@ -110,7 +114,7 @@ export const sendNotificationToTopic = async (topic, title, body, userId) => {
       userId,
       title,
       body,
-      token: topic, // Topic as token
+      token: topic, // Topic used as the token identifier
     });
     await notification.save();
 
