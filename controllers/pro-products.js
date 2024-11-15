@@ -52,6 +52,57 @@ export const addProduct = async (req, res) => {
   }
 };
 
+export const updateProduct = async (req, res) => {
+  try {
+    const { productId } = req.params; // Get product ID from the request parameters
+    const {
+      seller, name, category, subCategory, type, subType, price, quantity, about, technicalDetails,
+      manufactureDetails, warrantyAndCertifications, images, brandId
+    } = req.body;
+
+    // Validate required fields
+    if (!name || !price || !quantity || !brandId) {
+      return res.status(400).json({ message: 'Name, price, quantity, and brand are required.' });
+    }
+
+    // Check if the brand exists and is approved
+    const brand = await Brand.findById(brandId);
+    if (!brand) {
+      return res.status(400).json({ message: 'Brand not found or not approved by admin.' });
+    }
+
+    // Find the product by ID
+    const product = await ProProduct.findById(productId);
+    if (!product) {
+      return res.status(404).json({ message: 'Product not found.' });
+    }
+
+    // Update the product with new data
+    product.seller = seller || product.seller;
+    product.name = name || product.name;
+    product.category = category || product.category;
+    product.subCategory = subCategory || product.subCategory;
+    product.type = type || product.type;
+    product.subType = subType || product.subType;
+    product.brand = brandId; // Reference to the updated brand
+    product.price = price || product.price;
+    product.quantity = quantity || product.quantity;
+    product.about = about || product.about;
+    product.technicalDetails = technicalDetails || product.technicalDetails;
+    product.manufactureDetails = manufactureDetails || product.manufactureDetails;
+    product.warrantyAndCertifications = warrantyAndCertifications || product.warrantyAndCertifications;
+    product.images = images || product.images;
+
+    // Save the updated product to the database
+    await product.save();
+
+    // Send a success response with the updated product
+    res.status(200).json({ message: 'Product updated successfully', product });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to update product', error: error.message });
+  }
+};
+
 
 // Controller to list all products with optional pagination
 export const listAllProducts = async (req, res) => {
