@@ -64,6 +64,7 @@ const getAllEnquiries = async (req, res) => {
 
     // Fetch paginated enquiries
     const enquiries = await Enquiry.find()
+      .populate('createdBy')
       .skip(skip)
       .limit(limit);
 
