@@ -1,18 +1,31 @@
-// notification.js
-import 'dotenv/config'; 
+import 'dotenv/config';
 import admin from 'firebase-admin';
 import Notification from '../models/notification.js'; // Import Notification model
+import fetch from 'node-fetch'; // You may need to install node-fetch
 
+// Fetch the service account JSON from the remote URL
+const fetchServiceAccount = async () => {
+  try {
+    const response = await fetch('https://lamprosapp.github.io/farebase-test/');
+    const serviceAccountJson = await response.json(); // Parse the JSON response
+    return serviceAccountJson;
+  } catch (error) {
+    console.error('Error fetching service account JSON:', error);
+    throw new Error('Failed to fetch service account');
+  }
+};
 
+const initializeFirebase = async () => {
+  const serviceAccount = await fetchServiceAccount();
 
-const serviceAccount = JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON);
+  admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+  });
 
+  console.log('Firebase initialized successfully');
+};
 
-
-
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-});
+initializeFirebase(); // Call the initialization function
 
 // Send notification to a specific device and save it in DB
 export const sendNotificationToDevice = async (token, title, body, userId) => {
