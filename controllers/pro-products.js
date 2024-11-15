@@ -62,11 +62,7 @@ export const updateProduct = async (req, res) => {
 
    
 
-    // Check if the brand exists and is approved
-    const brand = await Brand.findById(brandId);
-    if (!brand) {
-      return res.status(400).json({ message: 'Brand not found or not approved by admin.' });
-    }
+   
 
     // Find the product by ID
     const product = await ProProduct.findById(productId);
