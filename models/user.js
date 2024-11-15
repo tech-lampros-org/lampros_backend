@@ -1,6 +1,18 @@
 import mongoose from 'mongoose';
 import { nanoid } from 'nanoid'; // For generating unique IDs
 
+// Delivery Address Schema
+const deliveryAddressSchema = new mongoose.Schema({
+  fullName: { type: String },
+  mobile: { type: String },
+  altMobile: { type: String }, // Optional alternate mobile number
+  pincode: { type: Number },
+  district: { type: String },
+  city: { type: String },
+  address: { type: String},
+  landmark: { type: String }, // Optional landmark for delivery address
+}, { timestamps: true });
+
 // Schema for personal address
 const addressSchema = new mongoose.Schema({
   place: { type: String },
@@ -39,6 +51,9 @@ const UserSchema = new mongoose.Schema(
     companyDetails: companyDetailsSchema, // Use the company details schema with updated address structure
     role: { type: String, enum: ['Realtor', 'Product Seller', 'Professionals', 'Home Owner'], default: 'Home Owner' },
     type: { type: String },
+    token: { type : String },
+    followers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    following: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     premium: {
       isPremium: { type: Boolean, default: false },
       category: {
@@ -52,6 +67,7 @@ const UserSchema = new mongoose.Schema(
       professionalSpecificField: { type: String },
       affiliateSpecificField: { type: String },
     },
+    deliveryAddresses: [deliveryAddressSchema],
   },
   { timestamps: true } // Enable timestamps here
 );

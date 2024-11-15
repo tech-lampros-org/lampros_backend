@@ -85,32 +85,55 @@ export const completeBasic = async (req, res) => {
 
 export const update = async (req, res) => {
   try {
-    const { fname, lname, profileImage, role, type, email, companyDetails, address } = req.body;
+    const { fname, lname, profileImage, role, type, email, companyDetails, address, age, gender, token } = req.body;
 
+    
+
+    // Helper functions for specific checks
     const isNotEmpty = (value) => value !== undefined && value !== null && value !== '';
+    const isNonEmptyString = (str) => typeof str === 'string' && str.trim().length > 0;
+    const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    const isValidNumber = (num) => typeof num === 'number' && num > 0;
 
-    // Build the fields to update, excluding null or empty values
+    // Fetch the existing user document to retain existing fields
+    const existingUser = await User.findById(req.user);
+    if (!existingUser) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Merge existing companyDetails with new updates if provided
+    const updatedCompanyDetails = {
+      ...(existingUser.companyDetails || {}),  // Keep existing fields
+      ...(isNonEmptyString(companyDetails?.companyName) && { companyName: companyDetails.companyName }),
+      ...(isValidEmail(companyDetails?.companyEmail) && { companyEmail: companyDetails.companyEmail }),
+      ...(isNonEmptyString(companyDetails?.companyPhone) && { companyPhone: companyDetails.companyPhone }),
+      ...(isNonEmptyString(companyDetails?.companyGstNumber) && { companyGstNumber: companyDetails.companyGstNumber }),
+      ...(isValidNumber(companyDetails?.experience) && { experience: companyDetails.experience }),
+    };
+
+    // Build the fields to update, excluding null or empty values and validating specific fields
     const updatedFields = {
-      ...(isNotEmpty(fname) && { fname }),
-      ...(isNotEmpty(lname) && { lname }),
+      ...(isNonEmptyString(fname) && { fname }),
+      ...(isNonEmptyString(token) && { token }),
+      ...(isNonEmptyString(lname) && { lname }),
       profileImage: isNotEmpty(profileImage)
         ? profileImage
         : 'https://static.vecteezy.com/system/resources/previews/009/734/564/non_2x/default-avatar-profile-icon-of-social-media-user-vector.jpg',
-      ...(isNotEmpty(role) && { role }),
-      ...(isNotEmpty(type) && { type }),
-      ...(isNotEmpty(email) && { email }),
-      ...(isNotEmpty(companyDetails) && { companyDetails }),
+      ...(isNonEmptyString(role) && { role }),
+      ...(isNonEmptyString(type) && { type }),
+      ...(isValidEmail(email) && { email }),
+      ...(isNotEmpty(companyDetails) && { companyDetails: updatedCompanyDetails }),  // Include updated companyDetails
       ...(isNotEmpty(address) && { address }),
+      ...(isValidNumber(age) && { age }),
+      ...(isNonEmptyString(gender) && { gender }),
     };
 
     // Update user details using req.user.id
     const user = await User.findByIdAndUpdate(req.user, updatedFields, { new: true });
 
-
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
-
 
     res.status(200).json({ message: 'updated', user });
   } catch (error) {
@@ -119,9 +142,10 @@ export const update = async (req, res) => {
 };
 
 
+
 export const completeRegistration = async (req, res) => {
   try {
-    const { phoneNumber, fname, lname, profileImage, role, type, email, companyDetails, address, couponCode } = req.body;
+    const { phoneNumber, fname, lname, profileImage, role, type, email, companyDetails, address, couponCode, age, gender } = req.body;
 
     const isNotEmpty = (value) => value !== undefined && value !== null && value !== '';
 
@@ -147,6 +171,8 @@ export const completeRegistration = async (req, res) => {
     const updatedFields = {
       fname,
       lname,
+      age,
+      gender,
       profileImage: isNotEmpty(profileImage)
         ? profileImage
         : 'https://static.vecteezy.com/system/resources/previews/009/734/564/non_2x/default-avatar-profile-icon-of-social-media-user-vector.jpg',
@@ -170,16 +196,16 @@ export const completeRegistration = async (req, res) => {
     // Generate a token for the user
     const token = generateToken(user._id);
 
-    await sendSmsvia2fact(phoneNumber,`*Welcome to Lampros!*
+    // await sendSmsvia2fact(phoneNumber,`*Welcome to Lampros!*
 
-    Thank you for joining the Lampros family. You’re now one step closer to bringing your dream home to life! Explore a wide range of home designs, top-quality products, expert consultations, and connect with trusted professionals—all in one place.
+    // Thank you for joining the Lampros family. You’re now one step closer to bringing your dream home to life! Explore a wide range of home designs, top-quality products, expert consultations, and connect with trusted professionals—all in one place.
     
-    Feel free to start exploring the app, and if you have any questions or need assistance, we’re here to help.
+    // Feel free to start exploring the app, and if you have any questions or need assistance, we’re here to help.
     
-    Welcome aboard, and happy homebuilding!
+    // Welcome aboard, and happy homebuilding!
     
-    *Team Lampros*
-    India’s First Virtual Buildmart`)
+    // *Team Lampros*
+    // India’s First Virtual Buildmart`)
 
     res.status(200).json({ message: 'Registration complete', token });
   } catch (error) {

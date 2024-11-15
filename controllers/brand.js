@@ -53,12 +53,16 @@ export const approveBrand = async (req, res) => {
   
   export const listAllBrands = async (req, res) => {
     try {
-      // Fetch all brands
+      // Fetch all brands without pagination
       const brands = await Brand.find();
   
-      // Send the brands as a response
-      res.status(200).json(brands);
+      // Send the response with all brands
+      res.status(200).json({
+        brands,
+      });
     } catch (error) {
       res.status(500).json({ message: 'Failed to retrieve brands', error: error.message });
     }
   };
+  
+  

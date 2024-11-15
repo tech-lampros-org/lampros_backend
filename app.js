@@ -2,9 +2,7 @@ import express from 'express';
 import {logger} from './config/loggingConfig.js';
 import connectDB from './config/dbConfig.js';
 import corsMiddleware from './middlewares/corsMiddleware.js';
-import requestLoggerMiddleware from './middlewares/requestLogger.js';
 import config from './config/serverConfig.js';
-import rateLimiter from './middlewares/rateLimiter.js';
 import errorHandler from './middlewares/errorHandler.js';
 import { protect } from './middlewares/protect.js'; 
 
@@ -18,6 +16,12 @@ import ro_products from './routes/pro-products.js'
 import category from './routes/catogory.js'
 import ro_brands from './routes/brand.js'
 import searchRoutes from './routes/serch.js'
+import ro_message from './routes/message.js'
+import ro_notification from './routes/notification.js'
+import ro_order from './routes/order.js'
+import ro_enq from './routes/enq.js'
+import ro_fo from './routes/followersRoutes.js'
+
 
 const app = express();
 
@@ -26,12 +30,12 @@ connectDB();
 
 
 
-app.use(rateLimiter);
+// app.use(rateLimiter);
 // Body parser middleware
 app.use(express.json()); // Parse JSON bodies
 app.use(express.urlencoded({ extended: true }));
 app.use(corsMiddleware);
-app.use(requestLoggerMiddleware);
+// app.use(requestLoggerMiddleware);
 
 
 // Use OTP routes
@@ -43,6 +47,12 @@ app.use('/api/products', ro_products);
 app.use('/api/category', category);
 app.use('/api/brand', ro_brands);
 app.use('/api', protect, searchRoutes);
+app.use('/api', protect, ro_message);
+app.use('/api', protect, ro_notification);
+app.use('/api', protect, ro_order);
+app.use('/api',protect, ro_enq);
+app.use('/api',protect, ro_fo);
+
 
 
 // Example route

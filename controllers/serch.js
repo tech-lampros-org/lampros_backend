@@ -6,37 +6,72 @@ import ProProject from '../models/pro-projects.js';
 import User from '../models/user.js';
 
 export const fuzzySearchAll = async (req, res) => {
-    const { q = '' } = req.query; // Removed letterSupport parameter
+    const { q = '', page = 1, limit = 10 } = req.query;
 
     try {
+        const parsedPage = parseInt(page, 10) < 1 ? 1 : parseInt(page, 10);
+        const parsedLimit = parseInt(limit, 10) < 1 ? 10 : parseInt(limit, 10);
+        const skip = (parsedPage - 1) * parsedLimit;
+
         // Build the regex for fuzzy matching
-        const regex = new RegExp(q, 'i'); // Case insensitive
+        const regex = new RegExp(q.split('').join('.*'), 'i'); // Fuzzy matching regex
 
         // Define roles to search for in the User collection
         const userRoles = ['Realtor', 'Product Seller', 'Home Owner', 'Professionals'];
 
-        // Perform parallel searches across different collections
-        const [categories, brands, products, proProjects, users] = await Promise.all([
-            Category.find({ name: regex }).lean(),
-            Brand.find({ name: regex }).lean(),
+        // Perform parallel searches across different collections with pagination
+        const [
+            categories,
+            categoriesTotal,
+            brands,
+            brandsTotal,
+            products,
+            productsTotal,
+            proProjects,
+            proProjectsTotal,
+            users,
+            usersTotal
+        ] = await Promise.all([
+            Category.find({ name: regex }).skip(skip).limit(parsedLimit).lean(),
+            Category.countDocuments({ name: regex }),
+            Brand.find({ name: regex }).skip(skip).limit(parsedLimit).lean(),
+            Brand.countDocuments({ name: regex }),
             Product.find({
                 $or: [
                     { name: regex },
                     { about: regex }
                 ]
-            }).populate('brand').lean(),
+            }).populate('brand').skip(skip).limit(parsedLimit).lean(),
+            Product.countDocuments({
+                $or: [
+                    { name: regex },
+                    { about: regex }
+                ]
+            }),
             ProProject.find({
                 $or: [
                     { projectType: regex },
                     { about: regex }
                 ]
-            }).lean(),
+            }).skip(skip).limit(parsedLimit).lean(),
+            ProProject.countDocuments({
+                $or: [
+                    { projectType: regex },
+                    { about: regex }
+                ]
+            }),
             User.find({
                 $or: [
                     { fname: regex },
                     { lname: regex },
                 ]
-            }).lean(),
+            }).skip(skip).limit(parsedLimit).lean(),
+            User.countDocuments({
+                $or: [
+                    { fname: regex },
+                    { lname: regex },
+                ]
+            }),
         ]);
 
         // If there are users, fetch their associated projects or products
@@ -50,10 +85,12 @@ export const fuzzySearchAll = async (req, res) => {
                 .filter(user => user.role === 'Product Seller')
                 .map(user => user._id);
 
-            // Fetch all relevant projects and products in bulk
-            const [projects, productsList] = await Promise.all([
-                ProProject.find({ createdBy: { $in: realtorOrProfIds } }).lean(),
-                Product.find({ createdBy: { $in: productSellerIds } }).lean(),
+            // Fetch all relevant projects and products in bulk with pagination
+            const [projects, projectsTotal, productsList, productsListTotal] = await Promise.all([
+                ProProject.find({ createdBy: { $in: realtorOrProfIds } }).skip(skip).limit(parsedLimit).lean(),
+                ProProject.countDocuments({ createdBy: { $in: realtorOrProfIds } }),
+                Product.find({ createdBy: { $in: productSellerIds } }).skip(skip).limit(parsedLimit).lean(),
+                Product.countDocuments({ createdBy: { $in: productSellerIds } }),
             ]);
 
             // Map projects and products to their respective users
@@ -89,22 +126,47 @@ export const fuzzySearchAll = async (req, res) => {
             });
         }
 
-        // Combine results
+        // Combine results with pagination info
         res.status(200).json({
             success: true,
             results: {
-                categories,
-                brands,
-                products,
-                projects: proProjects,
-                users: usersWithDetails, // Use enhanced user data
+                categories: {
+                    data: categories,
+                    currentPage: parsedPage,
+                    totalPages: Math.ceil(categoriesTotal / parsedLimit),
+                    totalResults: categoriesTotal
+                },
+                brands: {
+                    data: brands,
+                    currentPage: parsedPage,
+                    totalPages: Math.ceil(brandsTotal / parsedLimit),
+                    totalResults: brandsTotal
+                },
+                products: {
+                    data: products,
+                    currentPage: parsedPage,
+                    totalPages: Math.ceil(productsTotal / parsedLimit),
+                    totalResults: productsTotal
+                },
+                projects: {
+                    data: proProjects,
+                    currentPage: parsedPage,
+                    totalPages: Math.ceil(proProjectsTotal / parsedLimit),
+                    totalResults: proProjectsTotal
+                },
+                users: {
+                    data: usersWithDetails,
+                    currentPage: parsedPage,
+                    totalPages: Math.ceil(usersTotal / parsedLimit),
+                    totalResults: usersTotal
+                },
             },
             totalResults: {
-                categories: categories.length,
-                brands: brands.length,
-                products: products.length,
-                projects: proProjects.length,
-                users: usersWithDetails.length, // Updated count
+                categories: categoriesTotal,
+                brands: brandsTotal,
+                products: productsTotal,
+                projects: proProjectsTotal,
+                users: usersTotal,
             },
         });
     } catch (error) {
