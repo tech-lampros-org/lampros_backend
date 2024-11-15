@@ -41,7 +41,7 @@ export const fuzzySearchAll = async (req, res) => {
                     { name: regex },
                     { about: regex }
                 ]
-            }).populate('brand').skip(skip).limit(parsedLimit).lean(),
+            }).populate('brand').populate('createdBy').skip(skip).limit(parsedLimit).lean(),
             Product.countDocuments({
                 $or: [
                     { name: regex },
@@ -53,7 +53,7 @@ export const fuzzySearchAll = async (req, res) => {
                     { projectType: regex },
                     { about: regex }
                 ]
-            }).skip(skip).limit(parsedLimit).lean(),
+            }).skip(skip).populate('createdBy').limit(parsedLimit).lean(),
             ProProject.countDocuments({
                 $or: [
                     { projectType: regex },
