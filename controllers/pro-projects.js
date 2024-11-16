@@ -145,6 +145,7 @@ export const listUserProjects = async (req, res) => {
 
     // Fetch projects created by the authenticated user with pagination and sorting
     const projectsPromise = ProProject.find({ createdBy: userId })
+      .populate('createdBy', '-password')
       .sort({ [sortBy]: sortOrder })
       .skip(skip)
       .limit(limit);

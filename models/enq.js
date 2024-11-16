@@ -71,10 +71,7 @@ const enquirySchema = new mongoose.Schema({
     type: String
   },
 
-  createdBy: {
-    type: String,
-    required: true
-  }
+  createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
 });
 
 const Enquiry = mongoose.model('Enquiry', enquirySchema);
