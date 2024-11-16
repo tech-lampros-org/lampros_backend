@@ -101,15 +101,37 @@ export const update = async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    // Merge existing companyDetails with new updates if provided
+    const mergeField = (existing, newField, validator) =>
+      newField && validator(newField) ? newField : existing;
+    
     const updatedCompanyDetails = {
-      ...(existingUser.companyDetails || {}),  // Keep existing fields
-      ...(isNonEmptyString(companyDetails?.companyName) && { companyName: companyDetails.companyName }),
-      ...(isValidEmail(companyDetails?.companyEmail) && { companyEmail: companyDetails.companyEmail }),
-      ...(isNonEmptyString(companyDetails?.companyPhone) && { companyPhone: companyDetails.companyPhone }),
-      ...(isNonEmptyString(companyDetails?.companyGstNumber) && { companyGstNumber: companyDetails.companyGstNumber }),
-      ...(isValidNumber(companyDetails?.experience) && { experience: companyDetails.experience }),
+      companyName: mergeField(
+        existingUser.companyDetails?.companyName,
+        companyDetails?.companyName,
+        isNonEmptyString
+      ),
+      companyEmail: mergeField(
+        existingUser.companyDetails?.companyEmail,
+        companyDetails?.companyEmail,
+        isValidEmail
+      ),
+      companyPhone: mergeField(
+        existingUser.companyDetails?.companyPhone,
+        companyDetails?.companyPhone,
+        isNonEmptyString
+      ),
+      companyGstNumber: mergeField(
+        existingUser.companyDetails?.companyGstNumber,
+        companyDetails?.companyGstNumber,
+        isNonEmptyString
+      ),
+      experience: mergeField(
+        existingUser.companyDetails?.experience,
+        companyDetails?.experience,
+        isValidNumber
+      ),
     };
+    
 
     // Build the fields to update, excluding null or empty values and validating specific fields
     const updatedFields = {
@@ -118,7 +140,7 @@ export const update = async (req, res) => {
       ...(isNonEmptyString(lname) && { lname }),
       profileImage: isNotEmpty(profileImage)
         ? profileImage
-        : 'https://static.vecteezy.com/system/resources/previews/009/734/564/non_2x/default-avatar-profile-icon-of-social-media-user-vector.jpg',
+        : existingUser.profileImage,
       ...(isNonEmptyString(role) && { role }),
       ...(isNonEmptyString(type) && { type }),
       ...(isValidEmail(email) && { email }),
@@ -306,7 +328,7 @@ export const filterUsersWithProjectsOrProducts = async (req, res) => {
 
     // Fetch users based on the role and type with pagination
     const usersPromise = User.find(filter)
-      .select('-password -__v') // Exclude password and other unnecessary fields
+      .select('-password') // Exclude password and other unnecessary fields
       .skip(skip)
       .limit(parsedLimit)
       .exec();
