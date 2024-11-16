@@ -53,6 +53,8 @@ const createEnquiry = async (req, res) => {
   }
 };
 
+import axios from 'axios';
+
 const getAllEnquiries = async (req, res) => {
   try {
     // Get page and limit from query parameters, with default values
@@ -68,6 +70,32 @@ const getAllEnquiries = async (req, res) => {
       .skip(skip)
       .limit(limit);
 
+    // Fetch pincode details dynamically for each enquiry
+    const enhancedEnquiries = await Promise.all(
+      enquiries.map(async (enquiry) => {
+        try {
+          const response = await axios.get(`https://pincode.vercel.app/${enquiry.pincode}`);
+          const { taluk, districtName, stateName, officeNames } = response.data;
+
+          return {
+            ...enquiry.toObject(),
+            pincodeDetails: {
+              taluk,
+              district: districtName,
+              state: stateName,
+              officeNames,
+            },
+          };
+        } catch (error) {
+          console.error(`Error fetching pincode details for ${enquiry.pincode}:`, error.message);
+          return {
+            ...enquiry.toObject(),
+            pincodeDetails: null, // Default value if the API call fails
+          };
+        }
+      })
+    );
+
     // Get the total count of documents for pagination info
     const totalEnquiries = await Enquiry.countDocuments();
 
@@ -76,12 +104,13 @@ const getAllEnquiries = async (req, res) => {
       currentPage: page,
       totalPages: Math.ceil(totalEnquiries / limit),
       totalEnquiries,
-      enquiries,
+      enquiries: enhancedEnquiries,
     });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server Error' });
   }
 };
+
 
 export { createEnquiry,getAllEnquiries };
