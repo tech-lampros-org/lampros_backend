@@ -109,3 +109,39 @@ export const getFollowers = async (req, res) => {
     res.status(500).json({ message: 'Error retrieving followers', error });
   }
 };
+
+
+// POST: Unfollow another user
+export const unfollowUser = async (req, res) => {
+  const userId = req.user; // Authenticated user's ID
+  const { targetUserId } = req.body; // ID of the user to unfollow
+
+  try {
+    // Find the target user and the authenticated user
+    const targetUser = await User.findById(targetUserId);
+    const user = await User.findById(userId);
+
+    if (!targetUser || !user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Check if the user is already not following the target user
+    if (!user.following.includes(targetUserId)) {
+      return res.status(400).json({ message: 'You are not following this user' });
+    }
+
+    // Remove target user from 'following' list of the current user
+    user.following = user.following.filter(id => id.toString() !== targetUserId);
+
+    // Remove current user from 'followers' list of the target user
+    targetUser.followers = targetUser.followers.filter(id => id.toString() !== userId);
+
+    // Save both user documents
+    await user.save();
+    await targetUser.save();
+
+    res.status(200).json({ message: 'Successfully unfollowed the user' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error unfollowing user', error });
+  }
+};
