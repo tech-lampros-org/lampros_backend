@@ -96,6 +96,68 @@ export const updateProduct = async (req, res) => {
   }
 };
 
+export const listAllProductsByIds = async (req, res) => {
+  try {
+    // Extract pagination parameters from query string
+    let { page = 1, limit = 10, sortBy = 'createdAt', order = 'desc', brand, search } = req.query;
+
+    // Extract product IDs from request body
+    const { ids } = req.body;
+
+    // Convert page and limit to integers
+    page = parseInt(page, 10);
+    limit = parseInt(limit, 10);
+
+    // Validate page and limit
+    if (isNaN(page) || page < 1) page = 1;
+    if (isNaN(limit) || limit < 1) limit = 10;
+
+    // Determine sort order
+    const sortOrder = order === 'asc' ? 1 : -1;
+
+    // Initialize filter for query
+    const filter = {};
+
+    // Add ID filter if IDs are provided in the body
+    if (ids && Array.isArray(ids) && ids.length > 0) {
+      filter._id = { $in: ids.map(id => mongoose.Types.ObjectId(id)) };  // Convert IDs to ObjectId format
+    }
+
+    // Add brand filter if provided
+    if (brand) filter.brand = brand;
+
+    // Add search filter if provided
+    if (search) filter.name = { $regex: search, $options: 'i' };
+
+    // Pagination options
+    const options = {
+      page,
+      limit,
+      sort: { [sortBy]: sortOrder },
+      populate: [
+        { path: 'createdBy', select: '-password' },
+        { path: 'brand' },
+      ],
+      lean: true,
+      leanWithId: false,
+    };
+
+    // Fetch products with pagination, sorting, and filtering
+    const result = await ProProduct.paginate(filter, options);
+
+    // Send the paginated response
+    res.status(200).json({
+      currentPage: result.page,
+      totalPages: result.totalPages,
+      totalProducts: result.totalDocs,
+      products: result.docs,
+    });
+  } catch (error) {
+    console.error('Error retrieving products:', error);
+    res.status(500).json({ message: 'Failed to retrieve products', error: error.message });
+  }
+};
+
 
 // Controller to list all products with optional pagination
 export const listAllProducts = async (req, res) => {

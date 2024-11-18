@@ -1,5 +1,5 @@
 import express from 'express';
-import { addProduct, listAllProducts, listUserProducts, filterProducts, searchProducts,updateProduct } from '../controllers/pro-products.js';
+import { addProduct, listAllProducts, listUserProducts, filterProducts, searchProducts,updateProduct, listAllProductsByIds } from '../controllers/pro-products.js';
 import { protect } from '../middlewares/protect.js'; 
 
 // Initialize the router
@@ -10,6 +10,8 @@ router.post('/products', protect, addProduct);
 
 // Route to list all products (GET /api/products/all)
 router.get('/products/all', protect, listAllProducts);
+router.post('/products/ids', protect, listAllProductsByIds);
+
 
 router.put('/product/:productId',protect, updateProduct);
 

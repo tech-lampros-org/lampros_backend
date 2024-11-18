@@ -51,6 +51,78 @@ export const addProject = async (req, res) => {
   }
 };
 
+export const listAllProjectsByIds = async (req, res) => {
+  try {
+    // Extract pagination parameters from query
+    let { page = 1, limit = 10, sortBy = 'createdAt', order = 'desc' } = req.query;
+
+    // Extract project IDs from request body
+    const { ids } = req.body;
+
+    // Convert page and limit to integers
+    page = parseInt(page, 10);
+    limit = parseInt(limit, 10);
+
+    // Validate page and limit
+    if (isNaN(page) || page < 1) page = 1;
+    if (isNaN(limit) || limit < 1) limit = 10;
+
+    // Determine sort order
+    const sortOrder = order === 'asc' ? 1 : -1;
+
+    // Initialize filter for query
+    const filter = {};
+
+    // Add ID filter if IDs are provided
+    if (ids && Array.isArray(ids) && ids.length > 0) {
+      filter._id = { $in: ids.map(id => mongoose.Types.ObjectId(id)) };  // Convert IDs to ObjectId format
+    }
+
+    // Calculate the number of documents to skip
+    const skip = (page - 1) * limit;
+
+    // Fetch projects with pagination, sorting, and ID filtering
+    const projectsPromise = ProProject.find(filter)
+      .populate('createdBy', '-password') // Populate 'createdBy' and exclude 'password'
+      .sort({ [sortBy]: sortOrder }) // Sort based on query parameters
+      .skip(skip)
+      .limit(limit)
+      .exec();
+
+    // Get total count of projects matching filter
+    const countPromise = ProProject.countDocuments(filter).exec();
+
+    // Execute both queries in parallel
+    const [projects, total] = await Promise.all([projectsPromise, countPromise]);
+
+    // Calculate total pages
+    const totalPages = Math.ceil(total / limit);
+
+    // Handle case where requested page exceeds total pages
+    if (page > totalPages && totalPages !== 0) {
+      return res.status(400).json({
+        message: 'Page number exceeds total pages.',
+        currentPage: page,
+        totalPages,
+        totalProjects: total,
+        projects: [],
+      });
+    }
+
+    // Send the paginated response
+    res.status(200).json({
+      currentPage: page,
+      totalPages,
+      totalProjects: total,
+      projects,
+    });
+  } catch (error) {
+    console.error('Error retrieving projects:', error);
+    res.status(500).json({ message: 'Failed to retrieve projects', error: error.message });
+  }
+};
+
+
 // Controller to list all projects
 export const listAllProjects = async (req, res) => {
   try {
