@@ -105,11 +105,12 @@ export const deleteMessage = async (req, res) => {
 
 export const getAllMessagesForUser = async (req, res) => {
   try {
-    const { page = 1, limit = 10 } = req.query; // Default page is 1 and limit is 10
+    const { page = 1, limit = 10 } = req.query;
     const pageNumber = parseInt(page, 10);
     const limitNumber = parseInt(limit, 10);
 
-    // Aggregate pipeline to group messages by sender and get the latest message
+    console.log("Fetching messages for user:", req.user); // Debug log
+
     const messages = await Message.aggregate([
       {
         $match: {
@@ -117,19 +118,16 @@ export const getAllMessagesForUser = async (req, res) => {
         },
       },
       {
-        $sort: { createdAt: -1 }, // Sort messages by creation date (latest first)
+        $sort: { createdAt: -1 },
       },
       {
         $group: {
-          _id: "$sender", // Group by sender
-          latestMessage: { $first: "$$ROOT" }, // Get the latest message
+          _id: "$sender",
+          latestMessage: { $first: "$$ROOT" },
         },
       },
       {
-        $replaceRoot: { newRoot: "$latestMessage" }, // Replace the root document with the latest message
-      },
-      {
-        $sort: { createdAt: -1 }, // Sort the grouped results again if needed
+        $replaceRoot: { newRoot: "$latestMessage" },
       },
       {
         $skip: (pageNumber - 1) * limitNumber,
@@ -139,13 +137,13 @@ export const getAllMessagesForUser = async (req, res) => {
       },
     ]);
 
-    // Populate sender and receiver details
+    console.log("Aggregated Messages:", messages); // Debug log
+
     const populatedMessages = await Message.populate(messages, [
-      { path: "sender" }, 
+      { path: "sender" },
       { path: "receiver" },
     ]);
 
-    // Get the total number of unique senders
     const totalSenders = await Message.distinct("sender", {
       $or: [{ sender: req.user }, { receiver: req.user }],
     });
@@ -157,7 +155,8 @@ export const getAllMessagesForUser = async (req, res) => {
       totalMessages: totalSenders.length,
     });
   } catch (error) {
-    console.error(error);
+    console.error("Error fetching messages:", error); // Error log
     res.status(500).json({ error: "Failed to fetch messages for the user" });
   }
 };
+
