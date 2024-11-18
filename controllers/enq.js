@@ -60,12 +60,20 @@ const getAllEnquiries = async (req, res) => {
     // Get page and limit from query parameters, with default values
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
+    const userFilter = req.query.user === 'true'; // Check if 'user=true' is passed in the query
+
+    // Build the query filter
+    let filter = {};
+    if (userFilter) {
+      // If user=true, filter enquiries by the authenticated user
+      filter.createdBy = req.user;
+    }
 
     // Calculate the number of documents to skip
     const skip = (page - 1) * limit;
 
-    // Fetch paginated enquiries
-    const enquiries = await Enquiry.find()
+    // Fetch paginated enquiries with the filter applied
+    const enquiries = await Enquiry.find(filter)
       .populate('createdBy')
       .skip(skip)
       .limit(limit);
@@ -96,8 +104,8 @@ const getAllEnquiries = async (req, res) => {
       })
     );
 
-    // Get the total count of documents for pagination info
-    const totalEnquiries = await Enquiry.countDocuments();
+    // Get the total count of documents based on the filter
+    const totalEnquiries = await Enquiry.countDocuments(filter);
 
     res.status(200).json({
       message: 'Enquiries fetched successfully',
@@ -111,6 +119,8 @@ const getAllEnquiries = async (req, res) => {
     res.status(500).json({ message: 'Server Error' });
   }
 };
+
+
 
 
 export { createEnquiry,getAllEnquiries };
