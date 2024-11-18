@@ -102,34 +102,62 @@ export const deleteMessage = async (req, res) => {
   }
 };
 
-// Get all messages for the authenticated user with pagination and user details
+
 export const getAllMessagesForUser = async (req, res) => {
   try {
     const { page = 1, limit = 10 } = req.query; // Default page is 1 and limit is 10
     const pageNumber = parseInt(page, 10);
     const limitNumber = parseInt(limit, 10);
 
-    // Find messages for the authenticated user with pagination
-    const messages = await Message.find({
-      $or: [{ sender: req.user }, { receiver: req.user }],
-    })
-    .sort({ createdAt: -1 })
-    .skip((pageNumber - 1) * limitNumber)
-    .limit(limitNumber)
-    .populate('sender receiver');  // Populate sender and receiver details
+    // Aggregate pipeline to group messages by sender and get the latest message
+    const messages = await Message.aggregate([
+      {
+        $match: {
+          $or: [{ sender: req.user }, { receiver: req.user }],
+        },
+      },
+      {
+        $sort: { createdAt: -1 }, // Sort messages by creation date (latest first)
+      },
+      {
+        $group: {
+          _id: "$sender", // Group by sender
+          latestMessage: { $first: "$$ROOT" }, // Get the latest message
+        },
+      },
+      {
+        $replaceRoot: { newRoot: "$latestMessage" }, // Replace the root document with the latest message
+      },
+      {
+        $sort: { createdAt: -1 }, // Sort the grouped results again if needed
+      },
+      {
+        $skip: (pageNumber - 1) * limitNumber,
+      },
+      {
+        $limit: limitNumber,
+      },
+    ]);
 
-    // Get the total number of messages for pagination
-    const totalMessages = await Message.countDocuments({
+    // Populate sender and receiver details
+    const populatedMessages = await Message.populate(messages, [
+      { path: "sender" }, 
+      { path: "receiver" },
+    ]);
+
+    // Get the total number of unique senders
+    const totalSenders = await Message.distinct("sender", {
       $or: [{ sender: req.user }, { receiver: req.user }],
     });
 
     res.status(200).json({
-      data: messages,
+      data: populatedMessages,
       currentPage: pageNumber,
-      totalPages: Math.ceil(totalMessages / limitNumber),
-      totalMessages,
+      totalPages: Math.ceil(totalSenders.length / limitNumber),
+      totalMessages: totalSenders.length,
     });
   } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch messages for the user' });
+    console.error(error);
+    res.status(500).json({ error: "Failed to fetch messages for the user" });
   }
 };
