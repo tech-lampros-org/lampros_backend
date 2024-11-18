@@ -1,5 +1,7 @@
 import Message from '../models/message.js';
 import User from '../models/user.js';
+import mongoose from 'mongoose';
+import { ObjectId } from 'mongodb';
 
 // Send a new message
 export const sendMessage = async (req, res) => {
@@ -105,58 +107,47 @@ export const deleteMessage = async (req, res) => {
 
 export const getAllMessagesForUser = async (req, res) => {
   try {
-    const { page = 1, limit = 10 } = req.query;
+    const { page = 1, limit = 10 } = req.query; // Default page is 1 and limit is 10
     const pageNumber = parseInt(page, 10);
     const limitNumber = parseInt(limit, 10);
 
-    console.log("Fetching messages for user:", req.user); // Debug log
-
-    const messages = await Message.aggregate([
-      {
-        $match: {
-          $or: [{ sender: req.user }, { receiver: req.user }],
-        },
-      },
-      {
-        $sort: { createdAt: -1 },
-      },
-      {
-        $group: {
-          _id: "$sender",
-          latestMessage: { $first: "$$ROOT" },
-        },
-      },
-      {
-        $replaceRoot: { newRoot: "$latestMessage" },
-      },
-      {
-        $skip: (pageNumber - 1) * limitNumber,
-      },
-      {
-        $limit: limitNumber,
-      },
-    ]);
-
-    console.log("Aggregated Messages:", messages); // Debug log
-
-    const populatedMessages = await Message.populate(messages, [
-      { path: "sender" },
-      { path: "receiver" },
-    ]);
-
-    const totalSenders = await Message.distinct("sender", {
+    // Fetch all messages for the authenticated user
+    const messages = await Message.find({
       $or: [{ sender: req.user }, { receiver: req.user }],
-    });
+    })
+      .sort({ createdAt: -1 })
+      .populate('sender receiver'); // Populate sender and receiver details
+
+    // Filter to only include one message per unique conversation
+    const uniqueConversations = [];
+    const conversationSet = new Set();
+
+    for (const message of messages) {
+      const conversationKey = 
+        [message.sender._id.toString(), message.receiver._id.toString()]
+          .sort()
+          .join('-');
+
+      if (!conversationSet.has(conversationKey)) {
+        uniqueConversations.push(message);
+        conversationSet.add(conversationKey);
+      }
+    }
+
+    // Paginate the unique conversations
+    const paginatedConversations = uniqueConversations.slice(
+      (pageNumber - 1) * limitNumber,
+      pageNumber * limitNumber
+    );
 
     res.status(200).json({
-      data: populatedMessages,
+      data: paginatedConversations,
       currentPage: pageNumber,
-      totalPages: Math.ceil(totalSenders.length / limitNumber),
-      totalMessages: totalSenders.length,
+      totalPages: Math.ceil(uniqueConversations.length / limitNumber),
+      totalMessages: uniqueConversations.length,
     });
   } catch (error) {
-    console.error("Error fetching messages:", error); // Error log
-    res.status(500).json({ error: "Failed to fetch messages for the user" });
+    res.status(500).json({ error: 'Failed to fetch messages for the user' });
   }
 };
 
