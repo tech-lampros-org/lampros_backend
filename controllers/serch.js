@@ -94,36 +94,43 @@ export const fuzzySearchAll = async (req, res) => {
             ]);
 
             // Map projects and products to their respective users
-            const projectsByUser = realtorOrProfIds.reduce((acc, userId) => {
-                acc[userId] = [];
-                return acc;
-            }, {});
-            projects.forEach(project => {
-                if (projectsByUser[project.createdBy]) {
-                    projectsByUser[project.createdBy].push(project);
-                }
-            });
+const projectsByUser = realtorOrProfIds.reduce((acc, userId) => {
+    acc[userId] = [];
+    return acc;
+}, {});
 
-            const productsByUser = productSellerIds.reduce((acc, userId) => {
-                acc[userId] = [];
-                return acc;
-            }, {});
-            productsList.forEach(product => {
-                if (productsByUser[product.createdBy]) {
-                    productsByUser[product.createdBy].push(product);
-                }
-            });
+projects.forEach(project => {
+    // Use project.createdBy._id for mapping
+    const userId = project.createdBy._id.toString();
+    if (projectsByUser[userId]) {
+        projectsByUser[userId].push(project);
+    }
+});
 
-            // Attach projects or products to each user based on their role
-            usersWithDetails = users.map(user => {
-                const userWithDetails = { ...user };
-                if (user.role === 'Realtor' || user.role === 'Professionals') {
-                    userWithDetails.projects = projectsByUser[user._id] || [];
-                } else if (user.role === 'Product Seller') {
-                    userWithDetails.products = productsByUser[user._id] || [];
-                }
-                return userWithDetails;
-            });
+const productsByUser = productSellerIds.reduce((acc, userId) => {
+    acc[userId] = [];
+    return acc;
+}, {});
+
+productsList.forEach(product => {
+    // Use product.createdBy._id for mapping
+    const userId = product.createdBy._id.toString();
+    if (productsByUser[userId]) {
+        productsByUser[userId].push(product);
+    }
+});
+
+// Attach projects or products to each user based on their role
+usersWithDetails = users.map(user => {
+    const userWithDetails = { ...user };
+    if (user.role === 'Realtor' || user.role === 'Professionals') {
+        userWithDetails.projects = projectsByUser[user._id.toString()] || [];
+    } else if (user.role === 'Product Seller') {
+        userWithDetails.products = productsByUser[user._id.toString()] || [];
+    }
+    return userWithDetails;
+});
+
         }
 
         // Combine results with pagination info
