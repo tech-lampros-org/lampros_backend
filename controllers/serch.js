@@ -18,61 +18,70 @@ export const fuzzySearchAll = async (req, res) => {
 
         // Define roles to search for in the User collection
         const userRoles = ['Realtor', 'Product Seller', 'Home Owner', 'Professionals'];
-
-        // Perform parallel searches across different collections with pagination
-        const [
-            categories,
-            categoriesTotal,
-            brands,
-            brandsTotal,
-            products,
-            productsTotal,
-            proProjects,
-            proProjectsTotal,
-            users,
-            usersTotal
-        ] = await Promise.all([
-            Category.find({ name: regex }).skip(skip).limit(parsedLimit).lean(),
-            Category.countDocuments({ name: regex }),
-            Brand.find({ name: regex }).skip(skip).limit(parsedLimit).lean(),
-            Brand.countDocuments({ name: regex }),
-            Product.find({
-                $or: [
-                    { name: regex },
-                    { about: regex }
-                ]
-            }).populate('brand').populate('createdBy').skip(skip).limit(parsedLimit).lean(),
-            Product.countDocuments({
-                $or: [
-                    { name: regex },
-                    { about: regex }
-                ]
-            }),
-            ProProject.find({
-                $or: [
-                    { projectType: regex },
-                    { about: regex }
-                ]
-            }).skip(skip).populate('createdBy').limit(parsedLimit).lean(),
-            ProProject.countDocuments({
-                $or: [
-                    { projectType: regex },
-                    { about: regex }
-                ]
-            }),
-            User.find({
-                $or: [
-                    { fname: regex },
-                    { lname: regex },
-                ]
-            }).skip(skip).limit(parsedLimit).lean(),
-            User.countDocuments({
-                $or: [
-                    { fname: regex },
-                    { lname: regex },
-                ]
-            }),
-        ]);
+ // Perform parallel searches across different collections with pagination
+ const [
+    categories,
+    categoriesTotal,
+    brands,
+    brandsTotal,
+    products,
+    productsTotal,
+    proProjects,
+    proProjectsTotal,
+    users,
+    usersTotal
+] = await Promise.all([
+    Category.find({ name: regex }).skip(skip).limit(parsedLimit).lean(),
+    Category.countDocuments({ name: regex }),
+    Brand.find({ name: regex }).skip(skip).limit(parsedLimit).lean(),
+    Brand.countDocuments({ name: regex }),
+    Product.find({
+        $or: [
+            { name: regex },
+            { about: regex }
+        ]
+    }).populate('brand').populate('createdBy').skip(skip).limit(parsedLimit).lean(),
+    Product.countDocuments({
+        $or: [
+            { name: regex },
+            { about: regex }
+        ]
+    }),
+    ProProject.find({
+        $or: [
+            { projectType: regex },
+            { about: regex }
+        ]
+    }).skip(skip).populate('createdBy').limit(parsedLimit).lean(),
+    ProProject.countDocuments({
+        $or: [
+            { projectType: regex },
+            { about: regex }
+        ]
+    }),
+    User.find({
+        $or: [
+            { fname: regex },
+            { lname: regex },
+            { 'companyDetails.companyName': regex },
+            { 'companyDetails.companyAddress.place': regex },
+            { 'companyDetails.companyPhone': regex },
+            { 'companyDetails.companyEmail': regex },
+            { 'companyDetails.companyGstNumber': regex },
+        ]
+    }).skip(skip).limit(parsedLimit).lean(),
+    User.countDocuments({
+        $or: [
+            { fname: regex },
+            { lname: regex },
+            { 'companyDetails.companyName': regex },
+            { 'companyDetails.companyAddress.place': regex },
+            { 'companyDetails.companyPhone': regex },
+            { 'companyDetails.companyEmail': regex },
+            { 'companyDetails.companyGstNumber': regex },
+        ]
+    }),
+]);
 
         // If there are users, fetch their associated projects or products
         let usersWithDetails = [];
