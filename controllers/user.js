@@ -345,11 +345,11 @@ export const filterUsersWithProjectsOrProducts = async (req, res) => {
         // Depending on the role, fetch related projects or products
         if (user.role === 'Realtor' || user.role === 'Professionals') {
           // Fetch ProProjects where createdBy matches the user's _id
-          const projects = await ProProject.find({ createdBy: user._id }).exec();
+          const projects = await ProProject.find({ createdBy: user._id }).populate('createdBy').exec();
           userWithDetails.projects = projects; // Add projects to the user object
         } else if (user.role === 'Product Seller') {
           // Fetch Products where createdBy matches the user's _id
-          const products = await Product.find({ createdBy: user._id }).exec();
+          const products = await Product.find({ createdBy: user._id }).populate('createdBy').exec();
           userWithDetails.products = products; // Add products to the user object
         }
 

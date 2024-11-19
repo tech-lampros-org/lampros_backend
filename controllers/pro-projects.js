@@ -70,33 +70,36 @@ export const listAllProjectsByIds = async (req, res) => {
     // Determine sort order
     const sortOrder = order === 'asc' ? 1 : -1;
 
-    // Initialize filter for query
-    const filter = {};
-
-    // Add ID filter if IDs are provided
+    // Fetch projects by individual IDs using ProProject.findById
+    let projects = [];
     if (ids && Array.isArray(ids) && ids.length > 0) {
-      filter._id = { $in: ids.map(id => mongoose.Types.ObjectId(id)) };  // Convert IDs to ObjectId format
+      const projectPromises = ids.map(id => 
+        ProProject.findById(id)
+          .populate('createdBy', '-password') // Populate 'createdBy' and exclude 'password'
+          .lean()
+      );
+      projects = await Promise.all(projectPromises);
     }
 
-    // Calculate the number of documents to skip
-    const skip = (page - 1) * limit;
+    // Remove any `null` values if some IDs don't match
+    projects = projects.filter(project => project !== null);
 
-    // Fetch projects with pagination, sorting, and ID filtering
-    const projectsPromise = ProProject.find(filter)
-      .populate('createdBy', '-password') // Populate 'createdBy' and exclude 'password'
-      .sort({ [sortBy]: sortOrder }) // Sort based on query parameters
-      .skip(skip)
-      .limit(limit)
-      .exec();
+    // Apply sorting
+    projects.sort((a, b) => {
+      if (sortOrder === 1) {
+        return a[sortBy] > b[sortBy] ? 1 : -1;
+      } else {
+        return a[sortBy] < b[sortBy] ? 1 : -1;
+      }
+    });
 
-    // Get total count of projects matching filter
-    const countPromise = ProProject.countDocuments(filter).exec();
-
-    // Execute both queries in parallel
-    const [projects, total] = await Promise.all([projectsPromise, countPromise]);
+    // Apply pagination
+    const totalProjects = projects.length;
+    const startIndex = (page - 1) * limit;
+    const paginatedProjects = projects.slice(startIndex, startIndex + limit);
 
     // Calculate total pages
-    const totalPages = Math.ceil(total / limit);
+    const totalPages = Math.ceil(totalProjects / limit);
 
     // Handle case where requested page exceeds total pages
     if (page > totalPages && totalPages !== 0) {
@@ -104,7 +107,7 @@ export const listAllProjectsByIds = async (req, res) => {
         message: 'Page number exceeds total pages.',
         currentPage: page,
         totalPages,
-        totalProjects: total,
+        totalProjects,
         projects: [],
       });
     }
@@ -113,14 +116,15 @@ export const listAllProjectsByIds = async (req, res) => {
     res.status(200).json({
       currentPage: page,
       totalPages,
-      totalProjects: total,
-      projects,
+      totalProjects,
+      projects: paginatedProjects,
     });
   } catch (error) {
     console.error('Error retrieving projects:', error);
     res.status(500).json({ message: 'Failed to retrieve projects', error: error.message });
   }
 };
+
 
 
 // Controller to list all projects
