@@ -87,9 +87,9 @@ export const fuzzySearchAll = async (req, res) => {
 
             // Fetch all relevant projects and products in bulk with pagination
             const [projects, projectsTotal, productsList, productsListTotal] = await Promise.all([
-                ProProject.find({ createdBy: { $in: realtorOrProfIds } }).skip(skip).limit(parsedLimit).lean(),
+                ProProject.find({ createdBy: { $in: realtorOrProfIds } }).skip(skip).limit(parsedLimit).populate('createdBy').lean(),
                 ProProject.countDocuments({ createdBy: { $in: realtorOrProfIds } }),
-                Product.find({ createdBy: { $in: productSellerIds } }).skip(skip).limit(parsedLimit).lean(),
+                Product.find({ createdBy: { $in: productSellerIds } }).skip(skip).limit(parsedLimit).populate('createdBy').lean(),
                 Product.countDocuments({ createdBy: { $in: productSellerIds } }),
             ]);
 
