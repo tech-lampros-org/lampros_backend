@@ -127,7 +127,7 @@ export const listAllProductsByIds = async (req, res) => {
     // Fetch products by individual IDs using Product.findById
     let products = [];
     if (ids && Array.isArray(ids) && ids.length > 0) {
-      const productPromises = ids.map(id => ProProduct.findById(id).populate('createdBy','brand', '-password').lean());
+      const productPromises = ids.map(id => ProProduct.findById(id).populate('createdBy', '-password').populate('brand').lean());
       products = await Promise.all(productPromises);
     }
 
