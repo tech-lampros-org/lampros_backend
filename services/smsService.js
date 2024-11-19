@@ -23,19 +23,21 @@ const vonage = new Vonage({
 export const sendSmsvia2fact = (to, message, next) => {
   return new Promise(async (resolve, reject) => {
     try {
-      // Remove '+' from the phone number if present
-      let formattedNumber = to.replace('+', '');
-
-      // Ensure phone number starts with '91'
-      if (!formattedNumber.startsWith('91')) {
-        formattedNumber = `91${formattedNumber}`;
-      }
-
       // Construct the API URL
-      const apiUrl = `https://whatsapp-bot-q1u3.onrender.com/send/${formattedNumber}/${message}`;
+      const apiUrl = `https://four-difficult-fuchsia.glitch.me/send`;
 
-      // Send the request using axios
-      const response = await axios.get(apiUrl);
+      // Prepare the request body
+      const requestBody = {
+        to,
+        message,
+      };
+
+      // Send the POST request using axios
+      const response = await axios.post(apiUrl, requestBody, {
+        headers: {
+          'Content-Type': 'application/json', // Ensure correct headers are set
+        },
+      });
 
       resolve(response.data); // Resolve with the response data
     } catch (err) {
