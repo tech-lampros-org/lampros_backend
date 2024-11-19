@@ -115,13 +115,8 @@ export const listAllProductsByIds = async (req, res) => {
     // Determine sort order
     const sortOrder = order === 'asc' ? 1 : -1;
 
-    // Initialize filter for query
+    // Initialize filter for additional query options
     const filter = {};
-
-    // Add ID filter if IDs are provided in the body
-    if (ids && Array.isArray(ids) && ids.length > 0) {
-      filter._id = { $in: ids.map(id => mongoose.Types.ObjectId(id)) };  // Convert IDs to ObjectId format
-    }
 
     // Add brand filter if provided
     if (brand) filter.brand = brand;
@@ -129,34 +124,51 @@ export const listAllProductsByIds = async (req, res) => {
     // Add search filter if provided
     if (search) filter.name = { $regex: search, $options: 'i' };
 
-    // Pagination options
-    const options = {
-      page,
-      limit,
-      sort: { [sortBy]: sortOrder },
-      populate: [
-        { path: 'createdBy', select: '-password' },
-        { path: 'brand' },
-      ],
-      lean: true,
-      leanWithId: false,
-    };
+    // Fetch products by individual IDs using Product.findById
+    let products = [];
+    if (ids && Array.isArray(ids) && ids.length > 0) {
+      const productPromises = ids.map(id => ProProduct.findById(id).lean());
+      products = await Promise.all(productPromises);
+    }
 
-    // Fetch products with pagination, sorting, and filtering
-    const result = await ProProduct.paginate(filter, options);
+    // Apply additional filtering on the fetched products
+    if (brand) {
+      products = products.filter(product => product && product.brand === brand);
+    }
+
+    if (search) {
+      const searchRegex = new RegExp(search, 'i');
+      products = products.filter(product => product && searchRegex.test(product.name));
+    }
+
+    // Apply sorting
+    products.sort((a, b) => {
+      if (sortOrder === 1) {
+        return a[sortBy] > b[sortBy] ? 1 : -1;
+      } else {
+        return a[sortBy] < b[sortBy] ? 1 : -1;
+      }
+    });
+
+    // Apply pagination
+    const totalProducts = products.length;
+    const startIndex = (page - 1) * limit;
+    const endIndex = startIndex + limit;
+    const paginatedProducts = products.slice(startIndex, endIndex);
 
     // Send the paginated response
     res.status(200).json({
-      currentPage: result.page,
-      totalPages: result.totalPages,
-      totalProducts: result.totalDocs,
-      products: result.docs,
+      currentPage: page,
+      totalPages: Math.ceil(totalProducts / limit),
+      totalProducts,
+      products: paginatedProducts,
     });
   } catch (error) {
     console.error('Error retrieving products:', error);
     res.status(500).json({ message: 'Failed to retrieve products', error: error.message });
   }
 };
+
 
 
 // Controller to list all products with optional pagination
