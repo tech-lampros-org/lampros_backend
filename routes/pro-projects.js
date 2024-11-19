@@ -10,7 +10,7 @@ router.post('/projects', protect, addProject);
 
 // Route to list all projects (GET /api/projects/all)
 router.get('/projects/all', protect, listAllProjects);
-router.get('/projects/Ids', protect, listAllProjectsByIds);
+router.post('/projects/Ids', protect, listAllProjectsByIds);
 
 // Route to list projects created by the authenticated user (GET /api/projects/user)
 router.get('/projects/user', protect, listUserProjects);
