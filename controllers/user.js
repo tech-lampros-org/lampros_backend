@@ -91,7 +91,6 @@ export const update = async (req, res) => {
     } = req.body;
 
     // Helper functions for specific checks
-    const isNotEmpty = (value) => value !== undefined && value !== null && value !== '';
     const isNonEmptyString = (str) => typeof str === 'string' && str.trim().length > 0;
     const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     const isValidNumber = (num) => typeof num === 'number' && num > 0;
@@ -102,64 +101,36 @@ export const update = async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    const mergeField = (existing, newField, validator) =>
-      newField && validator(newField) ? newField : existing;
+    // Helper function to merge fields only if the new value is valid
+    const mergeField = (existing, newField, validator) => {
+      return newField && validator(newField) ? newField : existing;
+    };
 
     // Merge and validate company details (flattened companyAddress)
     const updatedCompanyDetails = {
-      companyName: mergeField(
-        existingUser.companyDetails?.companyName,
-        companyDetails?.companyName,
-        isNonEmptyString
-      ),
-      companyEmail: mergeField(
-        existingUser.companyDetails?.companyEmail,
-        companyDetails?.companyEmail,
-        isValidEmail
-      ),
-      companyPhone: mergeField(
-        existingUser.companyDetails?.companyPhone,
-        companyDetails?.companyPhone,
-        isNonEmptyString
-      ),
-      companyGstNumber: mergeField(
-        existingUser.companyDetails?.companyGstNumber,
-        companyDetails?.companyGstNumber,
-        isNonEmptyString
-      ),
-      experience: mergeField(
-        existingUser.companyDetails?.experience,
-        companyDetails?.experience,
-        isValidNumber
-      ),
+      companyName: mergeField(existingUser.companyDetails?.companyName, companyDetails?.companyName, isNonEmptyString),
+      companyEmail: mergeField(existingUser.companyDetails?.companyEmail, companyDetails?.companyEmail, isValidEmail),
+      companyPhone: mergeField(existingUser.companyDetails?.companyPhone, companyDetails?.companyPhone, isNonEmptyString),
+      companyGstNumber: mergeField(existingUser.companyDetails?.companyGstNumber, companyDetails?.companyGstNumber, isNonEmptyString),
+      experience: mergeField(existingUser.companyDetails?.experience, companyDetails?.experience, isValidNumber),
       // Flatten companyAddress fields here
-      companyAddressPlace: mergeField(
-        existingUser.companyDetails?.companyAddress?.place,
-        companyDetails?.companyAddress?.place,
-        isNonEmptyString
-      ),
-      companyAddressPincode: mergeField(
-        existingUser.companyDetails?.companyAddress?.pincode,
-        companyDetails?.companyAddress?.pincode,
-        isValidNumber
-      ),
+      companyAddressPlace: mergeField(existingUser.companyDetails?.companyAddress?.place, companyDetails?.companyAddress?.place, isNonEmptyString),
+      companyAddressPincode: mergeField(existingUser.companyDetails?.companyAddress?.pincode, companyDetails?.companyAddress?.pincode, isValidNumber),
     };
 
     // Build the fields to update, excluding null or empty values and validating specific fields
     const updatedFields = {
       ...(isNonEmptyString(fname) && { fname }),
-      ...(isNonEmptyString(token) && { token }),
       ...(isNonEmptyString(lname) && { lname }),
-      profileImage: isNotEmpty(profileImage)
-        ? profileImage
-        : existingUser.profileImage,
+      profileImage: profileImage && profileImage !== "" ? profileImage : existingUser.profileImage,
       ...(isNonEmptyString(role) && { role }),
       ...(isNonEmptyString(type) && { type }),
       ...(isValidEmail(email) && { email }),
-      ...(isNotEmpty(companyDetails) && { companyDetails: { ...updatedCompanyDetails } }), // Include updated company details
-      ...(isNotEmpty(address) && { address }),
+      ...(companyDetails && isNonEmptyString(companyDetails.companyName) && { companyDetails: { ...updatedCompanyDetails } }), // Include updated company details
+      ...(address && isNonEmptyString(address.place) && { address }),
       ...(isValidNumber(age) && { age }),
       ...(isNonEmptyString(gender) && { gender }),
+      ...(isNonEmptyString(token) && { token })
     };
 
     // Update user details using req.user.id
@@ -169,11 +140,13 @@ export const update = async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    res.status(200).json({ message: 'updated', user });
+    res.status(200).json({ message: 'User details updated successfully', user });
   } catch (error) {
+    console.error(error);
     res.status(400).json({ message: error.message });
   }
 };
+
 
 
 
