@@ -137,7 +137,7 @@ export const getAllMessagesForUser = async (req, res) => {
         const conversationMessage = { ...message._doc };
 
         // Ensure that 'sender' always represents the other user
-        conversationMessage.sender =
+        conversationMessage.receiver =
           message.sender._id.toString() === req.user.toString()
             ? message.receiver
             : message.sender;
