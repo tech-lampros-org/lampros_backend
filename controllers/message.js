@@ -120,17 +120,30 @@ export const getAllMessagesForUser = async (req, res) => {
 
     // Filter to only include one message per unique conversation
     const uniqueConversations = [];
-    const conversationSet = new Set();
+    const conversationMap = new Map();
 
     for (const message of messages) {
-      const conversationKey = 
-        [message.sender._id.toString(), message.receiver._id.toString()]
-          .sort()
-          .join('-');
+      // Determine the other user in the conversation
+      const otherUser =
+        message.sender._id.toString() === req.user.toString()
+          ? message.receiver
+          : message.sender;
 
-      if (!conversationSet.has(conversationKey)) {
-        uniqueConversations.push(message);
-        conversationSet.add(conversationKey);
+      const conversationKey = otherUser._id.toString();
+
+      // If this conversation hasn't been added yet, add it
+      if (!conversationMap.has(conversationKey)) {
+        // Clone the message to avoid mutating the original data
+        const conversationMessage = { ...message._doc };
+
+        // Ensure that 'sender' always represents the other user
+        conversationMessage.sender =
+          message.sender._id.toString() === req.user.toString()
+            ? message.receiver
+            : message.sender;
+
+        uniqueConversations.push(conversationMessage);
+        conversationMap.set(conversationKey, true);
       }
     }
 
@@ -147,7 +160,9 @@ export const getAllMessagesForUser = async (req, res) => {
       totalMessages: uniqueConversations.length,
     });
   } catch (error) {
+    console.error('Error fetching messages for the user:', error);
     res.status(500).json({ error: 'Failed to fetch messages for the user' });
   }
 };
+
 
