@@ -87,7 +87,7 @@ export const update = async (req, res) => {
   try {
     const { 
       fname, lname, profileImage, role, type, email, 
-      companyDetails, companyAddress, address, age, gender, token 
+      companyDetails, address, age, gender, token 
     } = req.body;
 
     // Helper functions for specific checks
@@ -105,7 +105,7 @@ export const update = async (req, res) => {
     const mergeField = (existing, newField, validator) =>
       newField && validator(newField) ? newField : existing;
 
-    // Merge and validate company details
+    // Merge and validate company details (flattened companyAddress)
     const updatedCompanyDetails = {
       companyName: mergeField(
         existingUser.companyDetails?.companyName,
@@ -132,18 +132,15 @@ export const update = async (req, res) => {
         companyDetails?.experience,
         isValidNumber
       ),
-    };
-
-    // Merge and validate company address
-    const updatedCompanyAddress = {
-      place: mergeField(
+      // Flatten companyAddress fields here
+      companyAddressPlace: mergeField(
         existingUser.companyDetails?.companyAddress?.place,
-        companyAddress?.place,
+        companyDetails?.companyAddress?.place,
         isNonEmptyString
       ),
-      pincode: mergeField(
+      companyAddressPincode: mergeField(
         existingUser.companyDetails?.companyAddress?.pincode,
-        companyAddress?.pincode,
+        companyDetails?.companyAddress?.pincode,
         isValidNumber
       ),
     };
@@ -159,7 +156,7 @@ export const update = async (req, res) => {
       ...(isNonEmptyString(role) && { role }),
       ...(isNonEmptyString(type) && { type }),
       ...(isValidEmail(email) && { email }),
-      ...(isNotEmpty(companyDetails) && { companyDetails: { ...updatedCompanyDetails, companyAddress: updatedCompanyAddress } }), // Include updated company details and address
+      ...(isNotEmpty(companyDetails) && { companyDetails: { ...updatedCompanyDetails } }), // Include updated company details
       ...(isNotEmpty(address) && { address }),
       ...(isValidNumber(age) && { age }),
       ...(isNonEmptyString(gender) && { gender }),
@@ -177,6 +174,7 @@ export const update = async (req, res) => {
     res.status(400).json({ message: error.message });
   }
 };
+
 
 
 
