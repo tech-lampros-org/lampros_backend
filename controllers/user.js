@@ -101,22 +101,28 @@ export const update = async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
+    console.log("Existing User:", existingUser);
+
     // Helper function to merge fields only if the new value is valid
     const mergeField = (existing, newField, validator) => {
-      return newField && validator(newField) ? newField : existing;
+      const mergedValue = newField && validator(newField) ? newField : existing;
+      console.log(`Merging field - Existing: ${existing}, New: ${newField}, Merged: ${mergedValue}`);
+      return mergedValue;
     };
 
-    // Merge and validate company details (flattened companyAddress)
+    // Merge and validate company details (including companyAddress.place)
     const updatedCompanyDetails = {
       companyName: mergeField(existingUser.companyDetails?.companyName, companyDetails?.companyName, isNonEmptyString),
       companyEmail: mergeField(existingUser.companyDetails?.companyEmail, companyDetails?.companyEmail, isValidEmail),
       companyPhone: mergeField(existingUser.companyDetails?.companyPhone, companyDetails?.companyPhone, isNonEmptyString),
       companyGstNumber: mergeField(existingUser.companyDetails?.companyGstNumber, companyDetails?.companyGstNumber, isNonEmptyString),
       experience: mergeField(existingUser.companyDetails?.experience, companyDetails?.experience, isValidNumber),
-      // Flatten companyAddress fields here
+      // Merge companyAddress fields explicitly
       companyAddressPlace: mergeField(existingUser.companyDetails?.companyAddress?.place, companyDetails?.companyAddress?.place, isNonEmptyString),
       companyAddressPincode: mergeField(existingUser.companyDetails?.companyAddress?.pincode, companyDetails?.companyAddress?.pincode, isValidNumber),
     };
+
+    console.log("Updated Company Details:", updatedCompanyDetails);
 
     // Build the fields to update, excluding null or empty values and validating specific fields
     const updatedFields = {
@@ -126,12 +132,14 @@ export const update = async (req, res) => {
       ...(isNonEmptyString(role) && { role }),
       ...(isNonEmptyString(type) && { type }),
       ...(isValidEmail(email) && { email }),
-      ...(companyDetails && isNonEmptyString(companyDetails.companyName) && { companyDetails: { ...updatedCompanyDetails } }), // Include updated company details
-      ...(address && isNonEmptyString(address.place) && { address }),
+      ...(companyDetails && Object.keys(updatedCompanyDetails).length > 0 && { companyDetails: { ...updatedCompanyDetails } }), // Include updated company details if any key exists
+      ...(address && { address }), // Include updated address if provided
       ...(isValidNumber(age) && { age }),
       ...(isNonEmptyString(gender) && { gender }),
       ...(isNonEmptyString(token) && { token })
     };
+
+    console.log("Updated Fields to Save:", updatedFields);
 
     // Update user details using req.user.id
     const user = await User.findByIdAndUpdate(req.user, updatedFields, { new: true });
@@ -140,12 +148,14 @@ export const update = async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
+    console.log("Updated User:", user);
     res.status(200).json({ message: 'User details updated successfully', user });
   } catch (error) {
-    console.error(error);
+    console.error("Error occurred:", error);
     res.status(400).json({ message: error.message });
   }
 };
+
 
 
 
