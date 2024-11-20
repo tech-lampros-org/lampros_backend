@@ -85,9 +85,10 @@ export const completeBasic = async (req, res) => {
 
 export const update = async (req, res) => {
   try {
-    const { fname, lname, profileImage, role, type, email, companyDetails, address, age, gender, token } = req.body;
-
-    
+    const { 
+      fname, lname, profileImage, role, type, email, 
+      companyDetails, companyAddress, address, age, gender, token 
+    } = req.body;
 
     // Helper functions for specific checks
     const isNotEmpty = (value) => value !== undefined && value !== null && value !== '';
@@ -103,7 +104,8 @@ export const update = async (req, res) => {
 
     const mergeField = (existing, newField, validator) =>
       newField && validator(newField) ? newField : existing;
-    
+
+    // Merge and validate company details
     const updatedCompanyDetails = {
       companyName: mergeField(
         existingUser.companyDetails?.companyName,
@@ -131,7 +133,20 @@ export const update = async (req, res) => {
         isValidNumber
       ),
     };
-    
+
+    // Merge and validate company address
+    const updatedCompanyAddress = {
+      place: mergeField(
+        existingUser.companyDetails?.companyAddress?.place,
+        companyAddress?.place,
+        isNonEmptyString
+      ),
+      pincode: mergeField(
+        existingUser.companyDetails?.companyAddress?.pincode,
+        companyAddress?.pincode,
+        isValidNumber
+      ),
+    };
 
     // Build the fields to update, excluding null or empty values and validating specific fields
     const updatedFields = {
@@ -144,7 +159,7 @@ export const update = async (req, res) => {
       ...(isNonEmptyString(role) && { role }),
       ...(isNonEmptyString(type) && { type }),
       ...(isValidEmail(email) && { email }),
-      ...(isNotEmpty(companyDetails) && { companyDetails: updatedCompanyDetails }),  // Include updated companyDetails
+      ...(isNotEmpty(companyDetails) && { companyDetails: { ...updatedCompanyDetails, companyAddress: updatedCompanyAddress } }), // Include updated company details and address
       ...(isNotEmpty(address) && { address }),
       ...(isValidNumber(age) && { age }),
       ...(isNonEmptyString(gender) && { gender }),
