@@ -109,40 +109,41 @@ export const update = async (req, res) => {
       console.log(`Merging field - Existing: ${existing}, New: ${newField}, Merged: ${mergedValue}`);
       return mergedValue;
     };
+// Merge and validate company details (including companyAddress)
+const updatedCompanyDetails = {
+  companyName: mergeField(existingUser.companyDetails?.companyName, companyDetails?.companyName, isNonEmptyString),
+  companyEmail: mergeField(existingUser.companyDetails?.companyEmail, companyDetails?.companyEmail, isValidEmail),
+  companyPhone: mergeField(existingUser.companyDetails?.companyPhone, companyDetails?.companyPhone, isNonEmptyString),
+  companyGstNumber: mergeField(existingUser.companyDetails?.companyGstNumber, companyDetails?.companyGstNumber, isNonEmptyString),
+  experience: mergeField(existingUser.companyDetails?.experience, companyDetails?.experience, isValidNumber),
+  companyAddress: {
+    place: mergeField(existingUser.companyDetails?.companyAddress?.place, companyDetails?.companyAddress?.place, isNonEmptyString),
+    pincode: mergeField(existingUser.companyDetails?.companyAddress?.pincode, companyDetails?.companyAddress?.pincode, isValidNumber),
+  }
+};
 
-    // Merge and validate company details (including companyAddress.place)
-    const updatedCompanyDetails = {
-      companyName: mergeField(existingUser.companyDetails?.companyName, companyDetails?.companyName, isNonEmptyString),
-      companyEmail: mergeField(existingUser.companyDetails?.companyEmail, companyDetails?.companyEmail, isValidEmail),
-      companyPhone: mergeField(existingUser.companyDetails?.companyPhone, companyDetails?.companyPhone, isNonEmptyString),
-      companyGstNumber: mergeField(existingUser.companyDetails?.companyGstNumber, companyDetails?.companyGstNumber, isNonEmptyString),
-      experience: mergeField(existingUser.companyDetails?.experience, companyDetails?.experience, isValidNumber),
-      // Merge companyAddress fields explicitly
-      companyAddressPlace: mergeField(existingUser.companyDetails?.companyAddress?.place, companyDetails?.companyAddress?.place, isNonEmptyString),
-      companyAddressPincode: mergeField(existingUser.companyDetails?.companyAddress?.pincode, companyDetails?.companyAddress?.pincode, isValidNumber),
-    };
+console.log("Updated Company Details:", updatedCompanyDetails);
 
-    console.log("Updated Company Details:", updatedCompanyDetails);
+// Include updated fields in the update object
+const updatedFields = {
+  ...(isNonEmptyString(fname) && { fname }),
+  ...(isNonEmptyString(lname) && { lname }),
+  profileImage: profileImage && profileImage !== "" ? profileImage : existingUser.profileImage,
+  ...(isNonEmptyString(role) && { role }),
+  ...(isNonEmptyString(type) && { type }),
+  ...(isValidEmail(email) && { email }),
+  ...(companyDetails && { companyDetails: updatedCompanyDetails }), // Use deep-merged object
+  ...(address && { address }),
+  ...(isValidNumber(age) && { age }),
+  ...(isNonEmptyString(gender) && { gender }),
+  ...(isNonEmptyString(token) && { token })
+};
 
-    // Build the fields to update, excluding null or empty values and validating specific fields
-    const updatedFields = {
-      ...(isNonEmptyString(fname) && { fname }),
-      ...(isNonEmptyString(lname) && { lname }),
-      profileImage: profileImage && profileImage !== "" ? profileImage : existingUser.profileImage,
-      ...(isNonEmptyString(role) && { role }),
-      ...(isNonEmptyString(type) && { type }),
-      ...(isValidEmail(email) && { email }),
-      ...(companyDetails && Object.keys(updatedCompanyDetails).length > 0 && { companyDetails: { ...updatedCompanyDetails } }), // Include updated company details if any key exists
-      ...(address && { address }), // Include updated address if provided
-      ...(isValidNumber(age) && { age }),
-      ...(isNonEmptyString(gender) && { gender }),
-      ...(isNonEmptyString(token) && { token })
-    };
+console.log("Updated Fields to Save:", updatedFields);
 
-    console.log("Updated Fields to Save:", updatedFields);
+// Update user details using req.user.id
+const user = await User.findByIdAndUpdate(req.user, { $set: updatedFields }, { new: true });
 
-    // Update user details using req.user.id
-    const user = await User.findByIdAndUpdate(req.user, updatedFields, { new: true });
 
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
