@@ -34,6 +34,29 @@ export const followUser = async (req, res) => {
 };
 
 
+// GET: Check if the authenticated user is following the target user
+export const isFollowing = async (req, res) => {
+  const userId = req.user; // Authenticated user's ID
+  const { targetUserId } = req.params; // ID of the target user to check from route parameters
+
+  try {
+    // Find the authenticated user
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Check if the target user ID is in the 'following' array of the authenticated user
+    const isFollowing = user.following.includes(targetUserId);
+
+    res.status(200).json({ isFollowing });
+  } catch (error) {
+    res.status(500).json({ message: 'Error checking following status', error });
+  }
+};
+
+
 
 // GET: Get following with pagination
 export const getFollowing = async (req, res) => {
