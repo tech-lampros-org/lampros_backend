@@ -50,7 +50,7 @@ app.use('/api/brand', ro_brands);
 app.use('/api', protect, searchRoutes);
 app.use('/api', protect, ro_message);
 app.use('/api', protect, ro_notification);
-app.use('/api', protect, ro_order);
+app.use('/api/order', protect, ro_order);
 app.use('/api',protect, ro_enq);
 app.use('/api',protect, ro_fo);
 app.use('/api/adr',protect, ro_adr);
