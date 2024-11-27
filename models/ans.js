@@ -39,8 +39,7 @@ const answerSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Index to improve query performance for answers
-answerSchema.index({ question: 1, createdAt: -1 });
+
 
 // Apply pagination plugin
 answerSchema.plugin(mongoosePaginate);

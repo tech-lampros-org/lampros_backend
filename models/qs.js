@@ -42,8 +42,7 @@ const questionSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Index to improve search performance
-questionSchema.index({ title: 'text', description: 'text', tags: 1 });
+
 
 // Apply pagination plugin
 questionSchema.plugin(mongoosePaginate);
