@@ -22,6 +22,7 @@ import ro_order from './routes/order.js'
 import ro_enq from './routes/enq.js'
 import ro_fo from './routes/followersRoutes.js'
 import ro_adr from './routes/deliveryAddressRoutes.js'
+import ro_review from './routes/review.js'
 
 
 const app = express();
@@ -54,6 +55,7 @@ app.use('/api/order', protect, ro_order);
 app.use('/api',protect, ro_enq);
 app.use('/api',protect, ro_fo);
 app.use('/api/adr',protect, ro_adr);
+app.use('/api/review',protect, ro_review);
 
 
 

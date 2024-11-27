@@ -74,6 +74,14 @@ const productSchema = new mongoose.Schema({
   manufactureDetails: manufactureDetailsSchema, // Manufacture details
   warrantyAndCertifications: warrantyAndCertificationsSchema, // Warranty and certifications
   images: [productImagesSchema], // Array of images
+  averageRating: {
+    type: Number,
+    default: 0,
+  },
+  totalReviews: {
+    type: Number,
+    default: 0,
+  },
   createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   updatedAt: { type: Date, default: Date.now }, // Automatically set the update date            
 }, { timestamps: true });
