@@ -50,8 +50,7 @@ const reviewSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Index to improve query performance for reviewable items
-reviewSchema.index({ reviewable: 1, createdAt: -1 });
+
 
 // Static method to calculate average rating and total reviews for a reviewable item
 reviewSchema.statics.calculateAverageRating = async function (reviewableId, onModel) {
