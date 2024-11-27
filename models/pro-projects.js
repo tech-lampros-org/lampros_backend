@@ -42,6 +42,14 @@ const proProjectSchema = new mongoose.Schema({
   propertyAge: { type: Number }, // Age of the property in years
   tags: { type: [String], default: [] },
   createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  averageRating: {
+    type: Number,
+    default: 0,
+  },
+  totalReviews: {
+    type: Number,
+    default: 0,
+  },
   createdAt: { type: Date, default: Date.now }, // Automatically set the creation date
   updatedAt: { type: Date, default: Date.now }, // Automatically set the update date
 }, { timestamps: true });
