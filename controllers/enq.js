@@ -74,7 +74,7 @@ const getAllEnquiries = async (req, res) => {
 
     // Fetch paginated enquiries with the filter applied
     const enquiries = await Enquiry.find(filter)
-      .populate('createdBy -deliveryAddresses')
+      .populate('createdBy', '-deliveryAddresses')
       .skip(skip)
       .limit(limit);
 
