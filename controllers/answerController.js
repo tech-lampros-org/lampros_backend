@@ -5,7 +5,7 @@ import Question from '../models/qs.js';
 export const createAnswer = async (req, res) => {
   try {
     const { questionId, parentId, content } = req.body;
-    const userId = req.user._id; // Assuming user is authenticated and user ID is in req.user
+    const userId = req.user; // Assuming user is authenticated and user ID is in req.user
 
     // Validate question existence
     const question = await Question.findById(questionId);
@@ -91,7 +91,7 @@ export const updateAnswer = async (req, res) => {
   try {
     const { answerId } = req.params;
     const { content } = req.body;
-    const userId = req.user._id;
+    const userId = req.user;
 
     // Find the answer
     const answer = await Answer.findById(answerId);
@@ -119,7 +119,7 @@ export const updateAnswer = async (req, res) => {
 export const deleteAnswer = async (req, res) => {
   try {
     const { answerId } = req.params;
-    const userId = req.user._id;
+    const userId = req.user;
     const userRole = req.user.role; // Assuming user role is available
 
     // Find the answer
