@@ -117,7 +117,7 @@ export const updateDeliveryAddress = async (req, res) => {
 
     // Update the delivery address fields
     Object.keys(updates).forEach((key) => {
-      if (deliveryAddress[key] !== undefined) {
+      if (deliveryAddress[key] !== undefined || deliveryAddress[key] !== null || deliveryAddress[key] !== '') {
         deliveryAddress[key] = updates[key];
       }
     });
@@ -152,7 +152,7 @@ export const deleteDeliveryAddress = async (req, res) => {
     }
 
     // Remove the delivery address
-    deliveryAddress.remove();
+    user.deliveryAddresses.pull(addressId);
 
     // Save the updated user
     await user.save();
