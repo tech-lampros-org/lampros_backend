@@ -115,9 +115,14 @@ export const updateDeliveryAddress = async (req, res) => {
       return res.status(404).json({ message: 'Delivery address not found.' });
     }
 
+    // Prevent updates to the _id field
+    if (updates._id) {
+      delete updates._id;
+    }
+
     // Update the delivery address fields
     Object.keys(updates).forEach((key) => {
-      if (deliveryAddress[key] !== undefined || deliveryAddress[key] !== null || deliveryAddress[key] !== '') {
+      if (updates[key] !== undefined && updates[key] !== null) {
         deliveryAddress[key] = updates[key];
       }
     });
