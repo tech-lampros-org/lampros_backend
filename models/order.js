@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 // Order Schema
 const orderSchema = new mongoose.Schema({
   user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }, // Reference to User
-  deliveryAddress: { type: mongoose.Schema.Types.ObjectId, ref: 'User.deliveryAddresses', required: true }, // Reference to delivery address
+  deliveryAddress: { type: mongoose.Schema.Types.ObjectId, required: true }, // Reference to delivery address
   product: {
     productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: true }, // Reference to Product schema
     price: { type: Number, required: true }, // Snapshot of product price at the time of order

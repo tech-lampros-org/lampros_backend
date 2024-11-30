@@ -59,25 +59,33 @@ export const createOrder = async (req, res) => {
 // Get all orders with populated product and brand details
 export const getOrders = async (req, res) => {
   try {
-    if (!req.user) {
-      return res.status(401).json({ message: 'Unauthorized user' });
-    }
-
     const orders = await Order.find({ user: req.user })
       .populate({
         path: 'product.productId',
         populate: {
-          path: 'brandId', // Populate brandId inside Product
+          path: 'brandId',
         },
-      })
-      .populate('deliveryAddress'); // Optionally populate delivery address
+      });
 
-    res.status(200).json({ success: true, data: orders });
+    // Manually populate the delivery address
+    const populatedOrders = await Promise.all(
+      orders.map(async (order) => {
+        const user = await User.findById(order.user);
+        const deliveryAddress = user.deliveryAddresses.id(order.deliveryAddress);
+        return {
+          ...order._doc,
+          deliveryAddress,
+        };
+      })
+    );
+
+    res.status(200).json({ success: true, data: populatedOrders });
   } catch (error) {
     console.error(error);
     res.status(500).json({ success: false, message: 'Server error', error: error.message });
   }
 };
+
 
 // Get a single order by ID with populated details
 export const getOrderById = async (req, res) => {
