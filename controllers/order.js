@@ -63,7 +63,7 @@ export const getOrders = async (req, res) => {
       .populate({
         path: 'product.productId',
         populate: {
-          path: 'brandId',
+          path: 'brand',
         },
       });
 
