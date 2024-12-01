@@ -41,7 +41,7 @@ export const getQuestions = async (req, res) => {
 
     // If a user ID is provided, filter questions where the user has answered
     if (user) {
-      query.answers = { $elemMatch: { user } };
+      query.answers = { $elemMatch: { user:user } };
     }
 
     const options = {
