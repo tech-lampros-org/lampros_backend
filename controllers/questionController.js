@@ -26,7 +26,7 @@ export const createQuestion = async (req, res) => {
 // Get all questions with pagination and search
 export const getQuestions = async (req, res) => {
   try {
-    const { page = 1, limit = 10, search = '', tags = [] } = req.query;
+    const { page = 1, limit = 10, search = '', tags = [], user } = req.query;
 
     // Build the search query
     const query = {};
@@ -39,11 +39,22 @@ export const getQuestions = async (req, res) => {
       query.tags = { $in: tags.split(',') };
     }
 
+    // If a user ID is provided, filter questions where the user has answered
+    if (user) {
+      query.answers = { $elemMatch: { user } };
+    }
+
     const options = {
       page: parseInt(page, 10),
       limit: parseInt(limit, 10),
       sort: { createdAt: -1 },
-      populate: { path: 'user', select: 'fname lname profileImage' },
+      populate: [
+        { path: 'user', select: 'fname lname profileImage address.place' },
+        {
+          path: 'answers',
+          populate: { path: 'user', select: 'fname lname profileImage address.place' },
+        },
+      ],
     };
 
     const questions = await Question.paginate(query, options);
@@ -54,18 +65,20 @@ export const getQuestions = async (req, res) => {
   }
 };
 
+
+
 // Get a single question by ID with its answers
 export const getQuestionById = async (req, res) => {
   try {
     const { questionId } = req.params;
 
     const question = await Question.findById(questionId)
-      .populate('user', 'fname lname profileImage')
+      .populate('user', 'fname lname profileImage address.place')
       .populate({
         path: 'answers',
         populate: {
           path: 'user',
-          select: 'fname lname profileImage',
+          select: 'fname lname profileImage address.place',
         },
       });
 
