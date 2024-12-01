@@ -62,13 +62,10 @@ export const getQuestions = async (req, res) => {
       : questions;
 
     res.status(200).json({
-      docs: filteredQuestions,
-      totalDocs: questions.length,
-      limit: limitValue,
-      page: parseInt(page, 10),
-      totalPages: Math.ceil(questions.length / limitValue),
-      hasPrevPage: page > 1,
-      hasNextPage: filteredQuestions.length === limitValue,
+      questions: filteredQuestions,
+      totalQuestions: filteredQuestions.length,
+      currentPage: parseInt(page, 10),
+      totalPages: Math.ceil(filteredQuestions.length / limitValue),
     });
   } catch (error) {
     res.status(500).json({ message: 'Server Error', error: error.message });
