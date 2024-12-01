@@ -39,10 +39,6 @@ export const getQuestions = async (req, res) => {
       query.tags = { $in: tags.split(',') };
     }
 
-    // Pagination options
-    const skip = (parseInt(page, 10) - 1) * parseInt(limit, 10);
-    const limitValue = parseInt(limit, 10);
-
     // Fetch data with Mongoose
     const questions = await Question.find(query)
       .populate('user', 'fname lname profileImage address.place')
@@ -50,9 +46,7 @@ export const getQuestions = async (req, res) => {
         path: 'answers',
         populate: { path: 'user', select: 'fname lname profileImage address.place' },
       })
-      .sort({ createdAt: -1 })
-      .skip(skip)
-      .limit(limitValue);
+      .sort({ createdAt: -1 });
 
     // Filter questions based on the `user` parameter in answers
     const filteredQuestions = user
@@ -61,16 +55,25 @@ export const getQuestions = async (req, res) => {
         )
       : questions;
 
+    // Apply pagination after filtering
+    const totalQuestions = filteredQuestions.length;
+    const totalPages = Math.ceil(totalQuestions / limit);
+    const paginatedQuestions = filteredQuestions.slice(
+      (page - 1) * limit,
+      page * limit
+    );
+
     res.status(200).json({
-      questions: filteredQuestions,
-      totalQuestions: filteredQuestions.length,
+      questions: paginatedQuestions,
+      totalQuestions,
       currentPage: parseInt(page, 10),
-      totalPages: Math.ceil(filteredQuestions.length / limitValue),
+      totalPages,
     });
   } catch (error) {
     res.status(500).json({ message: 'Server Error', error: error.message });
   }
 };
+
 
 
 
