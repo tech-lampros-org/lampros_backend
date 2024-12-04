@@ -59,15 +59,18 @@ export const createOrder = async (req, res) => {
 // Get all orders with populated product and brand details
 export const getOrders = async (req, res) => {
   try {
-    // Fetch skip, limit, and orderStatus from query parameters, with defaults
+    // Fetch skip, limit, orderStatus, and user filter from query parameters, with defaults
     const skip = parseInt(req.query.skip, 10) || 0; // Default: 0
     const limit = parseInt(req.query.limit, 10) || 10; // Default: 10
-    const { orderStatus } = req.query; // Order status to filter by (optional)
+    const { orderStatus, user } = req.query;
 
     // Build the query object
-    const query = { user: req.user };
+    const query = {};
     if (orderStatus) {
-      query.orderStatus = orderStatus;
+      query.orderStatus = orderStatus; // Filter by orderStatus if provided
+    }
+    if (user === 'true') {
+      query.user = req.user; // Filter by user if user=true
     }
 
     // Get total count for the filtered orders
