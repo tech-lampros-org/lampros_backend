@@ -42,7 +42,7 @@ export const isFollowing = async (req, res) => {
   try {
     // Find the authenticated user
     const user = await User.findById(userId)
-    const target = await User.findById(targetUserId).populate('followers');
+    const target = await User.findById(targetUserId);
 
 
     if (!user) {
