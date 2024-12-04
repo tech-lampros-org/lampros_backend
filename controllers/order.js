@@ -59,7 +59,27 @@ export const createOrder = async (req, res) => {
 // Get all orders with populated product and brand details
 export const getOrders = async (req, res) => {
   try {
-    const orders = await Order.find({ user: req.user })
+    // Fetch skip, limit, orderStatus, and user filter from query parameters, with defaults
+    const skip = parseInt(req.query.skip, 10) || 0; // Default: 0
+    const limit = parseInt(req.query.limit, 10) || 10; // Default: 10
+    const { orderStatus, user } = req.query;
+
+    // Build the query object
+    const query = {};
+    if (orderStatus) {
+      query.orderStatus = orderStatus; // Filter by orderStatus if provided
+    }
+    if (user === 'true') {
+      query.user = req.user; // Filter by user if user=true
+    }
+
+    // Get total count for the filtered orders
+    const totalCount = await Order.countDocuments(query);
+
+    // Fetch paginated orders based on the filtered query
+    const orders = await Order.find(query)
+      .skip(skip)
+      .limit(limit)
       .populate({
         path: 'product.productId',
         populate: {
@@ -79,12 +99,26 @@ export const getOrders = async (req, res) => {
       })
     );
 
-    res.status(200).json({ success: true, data: populatedOrders });
+    // Prepare the response
+    res.status(200).json({
+      success: true,
+      counts: {
+        total: totalCount, // Total orders matching the filter
+      },
+      pagination: {
+        skip,
+        limit,
+        currentPage: Math.floor(skip / limit) + 1,
+        totalPages: Math.ceil(totalCount / limit),
+      },
+      data: populatedOrders, // Paginated list of orders
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ success: false, message: 'Server error', error: error.message });
   }
 };
+
 
 
 // Get a single order by ID with populated details
