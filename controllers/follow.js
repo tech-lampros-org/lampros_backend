@@ -41,7 +41,8 @@ export const isFollowing = async (req, res) => {
 
   try {
     // Find the authenticated user
-    const user = await User.findById(userId).populate('followers');
+    const user = await User.findById(userId)
+    const target = await User.findById(targetUserId).populate('followers');
 
 
     if (!user) {
@@ -51,7 +52,7 @@ export const isFollowing = async (req, res) => {
     // Check if the target user ID is in the 'following' array of the authenticated user
     const isFollowing = user.following.includes(targetUserId);
 
-    res.status(200).json({ isFollowing:isFollowing, followersCount: user?.followers?.length });
+    res.status(200).json({ isFollowing:isFollowing, followersCount: target?.followers?.length });
   } catch (error) {
     res.status(500).json({ message: 'Error checking following status', error });
   }
