@@ -36,7 +36,6 @@ const reviewSchema = new mongoose.Schema(
     comment: {
       type: String,
       maxlength: [1000, 'Comment cannot exceed 1000 characters'],
-      required: true,
     },
     // Array of replies
     replies: [
