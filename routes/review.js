@@ -17,7 +17,7 @@ router.post('/', authenticateUser, createReview);
 // Route: GET /api/reviews
 // Description: Get all top-level reviews for a specific reviewable item
 // Query parameters: onModel, reviewableId, page, limit
-router.get('/', getReviews);
+router.get('/:onModel/:reviewableId', getReviews);
 
 // Route: GET /api/reviews/:reviewId
 // Description: Get a single review by ID
