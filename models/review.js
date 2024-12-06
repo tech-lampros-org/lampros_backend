@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import mongoosePaginate from 'mongoose-paginate-v2';
 
 // Define possible models that can be reviewed
-const allowedModels = ['Product', 'ProProject'];
+const allowedModels = ['Product', 'ProProject', 'User'];
 
 const reviewSchema = new mongoose.Schema(
   {
@@ -31,7 +31,6 @@ const reviewSchema = new mongoose.Schema(
       type: Number,
       min: [1, 'Rating must be at least 1'],
       max: [5, 'Rating cannot exceed 5'],
-      // Make rating optional by not setting `required: true`
     },
     comment: {
       type: String,
@@ -48,8 +47,6 @@ const reviewSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
-
-
 
 // Static method to calculate average rating and total reviews for a reviewable item
 reviewSchema.statics.calculateAverageRating = async function (reviewableId, onModel) {
@@ -77,6 +74,11 @@ reviewSchema.statics.calculateAverageRating = async function (reviewableId, onMo
           averageRating: averageRating.toFixed(1),
           totalReviews,
         });
+      } else if (onModel === 'User') {
+        await mongoose.model('User').findByIdAndUpdate(reviewableId, {
+          averageRating: averageRating.toFixed(1),
+          totalReviews,
+        });
       }
     } else {
       // If no reviews with ratings, reset the fields
@@ -87,6 +89,11 @@ reviewSchema.statics.calculateAverageRating = async function (reviewableId, onMo
         });
       } else if (onModel === 'ProProject') {
         await mongoose.model('ProProject').findByIdAndUpdate(reviewableId, {
+          averageRating: 0,
+          totalReviews: 0,
+        });
+      } else if (onModel === 'User') {
+        await mongoose.model('User').findByIdAndUpdate(reviewableId, {
           averageRating: 0,
           totalReviews: 0,
         });
