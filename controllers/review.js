@@ -1,11 +1,13 @@
 import Review from '../models/review.js';
 import Product from '../models/pro-products.js';
 import ProProject from '../models/pro-projects.js';
+import User from '../models/user.js'
 
 // Utility function to determine the model based on onModel field
 const getReviewableModel = (onModel) => {
   if (onModel === 'Product') return Product;
   if (onModel === 'ProProject') return ProProject;
+  if (onModel === 'User')  return User;
   return null;
 };
 
@@ -16,7 +18,7 @@ export const createReview = async (req, res) => {
     const userId = req.user; // Assuming user is authenticated and user ID is in req.user
 
     // Validate onModel
-    if (!['Product', 'ProProject'].includes(onModel)) {
+    if (!['Product', 'ProProject', 'User'].includes(onModel)) {
       return res.status(400).json({ message: 'Invalid model specified for review' });
     }
 
@@ -71,7 +73,7 @@ export const getReviews = async (req, res) => {
     const { page = 1, limit = 10 } = req.query;
 
     // Validate onModel
-    if (!['Product', 'ProProject'].includes(onModel)) {
+    if (!['Product', 'ProProject', 'User'].includes(onModel)) {
       return res.status(400).json({ message: 'Invalid model specified for review' });
     }
 
@@ -88,8 +90,7 @@ export const getReviews = async (req, res) => {
       limit: parseInt(limit, 10),
       sort: { createdAt: -1 },
       populate: [
-        { path: 'user', select: 'fname lname profileImage' },
-        { path: 'replies', populate: { path: 'user', select: 'fname lname profileImage' } },
+        { path: 'user' },
       ],
     };
 
@@ -144,7 +145,7 @@ export const deleteReview = async (req, res) => {
   try {
     const { reviewId } = req.params;
     const userId = req.user;
-    const userRole = req.user.role; // Assuming user role is available
+    // const userRole = req.user.role; // Assuming user role is available
 
     // Find the review
     const review = await Review.findById(reviewId);
@@ -192,11 +193,7 @@ export const getReviewById = async (req, res) => {
     const { reviewId } = req.params;
 
     const review = await Review.findById(reviewId)
-      .populate('user', 'fname lname profileImage')
-      .populate({
-        path: 'replies',
-        populate: { path: 'user', select: 'fname lname profileImage' },
-      });
+      .populate('user');
 
     if (!review) {
       return res.status(404).json({ message: 'Review not found' });
