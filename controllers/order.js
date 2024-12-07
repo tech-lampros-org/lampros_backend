@@ -60,12 +60,15 @@ export const createOrder = async (req, res) => {
 export const getOrders = async (req, res) => {
   try {
     // Validate and parse query parameters
-    let skip = parseInt(req.query.skip, 10);
+    let page = parseInt(req.query.page, 10);
     let limit = parseInt(req.query.limit, 10);
 
-    // Default values if parameters are missing or invalid
-    skip = isNaN(skip) || skip < 0 ? 0 : skip;
-    limit = isNaN(limit) || limit <= 0 ? 10 : limit;
+    // Default values for page and limit
+    page = isNaN(page) || page < 1 ? 1 : page; // Default page is 1
+    limit = isNaN(limit) || limit <= 0 ? 10 : limit; // Default limit is 10
+
+    // Calculate skip value
+    const skip = (page - 1) * limit;
 
     const { orderStatus, user } = req.query;
 
@@ -83,9 +86,6 @@ export const getOrders = async (req, res) => {
 
     // Get filtered count for the current query
     const filteredCount = await Order.countDocuments(query);
-
-    // Adjust skip value to not exceed filtered count
-    if (skip >= filteredCount) skip = Math.max(0, filteredCount - limit);
 
     // Fetch paginated orders based on the filtered query
     const orders = await Order.find(query)
@@ -121,7 +121,6 @@ export const getOrders = async (req, res) => {
     );
 
     // Calculate pagination details
-    const currentPage = Math.floor(skip / limit) + 1;
     const totalPages = Math.ceil(filteredCount / limit);
 
     // Prepare the response
@@ -133,12 +132,10 @@ export const getOrders = async (req, res) => {
         byStatus: orderStatusCounts, // Counts by orderStatus
       },
       pagination: {
-        skip,
+        page,
         limit,
-        currentPage,
+        currentPage: page,
         totalPages,
-        hasNextPage: currentPage < totalPages,
-        hasPrevPage: currentPage > 1,
       },
       data: populatedOrders, // Paginated list of orders
     });
@@ -147,6 +144,7 @@ export const getOrders = async (req, res) => {
     res.status(500).json({ success: false, message: 'Server error', error: error.message });
   }
 };
+
 
 
 
