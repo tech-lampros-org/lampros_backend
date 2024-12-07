@@ -59,9 +59,14 @@ export const createOrder = async (req, res) => {
 // Get all orders with populated product and brand details
 export const getOrders = async (req, res) => {
   try {
-    // Fetch skip, limit, orderStatus, and user filter from query parameters, with defaults
-    const skip = parseInt(req.query.skip, 10) || 0; // Default: 0
-    const limit = parseInt(req.query.limit, 10) || 10; // Default: 10
+    // Validate and parse query parameters
+    let skip = parseInt(req.query.skip, 10);
+    let limit = parseInt(req.query.limit, 10);
+
+    // Default values if parameters are missing or invalid
+    skip = isNaN(skip) || skip < 0 ? 0 : skip;
+    limit = isNaN(limit) || limit <= 0 ? 10 : limit;
+
     const { orderStatus, user } = req.query;
 
     // Build the query object
@@ -73,8 +78,14 @@ export const getOrders = async (req, res) => {
       query.user = req.user; // Filter by user if user=true
     }
 
-    // Get total count for the filtered orders
-    const totalCount = await Order.countDocuments(query);
+    // Get total count for all orders (without filter)
+    const totalOrderCount = await Order.countDocuments();
+
+    // Get filtered count for the current query
+    const filteredCount = await Order.countDocuments(query);
+
+    // Adjust skip value to not exceed filtered count
+    if (skip >= filteredCount) skip = Math.max(0, filteredCount - limit);
 
     // Fetch paginated orders based on the filtered query
     const orders = await Order.find(query)
@@ -91,7 +102,7 @@ export const getOrders = async (req, res) => {
     const populatedOrders = await Promise.all(
       orders.map(async (order) => {
         const user = await User.findById(order.user);
-        const deliveryAddress = user.deliveryAddresses.id(order.deliveryAddress);
+        const deliveryAddress = user?.deliveryAddresses.id(order.deliveryAddress);
         return {
           ...order._doc,
           deliveryAddress,
@@ -99,17 +110,35 @@ export const getOrders = async (req, res) => {
       })
     );
 
+    // Aggregate counts for each orderStatus
+    const orderStatusCounts = await Order.aggregate([
+      { $group: { _id: '$orderStatus', count: { $sum: 1 } } },
+    ]).then((results) =>
+      results.reduce((acc, { _id, count }) => {
+        acc[_id] = count;
+        return acc;
+      }, {})
+    );
+
+    // Calculate pagination details
+    const currentPage = Math.floor(skip / limit) + 1;
+    const totalPages = Math.ceil(filteredCount / limit);
+
     // Prepare the response
     res.status(200).json({
       success: true,
       counts: {
-        total: totalCount, // Total orders matching the filter
+        total: totalOrderCount, // Total orders (no filter)
+        filtered: filteredCount, // Orders matching the filter
+        byStatus: orderStatusCounts, // Counts by orderStatus
       },
       pagination: {
         skip,
         limit,
-        currentPage: Math.floor(skip / limit) + 1,
-        totalPages: Math.ceil(totalCount / limit),
+        currentPage,
+        totalPages,
+        hasNextPage: currentPage < totalPages,
+        hasPrevPage: currentPage > 1,
       },
       data: populatedOrders, // Paginated list of orders
     });
@@ -118,6 +147,8 @@ export const getOrders = async (req, res) => {
     res.status(500).json({ success: false, message: 'Server error', error: error.message });
   }
 };
+
+
 
 
 
