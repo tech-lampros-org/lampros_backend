@@ -30,10 +30,12 @@ const initializeFirebase = () => {
   }
 };
 
+
+initializeFirebase();
+
 // Send notification to a single device
 export const sendNotificationToDevice = async (token, title, body, userId) => {
   try {
-    initializeFirebase();
 
     const message = {
       notification: { title, body },
@@ -62,7 +64,6 @@ export const sendNotificationToDevice = async (token, title, body, userId) => {
 // Send notification to multiple devices
 export const sendNotificationToMultipleDevices = async (tokens, title, body, userIds) => {
   try {
-    initializeFirebase();
 
     const message = {
       notification: { title, body },
@@ -96,7 +97,6 @@ export const sendTestNotification = async () => {
   const body = 'This is a test notification to verify Firebase setup.';
 
   try {
-    initializeFirebase();
 
     const message = {
       notification: { title, body },
