@@ -64,31 +64,47 @@ export const sendNotificationToDevice = async (token, title, body, userId) => {
 // Send notification to multiple devices
 export const sendNotificationToMultipleDevices = async (tokens, title, body, userIds) => {
   try {
-
-    const message = {
-      notification: { title, body },
-      tokens,
-    };
-
-    const response = await admin.messaging().sendMulticast(message);
+    const responses = [];
+    const failedNotifications = [];
 
     for (let i = 0; i < tokens.length; i++) {
-      const notification = new Notification({
-        userId: userIds[i],
-        title,
-        body,
+      const message = {
+        notification: { title, body },
         token: tokens[i],
-      });
-      await notification.save();
+      };
+
+      try {
+        // Send notification to the individual token
+        const response = await admin.messaging().send(message);
+
+        // Save the notification to the database
+        const notification = new Notification({
+          userId: userIds[i],
+          title,
+          body,
+          token: tokens[i],
+        });
+        await notification.save();
+
+        // Log and collect the response
+        console.log(`Notification sent successfully to ${tokens[i]}`);
+        responses.push({ token: tokens[i], response });
+      } catch (error) {
+        console.error(`Failed to send notification to ${tokens[i]}:`, error.message);
+        failedNotifications.push({ token: tokens[i], error: error.message });
+      }
     }
 
-    console.log('Notifications sent successfully:', response);
-    return response;
+    return {
+      success: responses,
+      failures: failedNotifications,
+    };
   } catch (error) {
     console.error('Error sending notifications:', error.message);
     throw new Error('Failed to send notifications');
   }
 };
+
 
 // Send test notification
 export const sendTestNotification = async () => {
