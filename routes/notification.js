@@ -68,7 +68,7 @@ router.get('/listNotifications', authenticateUser, async (req, res) => {
 });
 
 // DELETE: Delete a notification by ID
-router.delete('/delete/:notificationId', authenticateUser, async (req, res) => {
+router.delete('/deleteNotification/:notificationId', authenticateUser, async (req, res) => {
   const { notificationId } = req.params;
 
   try {
