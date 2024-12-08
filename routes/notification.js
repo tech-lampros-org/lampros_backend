@@ -56,7 +56,7 @@ router.post('/sendToMultipleUsers', authenticateUser, async (req, res) => {
 
 
 // GET: List all notifications for the authenticated user
-router.get('/list', authenticateUser, async (req, res) => {
+router.get('/listNotifications', authenticateUser, async (req, res) => {
   const userId = req.user; // Get user ID from authenticated request
 
   try {
