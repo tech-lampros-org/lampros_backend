@@ -1,57 +1,63 @@
 // routes/notificationRoutes.js
 import express from 'express';
-import { sendNotificationToDevice, sendNotificationToTopic, sendNotificationToMultipleDevices } from '../controllers/notification.js';
-import Notification from '../models/notification.js'; // Import Notification model
+import {
+  sendNotificationToDevice,
+  sendNotificationToMultipleDevices,
+} from '../controllers/notification.js';
+import Notification from '../models/notification.js';
+import User from '../models/user.js'; // Import User model to fetch tokens
 
 const router = express.Router();
 
 // Middleware to verify authentication and set `req.user`
 import { protect as authenticateUser } from '../middlewares/protect.js';
 
-// POST: Send a notification to a specific device
-router.post('/sendToDevice', authenticateUser, async (req, res) => {
-  const { token, title, body, userId } = req.body;
+// POST: Send a notification to a specific user
+router.post('/sendToUser', authenticateUser, async (req, res) => {
+  const { userId, title, body } = req.body;
 
   try {
-    const response = await sendNotificationToDevice(token, title, body, userId);
+    // Fetch the token for the user
+    const user = await User.findById(userId);
+    if (!user || !user.token) {
+      return res.status(404).json({ message: 'User or token not found' });
+    }
+
+    const response = await sendNotificationToDevice(user.token, title, body, userId);
     res.status(200).json({ message: 'Notification sent', response });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 });
 
-// POST: Send notification to multiple devices (multiple users)
-router.post('/sendToMultipleDevices', authenticateUser, async (req, res) => {
-  const { tokens, title, body, userIds } = req.body;
-
-  if (tokens.length !== userIds.length) {
-    return res.status(400).json({ message: 'Tokens and User IDs arrays must have the same length' });
-  }
+// POST: Send notification to multiple users
+router.post('/sendToMultipleUsers', authenticateUser, async (req, res) => {
+  const { userIds, title, body } = req.body;
 
   try {
+    // Fetch tokens for the users
+    const users = await User.find({ _id: { $in: userIds } });
+    const tokens = users.map((user) => user.token).filter((token) => token); // Get tokens, filter out null/undefined
+
+    if (tokens.length === 0) {
+      return res.status(400).json({ message: 'No valid tokens found for the provided user IDs' });
+    }
+
     const response = await sendNotificationToMultipleDevices(tokens, title, body, userIds);
-    res.status(200).json({ message: 'Notifications sent', response });
+    res.status(200).json({
+      message: 'Notifications sent to users with valid tokens',
+      response,
+      skippedUsers: userIds.length - tokens.length, // Number of users without tokens
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 });
 
-// POST: Send a notification to a topic
-router.post('/sendToTopic', authenticateUser, async (req, res) => {
-  const { topic, title, body } = req.body;
-  const userId = req.user.id;  // Get user ID from authenticated request
-
-  try {
-    const response = await sendNotificationToTopic(topic, title, body, userId);
-    res.status(200).json({ message: 'Notification sent to topic', response });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-});
 
 // GET: List all notifications for the authenticated user
 router.get('/list', authenticateUser, async (req, res) => {
-  const userId = req.user;  // Get user ID from authenticated request
+  const userId = req.user; // Get user ID from authenticated request
 
   try {
     const notifications = await Notification.find({ userId }).sort({ sentAt: -1 });
