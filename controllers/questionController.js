@@ -75,6 +75,68 @@ export const getQuestions = async (req, res) => {
 };
 
 
+// Get questions and answers by a list of IDs
+export const getQuestionsByIds = async (req, res) => {
+  try {
+    const { questionIds } = req.body; // Array of question IDs in the request body
+
+    if (!Array.isArray(questionIds) || questionIds.length === 0) {
+      return res.status(400).json({ message: 'Please provide a valid array of question IDs' });
+    }
+
+    // Fetch questions with their answers
+    const questions = await Question.find({ _id: { $in: questionIds } })
+      .populate('user', 'fname lname profileImage address.place')
+      .populate({
+        path: 'answers',
+        populate: {
+          path: 'user',
+          select: 'fname lname profileImage address.place',
+        },
+      });
+
+    if (questions.length === 0) {
+      return res.status(404).json({ message: 'No questions found for the given IDs' });
+    }
+
+    res.status(200).json({ questions });
+  } catch (error) {
+    res.status(500).json({ message: 'Server Error', error: error.message });
+  }
+};
+
+
+
+// Like or dislike a question
+export const voteQuestion = async (req, res) => {
+  try {
+    const { questionId } = req.params;
+    const { voteType } = req.body; // Expecting 'upvote' or 'downvote'
+    const userId = req.user; // Assuming user is authenticated
+
+    const question = await Question.findById(questionId);
+
+    if (!question) {
+      return res.status(404).json({ message: 'Question not found' });
+    }
+
+    // Adjust votes based on the voteType
+    if (voteType === 'upvote') {
+      question.votes += 1;
+    } else if (voteType === 'downvote') {
+      question.votes -= 1;
+    } else {
+      return res.status(400).json({ message: 'Invalid vote type' });
+    }
+
+    await question.save();
+
+    res.status(200).json({ message: 'Vote updated successfully', votes: question.votes });
+  } catch (error) {
+    res.status(500).json({ message: 'Server Error', error: error.message });
+  }
+};
+
 
 
 
