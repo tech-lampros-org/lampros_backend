@@ -52,7 +52,7 @@ app.use('/api/category', category);
 app.use('/api/brand', ro_brands);
 app.use('/api/qs', ro_qs);
 app.use('/api/ans', ro_ans);
-app.use('/api', protect, searchRoutes);
+app.use('/api', searchRoutes);
 app.use('/api', protect, ro_message);
 app.use('/api', protect, ro_notification);
 app.use('/api/order', protect, ro_order);
