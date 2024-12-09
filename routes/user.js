@@ -5,13 +5,20 @@ import { protect } from '../middlewares/protect.js';
 
 const router = express.Router();
 
+const conditionalProtect = (req, res, next) => {
+    if (req.query.user === 'guest') {
+      return next(); // Skip protect middleware if user=guest
+    }
+    return protect(req, res, next); // Apply protect middleware otherwise
+  };
+
 router.post('/request-otp', requestOtp);
 router.post('/verify-otp', verifyOtp);
 router.post('/basic-registration', completeBasic);
 router.post('/complete-registration', completeRegistration);
 router.put('/update',protect, update);
 router.get('/protected-route', protect, getProfile);
-router.get('/user-filter',protect,filterUsersWithProjectsOrProducts )
+router.get('/user-filter', conditionalProtect, filterUsersWithProjectsOrProducts);
 router.delete('/delete',protect,deleteAccount)
 
 
