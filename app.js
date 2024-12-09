@@ -50,6 +50,8 @@ app.use('/api/projects', ro_projects);
 app.use('/api/products', ro_products);
 app.use('/api/category', category);
 app.use('/api/brand', ro_brands);
+app.use('/api/qs', ro_qs);
+app.use('/api/ans', ro_ans);
 app.use('/api', protect, searchRoutes);
 app.use('/api', protect, ro_message);
 app.use('/api', protect, ro_notification);
@@ -58,8 +60,6 @@ app.use('/api',protect, ro_enq);
 app.use('/api',protect, ro_fo);
 app.use('/api/adr',protect, ro_adr);
 app.use('/api/review',protect, ro_review);
-app.use('/api/qs', ro_qs);
-app.use('/api/ans', ro_ans);
 
 
 
