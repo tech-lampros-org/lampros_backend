@@ -17,9 +17,24 @@ export const requestOtp = async (req, res) => {
   }
 };
 
+export const verifyOtp = async (req, res) => {
+  try {
+    const { phoneNumber, otp } = req.body;
+    const response = await verifyOtpAndLogin(phoneNumber, otp);
+    
+    // Generate JWT token
+    const user = await User.findOne({ phoneNumber });
+    const token = generateToken(user._id);
+
+    res.status(200).json({ message: response.message, token ,role: response?.role });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
 export const deleteAccount = async (req, res) => {
   try {
-    const userId = req.user._id;
+    const userId = req.user;
       // Delete the user document
       await User.findByIdAndDelete(userId)
 
@@ -34,21 +49,6 @@ export const deleteAccount = async (req, res) => {
   } catch (error) {
     console.error('Error deleting account:', error);
     res.status(500).json({ message: 'Failed to delete account. Please try again later.' });
-  }
-};
-
-export const verifyOtp = async (req, res) => {
-  try {
-    const { phoneNumber, otp } = req.body;
-    const response = await verifyOtpAndLogin(phoneNumber, otp);
-    
-    // Generate JWT token
-    const user = await User.findOne({ phoneNumber });
-    const token = generateToken(user._id);
-
-    res.status(200).json({ message: response.message, token ,role: response?.role });
-  } catch (error) {
-    res.status(400).json({ message: error.message });
   }
 };
 
