@@ -88,12 +88,15 @@ export const getOrders = async (req, res) => {
       query['product.productId'] = { $in: productIds }; // Filter orders by these product IDs
     }
 
+    const removeOrderStatusFromQuery = (query) => {
+      const modifiedQuery = { ...query }; // Create a shallow copy of the query
+      delete modifiedQuery.orderStatus; // Remove orderStatus
+      return modifiedQuery;
+    };
+    
+
     // Get total count for the current query
-    const totalOrderCount = await Order.countDocuments(() => {
-      const countQuery = { ...query }; // Create a shallow copy of the query
-      delete countQuery.orderStatus; // Remove orderStatus only for countDocuments
-      return countQuery;
-    })();
+    const totalOrderCount = await Order.countDocuments(removeOrderStatusFromQuery(query));
 
     // Fetch paginated orders based on the query
     const orders = await Order.find(query)
