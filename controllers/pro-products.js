@@ -282,7 +282,7 @@ export const filterProducts = async (req, res) => {
     }
 
     if (isValid(PhoneNumber)) {
-      query['seller.phoneNumber'] = { $in: PhoneNumber.split(',') };
+      query['seller.phoneNumber'] = { $in: PhoneNumber };
     }
 
     if (isValid(location)) {
