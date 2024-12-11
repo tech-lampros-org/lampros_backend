@@ -70,7 +70,7 @@ export const getOrders = async (req, res) => {
     // Calculate skip value
     const skip = (page - 1) * limit;
 
-    const { orderStatus, user } = req.query;
+    const { orderStatus, user, createdBy } = req.query;
 
     // Build the query object
     const query = {};
@@ -80,23 +80,34 @@ export const getOrders = async (req, res) => {
     if (user === 'true') {
       query.user = req.user; // Filter by user if user=true
     }
+    if (createdBy === 'true') {
+      query['product.createdBy'] = req.user; // Filter by products created by the seller
+    }
 
-    // Get total count for all orders (without filter)
-    const totalOrderCount = await Order.countDocuments();
+    // Get total count for the current query
+    const totalOrderCount = await Order.countDocuments(query);
 
-    // Get filtered count for the current query
-    const filteredCount = await Order.countDocuments(query);
-
-    // Fetch paginated orders based on the filtered query
+    // Fetch paginated orders based on the query
     const orders = await Order.find(query)
       .skip(skip)
       .limit(limit)
       .populate({
         path: 'product.productId',
         populate: {
-          path: 'brand',
+          path: 'brand', // Populate both brand and createdBy fields
         },
       });
+
+    // Aggregate counts for each orderStatus within the current query
+    const orderStatusCounts = await Order.aggregate([
+      { $match: query }, // Match orders based on the query
+      { $group: { _id: '$orderStatus', count: { $sum: 1 } } },
+    ]).then((results) =>
+      results.reduce((acc, { _id, count }) => {
+        acc[_id] = count;
+        return acc;
+      }, {})
+    );
 
     // Manually populate the delivery address
     const populatedOrders = await Promise.all(
@@ -110,26 +121,15 @@ export const getOrders = async (req, res) => {
       })
     );
 
-    // Aggregate counts for each orderStatus
-    const orderStatusCounts = await Order.aggregate([
-      { $group: { _id: '$orderStatus', count: { $sum: 1 } } },
-    ]).then((results) =>
-      results.reduce((acc, { _id, count }) => {
-        acc[_id] = count;
-        return acc;
-      }, {})
-    );
-
     // Calculate pagination details
-    const totalPages = Math.ceil(filteredCount / limit);
+    const totalPages = Math.ceil(totalOrderCount / limit);
 
     // Prepare the response
     res.status(200).json({
       success: true,
       counts: {
-        total: totalOrderCount, // Total orders (no filter)
-        filtered: filteredCount, // Orders matching the filter
-        byStatus: orderStatusCounts, // Counts by orderStatus
+        total: totalOrderCount, // Total orders matching the query
+        byStatus: orderStatusCounts, // Counts by orderStatus within the query
       },
       pagination: {
         page,
@@ -144,6 +144,8 @@ export const getOrders = async (req, res) => {
     res.status(500).json({ success: false, message: 'Server error', error: error.message });
   }
 };
+
+
 
 
 

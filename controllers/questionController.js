@@ -41,10 +41,10 @@ export const getQuestions = async (req, res) => {
 
     // Fetch data with Mongoose
     const questions = await Question.find(query)
-      .populate('user', 'fname lname profileImage address.place')
+      .populate('user', 'fname lname profileImage address.place role')
       .populate({
         path: 'answers',
-        populate: { path: 'user', select: 'fname lname profileImage address.place' },
+        populate: { path: 'user', select: 'fname lname profileImage address.place role' },
       })
       .sort({ createdAt: -1 });
 
@@ -86,12 +86,12 @@ export const getQuestionsByIds = async (req, res) => {
 
     // Fetch questions with their answers
     const questions = await Question.find({ _id: { $in: questionIds } })
-      .populate('user', 'fname lname profileImage address.place')
+      .populate('user', 'fname lname profileImage address.place role')
       .populate({
         path: 'answers',
         populate: {
           path: 'user',
-          select: 'fname lname profileImage address.place',
+          select: 'fname lname profileImage address.place role',
         },
       });
 
@@ -146,12 +146,12 @@ export const getQuestionById = async (req, res) => {
     const { questionId } = req.params;
 
     const question = await Question.findById(questionId)
-      .populate('user', 'fname lname profileImage address.place')
+      .populate('user', 'fname lname profileImage address.place role')
       .populate({
         path: 'answers',
         populate: {
           path: 'user',
-          select: 'fname lname profileImage address.place',
+          select: 'fname lname profileImage address.place role',
         },
       });
 
