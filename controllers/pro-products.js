@@ -282,9 +282,19 @@ export const filterProducts = async (req, res) => {
     }
 
     if (isValid(PhoneNumber)) {
-      query['seller.phoneNumber'] = { $in: PhoneNumber.split(',') };
+      query['seller.phoneNumber'] = { $in: PhoneNumber };
     }
 
+    if (isValid(brand)) {
+      const brandNames = brand.split(',');
+
+      // Fetch matching brand IDs from the Brand collection
+      const brandDocs = await Brand.find({ name: { $in: brandNames } }, '_id');
+      const brandIds = brandDocs.map((doc) => doc._id);
+
+      query.brand = { $in: brandIds };
+    }
+    
     if (isValid(location)) {
       query['seller.location'] = location;
     }
