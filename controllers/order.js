@@ -89,7 +89,11 @@ export const getOrders = async (req, res) => {
     }
 
     // Get total count for the current query
-    const totalOrderCount = await Order.countDocuments(query);
+    const totalOrderCount = await Order.countDocuments(() => {
+      const countQuery = { ...query }; // Create a shallow copy of the query
+      delete countQuery.orderStatus; // Remove orderStatus only for countDocuments
+      return countQuery;
+    })();
 
     // Fetch paginated orders based on the query
     const orders = await Order.find(query)
