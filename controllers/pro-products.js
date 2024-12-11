@@ -241,7 +241,7 @@ export const filterProducts = async (req, res) => {
     // Extract other query parameters from the request
     const {
       sellerName,
-      sellerPhoneNumber,
+      PhoneNumber,
       location,
       category,
       subCategory,
@@ -278,8 +278,8 @@ export const filterProducts = async (req, res) => {
       query['seller.name'] = { $in: sellerName.split(',') };
     }
 
-    if (sellerPhoneNumber) {
-      query['seller.phoneNumber'] = { $in: sellerPhoneNumber.split(',') };
+    if (PhoneNumber) {
+      query['seller.phoneNumber'] = { $in: PhoneNumber.split(',') };
     }
 
     if (location) {
