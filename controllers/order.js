@@ -72,7 +72,7 @@ export const getOrders = async (req, res) => {
 
     const { orderStatus, user, createdBy } = req.query;
 
-    // Build the query object
+    // Build the initial query object
     const query = {};
     if (orderStatus) {
       query.orderStatus = orderStatus; // Filter by orderStatus if provided
@@ -80,8 +80,12 @@ export const getOrders = async (req, res) => {
     if (user === 'true') {
       query.user = req.user; // Filter by user if user=true
     }
+
+    // If createdBy=true, filter orders by products created by the logged-in user
     if (createdBy === 'true') {
-      query['product.createdBy'] = req.user; // Filter by products created by the seller
+      const products = await Product.find({ createdBy: req.user }).select('_id');
+      const productIds = products.map((product) => product._id);
+      query['product.productId'] = { $in: productIds }; // Filter orders by these product IDs
     }
 
     // Get total count for the current query
@@ -94,7 +98,7 @@ export const getOrders = async (req, res) => {
       .populate({
         path: 'product.productId',
         populate: {
-          path: 'brand', // Populate both brand and createdBy fields
+          path: 'brand', // Populate brand field
         },
       });
 
@@ -144,6 +148,7 @@ export const getOrders = async (req, res) => {
     res.status(500).json({ success: false, message: 'Server error', error: error.message });
   }
 };
+
 
 
 
