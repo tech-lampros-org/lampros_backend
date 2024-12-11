@@ -273,149 +273,140 @@ export const filterProducts = async (req, res) => {
       order = 'desc',
     } = req.query;
 
-    // Add filters to the query object based on the request parameters
-    if (sellerName) {
+    // Utility function to validate non-empty and non-null values
+    const isValid = (value) => value !== undefined && value !== null && value !== '';
+
+    // Add filters to the query object based on valid request parameters
+    if (isValid(sellerName)) {
       query['seller.name'] = { $in: sellerName.split(',') };
     }
 
-    if (PhoneNumber) {
+    if (isValid(PhoneNumber)) {
       query['seller.phoneNumber'] = { $in: PhoneNumber.split(',') };
     }
 
-    if (location) {
-      query['seller.location'] = location; // Assuming exact match for location
+    if (isValid(location)) {
+      query['seller.location'] = location;
     }
 
-    if (category) {
+    if (isValid(category)) {
       query.category = { $in: category.split(',') };
     }
 
-    if (subCategory) {
+    if (isValid(subCategory)) {
       query.subCategory = { $in: subCategory.split(',') };
     }
 
-    if (type) {
+    if (isValid(type)) {
       query.type = { $in: type.split(',') };
     }
 
-    if (subType) {
+    if (isValid(subType)) {
       query.subType = { $in: subType.split(',') };
     }
 
-    if (minPrice || maxPrice) {
+    if (isValid(minPrice) || isValid(maxPrice)) {
       query.price = {};
-      if (minPrice) query.price.$gte = Number(minPrice);
-      if (maxPrice) query.price.$lte = Number(maxPrice);
+      if (isValid(minPrice)) query.price.$gte = Number(minPrice);
+      if (isValid(maxPrice)) query.price.$lte = Number(maxPrice);
     }
 
-    if (minQuantity || maxQuantity) {
+    if (isValid(minQuantity) || isValid(maxQuantity)) {
       query.quantity = {};
-      if (minQuantity) query.quantity.$gte = Number(minQuantity);
-      if (maxQuantity) query.quantity.$lte = Number(maxQuantity);
+      if (isValid(minQuantity)) query.quantity.$gte = Number(minQuantity);
+      if (isValid(maxQuantity)) query.quantity.$lte = Number(maxQuantity);
     }
 
-    // Accept multiple values for technical details
-    if (color) {
+    if (isValid(color)) {
       query['technicalDetails.color'] = { $in: color.split(',') };
     }
 
-    if (material) {
+    if (isValid(material)) {
       query['technicalDetails.material'] = { $in: material.split(',') };
     }
 
-    if (weight) {
+    if (isValid(weight)) {
       query['technicalDetails.weight'] = { $in: weight.split(',').map(Number) };
     }
 
-    if (baseWidth) {
+    if (isValid(baseWidth)) {
       query['technicalDetails.baseWidth'] = { $in: baseWidth.split(',').map(Number) };
     }
 
-    if (style) {
+    if (isValid(style)) {
       query['technicalDetails.style'] = { $in: style.split(',') };
     }
 
-    if (installationType) {
+    if (isValid(installationType)) {
       query['technicalDetails.installationType'] = { $in: installationType.split(',') };
     }
 
-    if (finishType) {
+    if (isValid(finishType)) {
       query['technicalDetails.finishType'] = { $in: finishType.split(',') };
     }
 
-    if (drainType) {
+    if (isValid(drainType)) {
       query['technicalDetails.drainType'] = { $in: drainType.split(',') };
     }
 
-    if (seatMaterial) {
+    if (isValid(seatMaterial)) {
       query['technicalDetails.seatMaterial'] = { $in: seatMaterial.split(',') };
     }
 
-    if (shape) {
+    if (isValid(shape)) {
       query['technicalDetails.shape'] = { $in: shape.split(',') };
     }
 
-    if (specialFeatures) {
+    if (isValid(specialFeatures)) {
       query['technicalDetails.specialFeatures'] = { $in: specialFeatures.split(',') };
     }
 
-    if (productModelNumber) {
+    if (isValid(productModelNumber)) {
       query['technicalDetails.productModelNumber'] = { $in: productModelNumber.split(',') };
     }
 
-    if (asinNumber) {
+    if (isValid(asinNumber)) {
       query['technicalDetails.asinNumber'] = { $in: asinNumber.split(',') };
     }
 
-    if (productCareInstructions) {
+    if (isValid(productCareInstructions)) {
       query['technicalDetails.productCareInstructions'] = { $in: productCareInstructions.split(',') };
     }
 
-    // Warranty and certifications filters
-    if (warrantyDuration) {
+    if (isValid(warrantyDuration)) {
       query['warrantyAndCertifications.warrantyDuration'] = { $in: warrantyDuration.split(',').map(Number) };
     }
 
-    if (warranty) {
+    if (isValid(warranty)) {
       query['warrantyAndCertifications.warranty'] = warranty === 'true';
     }
 
-    if (isoCertified) {
+    if (isValid(isoCertified)) {
       query['warrantyAndCertifications.isoCertified'] = isoCertified === 'true';
     }
 
-    // List of allowed fields for sorting to prevent invalid fields
-const allowedSortFields = [
-  'createdAt', 'updatedAt', 'price', 'quantity', 'name', // Add other valid fields based on your schema
-];
+    // Sort validation and options
+    const allowedSortFields = ['createdAt', 'updatedAt', 'price', 'quantity', 'name'];
+    const sortByField = allowedSortFields.includes(sortBy) ? sortBy : 'createdAt';
+    const sortOrder = order.toLowerCase() === 'asc' ? 1 : -1;
 
-// Ensure sortBy and order have valid default values if they are null or undefined
-const sortByField = allowedSortFields.includes(sortBy) && sortBy ? sortBy : 'createdAt';
-const sortOrder = (order && order.toLowerCase() === 'asc') ? 1 : -1;
+    const sortOptions = { [sortByField]: sortOrder };
 
-// Build sort options with validated fields
-const sortOptions = {};
-sortOptions[sortByField] = sortOrder;
-
-    // Fetch products with pagination and populate brands
+    // Fetch products and total count
     const productsPromise = ProProduct.find(query)
       .populate('createdBy', '-password')
-      .populate('brand') // Populate the brand to access its name
+      .populate('brand')
       .sort(sortOptions)
       .skip(skip)
       .limit(limit)
       .exec();
 
-    // Get total count of products matching the query
     const countPromise = ProProduct.countDocuments(query).exec();
 
-    // Execute both queries in parallel
     const [products, total] = await Promise.all([productsPromise, countPromise]);
 
-    // Calculate total pages
     const totalPages = Math.ceil(total / limit);
 
-    // Handle case where requested page exceeds total pages
     if (page > totalPages && totalPages !== 0) {
       return res.status(400).json({
         message: 'Page number exceeds total pages.',
@@ -426,21 +417,6 @@ sortOptions[sortByField] = sortOrder;
       });
     }
 
-    // If brand filter is provided, filter products based on brand name
-    if (brand) {
-      const brandNames = brand.split(',');
-      const filteredProducts = products.filter(product =>
-        brandNames.includes(product.brand.name) // Adjust this based on your brand schema
-      );
-      return res.status(200).json({
-        currentPage: page,
-        totalPages,
-        totalProducts: filteredProducts.length,
-        products: filteredProducts,
-      });
-    }
-
-    // Send the paginated and filtered products as a response
     res.status(200).json({
       currentPage: page,
       totalPages,
@@ -451,6 +427,7 @@ sortOptions[sortByField] = sortOrder;
     res.status(500).json({ message: 'Failed to retrieve products', error: error.message });
   }
 };
+
 
 
 
