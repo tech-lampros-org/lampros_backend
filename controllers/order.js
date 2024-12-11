@@ -104,7 +104,13 @@ export const getOrders = async (req, res) => {
 
     // Aggregate counts for each orderStatus within the current query
     const orderStatusCounts = await Order.aggregate([
-      { $match: query }, // Match orders based on the query
+      {
+        $match: (() => {
+          const matchQuery = { ...query }; // Copy query
+          delete matchQuery.orderStatus; // Remove orderStatus
+          return matchQuery;
+        })(),
+      },
       { $group: { _id: '$orderStatus', count: { $sum: 1 } } },
     ]).then((results) =>
       results.reduce((acc, { _id, count }) => {
@@ -112,6 +118,7 @@ export const getOrders = async (req, res) => {
         return acc;
       }, {})
     );
+    
 
     // Manually populate the delivery address
     const populatedOrders = await Promise.all(
